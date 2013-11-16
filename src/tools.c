@@ -23,7 +23,7 @@ unsigned char crc8(unsigned char crc, unsigned char c)
     unsigned char i;
 
     crc ^= c;
-    for (i = 8; i > 0; i--) {
+    for (i = 8; i != 0; i--) {
         crc = (crc >> 1) ^ (-(crc & 1) & 0x8C);
     }
 

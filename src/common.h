@@ -95,21 +95,28 @@ void _nop_(void);
             break;                                              \
         }                                                       \
         if (__DELAY_LOOP1(n) > 1) {                             \
-            i = __DELAY_LOOP1(n) - 1;                           \
-            do {                                                \
-                j = __DELAY_LOOP0;                              \
-                while (--j);                                    \
-            } while (--i);                                      \
+            for (i = __DELAY_LOOP1(n) - 1; i != 0; i--) {       \
+                for (j = __DELAY_LOOP0; j != 0; j--);           \
+            }                                                   \
         }                                                       \
-        i = __DELAY_LOOP2(n) / __DELAY_DJNZ;                    \
-        while (--i);                                            \
+        for (i = __DELAY_LOOP2(n) / __DELAY_DJNZ; i != 0; i--); \
         if (__DELAY_LOOP2(n) % __DELAY_DJNZ) nop();             \
     } while (0)
 #define DELAY_US(t)                                             \
     DELAY_CYCLES(CYCLES_US(t))
 
 
-void hex2bcd(unsigned int x, char __idata *d);
+            /* i = __DELAY_LOOP1(n) - 1;                                       \ */
+            /*          do {                                       \ */
+            /*              j = __DELAY_LOOP0;                     \ */
+            /*     while (--j);                                    \ */
+            /* } while (--i);                                      \ */
+
+        /* i = __DELAY_LOOP2(n) / __DELAY_DJNZ;                    \ */
+        /* while (--i);                                            \ */
+
+void uint2bcd(unsigned int x, unsigned char __idata *d);
+void ulong2bcd(unsigned long x, unsigned char __idata *d);
 unsigned char reverse(unsigned char c);
 void delay_ms(unsigned int i);
 unsigned char crc8(unsigned char crc, unsigned char c);

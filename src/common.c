@@ -10,36 +10,71 @@
    See: http://www.ourdev.cn/bbs/bbs_content.jsp?bbs_sn=3587651
    See also: http://www.cs.uiowa.edu/~jones/bcd/decimal.html
  */
-void hex2bcd(unsigned int x, char __idata *d)
+void uint2bcd(unsigned int x, unsigned char __idata *d)
 {
-    unsigned char i, j;
+    unsigned char               i;
+    unsigned char               j;
+    unsigned char __idata       *p;
 
     i = x >> 10;
-    if (i > 41)	{
+    if (i >= 42) {
         i += 1;
     }
-    j = i * 6 + (unsigned char)(x >> 2);
+    j = i * 6 + x / 4;
     if (CY) {
         i += 1;
         j += 6;
     }
-    if (j > 249) {
+    if (j >= 250) {
         i += 1;
         j += 6;
     }
 
     /* from MSD to LSD */
-    d[0] = i / 10;
-    d[1] = B;
-    d[2] = j / 25;
-    d[3] = (unsigned char)((B * 4) | (x & 0x3)) / 10;
-    d[4] = B;
+    p = d;
+    *(p++) = i / 10;
+    *(p++) = B;
+    *(p++) = j / 25;
+    i = B * 4;
+    i += x & 3;
+    *(p++) = i / 10;
+    *(p++) = B;
+}
+
+void ulong2bcd(unsigned long x, unsigned char __idata *d)
+{
+    unsigned char               i;
+    unsigned char               j;
+    unsigned char               k;
+    unsigned char __idata       *p;
+
+    uint2bcd(x, d + 5);
+    uint2bcd(x >> 16, d);
+
+    for (i = 5; i != 0; i--) {
+        p = d + i - 1;
+        j = *p * 5;       /* j = d[i - 1] * 5; */
+        k = *p + j;       /* k = d[i - 1] * 6; */
+        *p = 0;           /* d[i - 1] = 0 */
+        *(++p) += k;      /* d[i + 0] += d[i - 1] * 6 */
+        *(++p) += j;      /* d[i + 1] += d[i - 1] * 5 */
+        *(++p) += j;      /* d[i + 2] += d[i - 1] * 5 */
+        *(++p) += k / 2;  /* d[i + 3] += d[i - 1] * 3 */
+        *(++p) += k;      /* d[i + 4] += d[i - 1] * 6 */
+    }
+
+    p = d + 9;
+    for (i = 9; i != 0; i--) {
+        k = *p / 10;      /* k = d[i] / 10 */
+        *p = B;           /* d[i] = d[i] % 10 */
+        *(--p) += k;      /* d[i - 1] += k */
+    }
 }
 
 void delay_ms(unsigned int i)
 {
-    do {
+    for (; i != 0; i--) {
         /* It needs about 6 extra machine cycles to do one loop. */
         DELAY_CYCLES(CYCLES_US(1000) - 6);
-    } while (--i);
+    }
 }

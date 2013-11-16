@@ -20,7 +20,7 @@ static __bit send_byte(unsigned char c)
     SCL = 0;
     DELAY_US(3);
 
-    for (i = 8; i > 0; i--) {
+    for (i = 8; i != 0; i--) {
         SDA = c & 0x80;
         SCL = 1;
         DELAY_US(3);
@@ -47,7 +47,7 @@ static unsigned char recv_byte(__bit ack)
     DELAY_US(3);
     SDA = 1;
 
-    for (i = 8; i > 0; i--) {
+    for (i = 8; i != 0; i--) {
         c <<= 1;
         SCL = 1;
         DELAY_US(3);
@@ -98,7 +98,7 @@ void rom2402_reset()
     DELAY_US(3);
     SDA = 1;
         
-    for (i = 9; i > 0; i--) {
+    for (i = 9; i != 0; i--) {
         SCL = 1;
         DELAY_US(3);
         SCL = 0;
@@ -172,7 +172,7 @@ void rom2402_readstr(unsigned char dev,
         dev += 1;
     }
 
-    for (; i > 0; i--, p++) {
+    for (; i != 0; p++, i--) {
         *p = recv_byte(i == 1);
     }
 
@@ -226,7 +226,7 @@ void rom2402_writestr(unsigned char dev,
     i = (i > n) ? n : i;
     k = i;
 
-    for (; i > 0; i--, p++) {
+    for (; i != 0; p++, i--) {
         if (send_byte(*p)) {
             p -= k - i;
             goto start;

@@ -34,7 +34,7 @@ static void send_byte(unsigned char c)
 {
     unsigned char i;
 
-    for (i = 8; i > 0; i--) {
+    for (i = 8; i != 0; i--) {
         send_bit(c & 1);
         c >>= 1;
     }
@@ -60,7 +60,7 @@ static unsigned char recv_byte(void)
     unsigned char c;
 
     c = 0;
-    for (i = 8; i > 0; i--) {
+    for (i = 8; i != 0; i--) {
         c >>= 1;
         if (recv_bit()) {
             c |= 0x80;
@@ -98,7 +98,7 @@ static void match_rom(unsigned char __idata *rom)
     if (rom) {
         /* Match ROM */
         send_byte(0x55);
-        for (i = 8; i > 0; i--, rom++) {
+        for (i = 8; i != 0; rom++, i--) {
             send_byte(*rom);
         }
     } else {
@@ -285,7 +285,7 @@ char ds1820_read_rom(unsigned char __idata *rom)
     send_byte(0x33);
 
     crc = 0;
-    for (i = 8; i > 0; i--, rom++) {
+    for (i = 8; i != 0; rom++, i--) {
         *rom = recv_byte();
         crc = crc8(crc, *rom);
     }
@@ -530,7 +530,7 @@ int ds1820_measure_temperature(unsigned char __idata *rom)
     } else {
         /* If the chip hasn't responded with a finish signal in 1
            second, return timeout error. */
-        for (i = 100; i > 0 && !recv_bit(); i--) {
+        for (i = 100; i != 0 && !recv_bit(); i--) {
             delay_ms(10);
         }
         if (i == 0) {

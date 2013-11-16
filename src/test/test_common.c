@@ -12,7 +12,7 @@ void main(void) {
     unsigned char               mask;
     
     i = 42025;
-    hex2bcd(i, p);
+    uint2bcd(i, p);
 
     if (p[0] == 4 && p[1] == 2 && p[2] == 0 && p[3] == 2 && p[4] == 5) {
         mask = 0x0F;

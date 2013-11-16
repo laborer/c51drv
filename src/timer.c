@@ -101,23 +101,22 @@ unsigned long timer0_get32(void)
            called within an interrupt service routine.  Since this
            32-bit timer uses timer interrupt to maintain the higher
            16-bit part, if the control flow is already in an interrupt
-           routine, the timer interrupt may be invoked until the
+           routine, the timer interrupt may not be invoked until the
            current interrupt routine exits.  In such case, the higher
            16-bit will not be correctly updated within the current
            interrupt routine, and timer0_get32(...) will return
            incorrect value.  Of course, if timer interrupt has higher
            priority than any other interrupt routines using
-           timer0_get32(...), this problem will not happen, however,
-           it might not always be feasible to have multiple priorities
+           timer0_get32(...), this problem will not occur, however, it
+           might not always be feasible to have multiple priorities
            for interrupt routines.  To ensure the correctness of the
            aforementioned idea, testing TF0==1 and setting TF0=0 must
-           be done atomically, as otherwise, to_h32 can be increased
-           twice by the following statements and the timer interrupt
-           routine seperately under some possible but extremely
-           unlikely condition.  Therefore, it is recommended to use
-           jbc instruction, which can test and clear a bit in one
-           step.  Normally, if the compiler is good enough, it should
-           use jbc.  */
+           be done atomically, as otherwise, it is possible to
+           incorrectly increase to_h32 twice by the following
+           statements and the timer interrupt routine under some
+           improbable condition.  Therefore, it is recommended to use
+           jbc instruction, which tests and clears a bit in one step.
+           Normally, a decent compiler would use jbc.  */
         if (TF0 == 1) {
             TF0 = 0;
             t0_h32 += 1;

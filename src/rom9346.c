@@ -19,7 +19,7 @@
 static void send_bits(unsigned char c, unsigned char n)
 {
     c <<= 8 - n;
-    for (; n > 0; n--) {
+    for (; n != 0; n--) {
         CLK = 0;
         DELAY_US(1);
         DI = c & 0x80;
@@ -56,7 +56,7 @@ static word_t recv_word()
     unsigned char       i;
 
     c = 0;
-    for (i = sizeof(c) * 8; i > 0; i--) {
+    for (i = sizeof(c) * 8; i != 0; i--) {
         CLK = 0;
         DELAY_US(1);
         CLK = 1;
@@ -113,7 +113,7 @@ word_t rom9346_read(unsigned int addr)
 void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
 {
     send_cmd(2, addr);
-    for (; n > 0; n--, p++) {
+    for (; n != 0; p++, n--) {
         *p = recv_word();
     }
     CS = 0;

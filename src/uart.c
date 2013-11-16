@@ -138,7 +138,6 @@ void uart_baudrate(void)
     /* Set timer */
     /* 256 - FOSC * (SMOD1 + 1) / BAUD / 32 / 12 */ 
     TH1 = 256 - FOSC * (1 + 1) / UART_BAUD / 32 / TICKS;
-    /* TL1 = TH1; */
 
     /* Start Timer1 */
     TR1 = 1;
@@ -281,7 +280,7 @@ void uart_putuint(unsigned int i)
     unsigned char __idata       buf[5];
     unsigned char               j;
     
-    hex2bcd(i, buf);
+    uint2bcd(i, buf);
     for (j = 0; j < 4 && buf[j] == 0; j++);
     for (; j < 5; j++) {
         uart_putchar('0' + buf[j]);

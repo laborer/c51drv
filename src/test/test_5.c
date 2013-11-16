@@ -31,7 +31,7 @@ static void _lcd1602_putuint(unsigned int i)
     unsigned char __idata       buf[5];
     unsigned char               j;
     
-    hex2bcd(i, buf);
+    uint2bcd(i, buf);
     for (j = 0; j < 4 && buf[j] == 0; j++);
     for (; j < 5; j++) {
         lcd1602_putchar('0' + buf[j]);

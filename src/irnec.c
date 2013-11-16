@@ -64,8 +64,7 @@ char irnec_falling(void)
                 }
             } else if (state == 2 + 16 * 3) {
                 data |= buf;
-            } else {
-                /* if (state == 2 + 16 * 4) */
+            } else {  /* state == 2 + 16 * 4 */
                 if ((unsigned char)(~data) != buf) {
                     state = 2;
                     return IRNEC_ERR_INVERSE;
