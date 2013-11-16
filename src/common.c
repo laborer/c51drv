@@ -6,8 +6,8 @@
 #include "common.h"
 
 
-/* See: http://www.ourdev.cn/bbs/bbs_content.jsp?bbs_sn=3731568
-   See: http://www.ourdev.cn/bbs/bbs_content.jsp?bbs_sn=3587651
+/* See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3731568
+   See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3587651
    See also: http://www.cs.uiowa.edu/~jones/bcd/decimal.html
  */
 void uint2bcd(unsigned int x, unsigned char __idata *d)

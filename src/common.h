@@ -106,20 +106,9 @@ void _nop_(void);
     DELAY_CYCLES(CYCLES_US(t))
 
 
-            /* i = __DELAY_LOOP1(n) - 1;                                       \ */
-            /*          do {                                       \ */
-            /*              j = __DELAY_LOOP0;                     \ */
-            /*     while (--j);                                    \ */
-            /* } while (--i);                                      \ */
-
-        /* i = __DELAY_LOOP2(n) / __DELAY_DJNZ;                    \ */
-        /* while (--i);                                            \ */
-
 void uint2bcd(unsigned int x, unsigned char __idata *d);
 void ulong2bcd(unsigned long x, unsigned char __idata *d);
-unsigned char reverse(unsigned char c);
 void delay_ms(unsigned int i);
-unsigned char crc8(unsigned char crc, unsigned char c);
 
 
 #endif //__COMMON_H

@@ -4,9 +4,8 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "ds1820.h"
-
-#include "uart.h"
 
 
 #if defined SDCC || defined __SDCC
