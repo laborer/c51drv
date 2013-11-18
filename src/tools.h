@@ -79,7 +79,6 @@
      + (((x) >= 0x02) ? 1 : 0))
 
 
-unsigned char reverse(unsigned char c);
 unsigned char crc8(unsigned char crc, unsigned char c);
 
 

@@ -487,8 +487,8 @@ char ds1820_write_triggers(unsigned char __idata *rom,
    for about one second in the worst case scenario, it is not
    recommended to use it in production code with an event loop.  For
    such case, a better way is to run convert_t(...) first, then return
-   the control flow to event loop and call read_temperature(...) one
-   second later (for 12-bit resolution). */
+   the control flow to the event loop and call read_temperature(...)
+   one second later (for 12-bit resolution). */
 int ds1820_measure_temperature(unsigned char __idata *rom)
 {
     unsigned char pwr;

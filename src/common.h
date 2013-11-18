@@ -50,13 +50,13 @@ void _nop_(void);
 #define __DELAY_MOV     2
 #define __DELAY_TYPE    __data
 
-#else /* Other compilers, finger crossed... */
+#else /* Other compiler, finger crossed... */
 
 #include <reg51.h>
 
 #define nop() asm("NOP")
 
-#endif /* Other Compilers */
+#endif /* Other compiler */
 
 
 #define CYCLES_US(t)                                            \
@@ -106,6 +106,7 @@ void _nop_(void);
     DELAY_CYCLES(CYCLES_US(t))
 
 
+unsigned char reverse(unsigned char c);
 void uint2bcd(unsigned int x, unsigned char __idata *d);
 void ulong2bcd(unsigned long x, unsigned char __idata *d);
 void delay_ms(unsigned int i);
