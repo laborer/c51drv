@@ -34,4 +34,4 @@ char ds1820_write_triggers(unsigned char __idata *rom,
 int ds1820_measure_temperature(unsigned char __idata *rom);
 
 
-#endif //__DS1820_H
+#endif /* __DS1820_H */

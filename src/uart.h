@@ -30,4 +30,4 @@ void uart_putuint(unsigned int i);
 void uart_putint(int i);
 
 
-#endif //__UART_H
+#endif /* __UART_H */

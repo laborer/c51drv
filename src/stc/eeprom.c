@@ -6,7 +6,6 @@
 #include "stc.h"
 #include "eeprom.h"
 #include "../common.h"
-#include "../tools.h"
 
 
 #if defined __STC89C5XRC_RDP_H_

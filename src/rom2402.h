@@ -26,4 +26,4 @@ void rom2402_writestr(unsigned char dev,
                       unsigned char n);
 
 
-#endif //__ROM2402_H
+#endif /* __ROM2402_H */

@@ -4,7 +4,6 @@
 
 
 #include "common.h"
-#include "tools.h"
 #include "ds1820.h"
 
 

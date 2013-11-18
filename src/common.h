@@ -7,6 +7,9 @@
 #define __COMMON_H
 
 
+#include "tools.h"
+
+
 #ifndef FOSC
 #define FOSC            12000000L
 #endif /* FOSC */
@@ -14,12 +17,33 @@
 #define TICKS           12
 #endif /* TICKS */
 
+/* R: Register
+   N: Number
+   D: Direct address 
+   E: Relative address */
+#ifndef CYCLES_MOV_R_N
+#define CYCLES_MOV_R_N  1
+#endif /* CYCLES_MOV_R_N */
+#ifndef CYCLES_MOV_D_N
+#define CYCLES_MOV_D_N  2
+#endif /* CYCLES_MOV_D_N */
+#ifndef CYCLES_DJNZ_R_E
+#define CYCLES_DJNZ_R_E 2
+#endif /* CYCLES_DJNZ_R_E */
+#ifndef CYCLES_DJNZ_D_E
+#define CYCLES_DJNZ_D_E 2
+#endif /* CYCLES_DJNZ_D_E */
+
 
 #if defined SDCC || defined __SDCC /* SDCC */
 
 #include <mcs51reg.h>
 
 #define nop() __asm nop __endasm
+
+#define __DELAY_MOV     CYCLES_MOV_R_N
+#define __DELAY_DJNZ    CYCLES_DJNZ_R_E
+#define __DELAY_TYPE
 
 #elif defined __C51__ || defined __CX51__ /* Keil C51 */
 
@@ -47,7 +71,8 @@ void _nop_(void);
 
 #define nop() _nop_()
 
-#define __DELAY_MOV     2
+#define __DELAY_MOV     CYCLES_MOV_D_N
+#define __DELAY_DJNZ    CYCLES_DJNZ_D_E
 #define __DELAY_TYPE    __data
 
 #else /* Other compiler, finger crossed... */
@@ -56,51 +81,51 @@ void _nop_(void);
 
 #define nop() asm("NOP")
 
+#define __DELAY_MOV     CYCLES_MOV_R_N
+#define __DELAY_DJNZ    CYCLES_DJNZ_R_E
+#define __DELAY_TYPE
+
 #endif /* Other compiler */
 
 
 #define CYCLES_US(t)                                            \
     ((unsigned int)((t) / 1000000.0 * FOSC / TICKS))
 
-#ifndef __DELAY_TYPE
-#define __DELAY_TYPE
-#endif /* __DELAY_TYPE */
-#ifndef __DELAY_MOV
-#define __DELAY_MOV     1
-#endif /* __DELAY_MOV */
-#define __DELAY_DJNZ    2
 #define __DELAY_LOOP0   0x7E
 #define __DELAY_INNER                                           \
     (__DELAY_MOV + __DELAY_DJNZ * (__DELAY_LOOP0 + 1))
+#define __DELAY_LOOP_FIX(n)                                     \
+    (((n) > 0) ? ((n) + __DELAY_MOV) : 0)
 #define __DELAY_LOOP1(n)                                        \
-    (((n) - __DELAY_MOV) / __DELAY_INNER)
+    (((int)(n) - __DELAY_MOV) / __DELAY_INNER - 1)
+#define __DELAY_N1(n)                                           \
+    ((n) - __DELAY_LOOP_FIX(__DELAY_LOOP1(n) * __DELAY_INNER))
 #define __DELAY_LOOP2(n)                                        \
-    ((__DELAY_LOOP1(n) > 1)                                     \
-     ? ((((n) - __DELAY_MOV) % __DELAY_INNER)                   \
-        + __DELAY_INNER - __DELAY_MOV)                          \
-     : ((n) - __DELAY_MOV))
+    ((__DELAY_N1(n) <= 8) \
+     ? 0 : ((__DELAY_N1(n) - __DELAY_MOV) / __DELAY_DJNZ))
+#define __DELAY_N2(n)                                           \
+    (__DELAY_N1(n)                                              \
+     - __DELAY_LOOP_FIX(__DELAY_LOOP2(n) * __DELAY_DJNZ))
 #define DELAY_CYCLES(n)                                         \
     do {                                                        \
         __DELAY_TYPE unsigned char i;                           \
         __DELAY_TYPE unsigned char j;                           \
-        if ((n) < 9) {                                          \
-            if ((n) > 0) nop();                                 \
-            if ((n) > 1) nop();                                 \
-            if ((n) > 2) nop();                                 \
-            if ((n) > 3) nop();                                 \
-            if ((n) > 4) nop();                                 \
-            if ((n) > 5) nop();                                 \
-            if ((n) > 6) nop();                                 \
-            if ((n) > 7) nop();                                 \
-            break;                                              \
-        }                                                       \
-        if (__DELAY_LOOP1(n) > 1) {                             \
-            for (i = __DELAY_LOOP1(n) - 1; i != 0; i--) {       \
+        if (__DELAY_LOOP1(n) > 0) {                             \
+            for (i = __DELAY_LOOP1(n); i != 0; i--) {           \
                 for (j = __DELAY_LOOP0; j != 0; j--);           \
             }                                                   \
         }                                                       \
-        for (i = __DELAY_LOOP2(n) / __DELAY_DJNZ; i != 0; i--); \
-        if (__DELAY_LOOP2(n) % __DELAY_DJNZ) nop();             \
+        if (__DELAY_LOOP2(n) > 0) {                             \
+            for (i = __DELAY_LOOP2(n); i != 0; i--);            \
+        }                                                       \
+        if (__DELAY_N2(n) > 0) nop();                           \
+        if (__DELAY_N2(n) > 1) nop();                           \
+        if (__DELAY_N2(n) > 2) nop();                           \
+        if (__DELAY_N2(n) > 3) nop();                           \
+        if (__DELAY_N2(n) > 4) nop();                           \
+        if (__DELAY_N2(n) > 5) nop();                           \
+        if (__DELAY_N2(n) > 6) nop();                           \
+        if (__DELAY_N2(n) > 7) nop();                           \
     } while (0)
 #define DELAY_US(t)                                             \
     DELAY_CYCLES(CYCLES_US(t))
@@ -112,4 +137,4 @@ void ulong2bcd(unsigned long x, unsigned char __idata *d);
 void delay_ms(unsigned int i);
 
 
-#endif //__COMMON_H
+#endif /* __COMMON_H */

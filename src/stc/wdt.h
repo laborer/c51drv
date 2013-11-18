@@ -8,7 +8,6 @@
 
 
 #include "../common.h"
-#include "../tools.h"
 
 
 #define WDT_KICK_IDLE_MS(idle, t)                               \

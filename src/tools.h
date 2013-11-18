@@ -78,8 +78,14 @@
      + (((x) >= 0x04) ? 1 : 0)                                  \
      + (((x) >= 0x02) ? 1 : 0))
 
+#define MIN(a, b)                                               \
+    (((a) > (b)) ? (b) : (a))
+
+#define MAX(a, b)                                               \
+    (((a) > (b)) ? (a) : (b))
+
 
 unsigned char crc8(unsigned char crc, unsigned char c);
 
 
-#endif //__TOOLS_H
+#endif /* __TOOLS_H */
