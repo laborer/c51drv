@@ -31,7 +31,7 @@
     do {                                                        \
         P##port##M0 = ((mode) & 1) ? 0xFF : 0;                  \
         P##port##M1 = ((mode) & 2) ? 0xFF : 0;                  \
-    } while (0);
+    } while (0)
 
 
 #endif /* __GPIO_H */

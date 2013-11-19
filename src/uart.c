@@ -135,8 +135,13 @@ void uart_baudrate(void)
     PCON |= SMOD;
 
     /* Set timer */
+#if TICKS != 6
     /* 256 - FOSC * (SMOD1 + 1) / BAUD / 32 / 12 */ 
-    TH1 = 256 - FOSC * (1 + 1) / UART_BAUD / 32 / TICKS;
+    TH1 = 256 - (unsigned char)(FOSC * (1 + 1) / UART_BAUD / 32 / 12);
+#else /* TICKS == 6 */
+#warning Use SYSCLK/6 as clock source
+    TH1 = 256 - (unsigned char)(FOSC * (1 + 1) / UART_BAUD / 32 / 6);
+#endif /* TICKS == 6 */
 
     /* Start Timer1 */
     TR1 = 1;

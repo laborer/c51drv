@@ -9,7 +9,7 @@ ASLINKFLAGS	:=
 
 MODULES		:= common tools uart timer irrc5 irnec ds1820 rom9346 rom2402 lcd1602
 MODULES		:= $(MODULES) stc/eeprom
-TESTS		:= $(subst /,_,$(MODULES)) stc_wdt stc_gpio 1 2 3 4 5 6
+TESTS		:= $(subst /,_,$(MODULES)) stc_wdt stc_gpio stc_adc 1 2 3 4 5 6
 TARGETS		:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
 # AT89C2051
@@ -62,6 +62,7 @@ $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 
 $(call testf, stc_wdt): 	$(call libf, common uart)
 $(call testf, stc_gpio): 	$(call libf, common uart)
+$(call testf, stc_adc): 	$(call libf, common uart)
 $(call testf, stc_eeprom): 	$(call libf, common uart stc/eeprom)
 
 $(call testf, 1): 		$(call libf, common)
