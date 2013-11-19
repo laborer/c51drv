@@ -9,7 +9,7 @@ ASLINKFLAGS	:=
 
 MODULES		:= common tools uart timer irrc5 irnec ds1820 rom9346 rom2402 lcd1602
 MODULES		:= $(MODULES) stc/eeprom
-TESTS		:= $(subst /,_,$(MODULES)) stc_wdt 1 2 3 4 5 6
+TESTS		:= $(subst /,_,$(MODULES)) stc_wdt stc_gpio 1 2 3 4 5 6
 TARGETS		:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
 # AT89C2051
@@ -19,14 +19,14 @@ TARGETS		:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 #ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 4096 --iram-size 128 --xram-size 0
 #SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
 # STC89C52RC
-ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --iram-size 256 --xram-size 256
-SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
+#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --iram-size 256 --xram-size 256
+#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
 # STC89C54RD+
 #ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
 #SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
 # STC12C5A16S2
-#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
-#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052 -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
+SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052 -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
 
 
 TESTCFLAGS	= $(if $(findstring /test/, $@), -Isrc)
@@ -61,6 +61,7 @@ $(call testf, ds1820): 		$(call libf, common tools uart ds1820)
 $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 
 $(call testf, stc_wdt): 	$(call libf, common uart)
+$(call testf, stc_gpio): 	$(call libf, common uart)
 $(call testf, stc_eeprom): 	$(call libf, common uart stc/eeprom)
 
 $(call testf, 1): 		$(call libf, common)
