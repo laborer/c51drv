@@ -8,8 +8,8 @@
 #include "irrc5.h"
 
 
-#define BITHALF         CYCLES_US(889)
-#define TIME_ERROR      CYCLES_US(200)
+#define BITHALF         TIMER_CYCLES_US(889)
+#define TIME_ERROR      TIMER_CYCLES_US(200)
 
 
 static unsigned char    state;

@@ -17,6 +17,11 @@
 #define TICKS           12
 #endif /* TICKS */
 
+#if TICKS == 6
+#warning If you are using 6T mode for STC89 series MCUs,        \
+    double FOSC rather than change TICKS from 12
+#endif
+
 /* R: Register
    N: Number
    D: Direct address 

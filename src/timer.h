@@ -10,6 +10,10 @@
 #include "common.h"
 
 
+#define TIMER_CYCLES_US(t)                                      \
+    ((unsigned int)((t) / 1000000.0 * FOSC / 12))
+
+
 #if defined SDCC || defined __SDCC
 
 #pragma callee_saves timer0_get16,timer0_get32

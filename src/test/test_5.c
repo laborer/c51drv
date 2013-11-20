@@ -137,7 +137,7 @@ void main(void) {
                 tempstate = 1;
             }
         } else if (tempstate == 1) {
-            if (TIMER0_GET32() - temptime > 800UL * CYCLES_US(1000)) {
+            if (TIMER0_GET32() - temptime > 800UL * TIMER_CYCLES_US(1000)) {
                 tempcode = ds1820_read_temperature(0);
                 if (((unsigned int)tempcode >> 8) != 0x80) {
                     display_temp(tempcode);
@@ -155,7 +155,7 @@ void main(void) {
             irtime = TIMER0_GET32();
             /* uart_putchar('I'); */
         } else if (irstate == 2) {
-            if (TIMER0_GET32() - irtime > 2000UL * CYCLES_US(1000)) {
+            if (TIMER0_GET32() - irtime > 2000UL * TIMER_CYCLES_US(1000)) {
                 irstate = 0;
                 display_ir_clear();
             }

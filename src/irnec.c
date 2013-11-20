@@ -8,12 +8,12 @@
 #include "irnec.h"
 
 
-#define BIT0            CYCLES_US(562.5)
+#define BIT0            TIMER_CYCLES_US(562.5)
 #define BIT1            (BIT0 * 3)
 #define STATE2          ((unsigned int)(BIT0 * 15.5))
 #define STATE3          (BIT0 * 8)
 #define REPEAT          (BIT0 * 4)
-#define TIME_ERROR      CYCLES_US(100)
+#define TIME_ERROR      TIMER_CYCLES_US(100)
 
 
 static unsigned char    state;
