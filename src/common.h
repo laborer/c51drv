@@ -19,7 +19,7 @@
 
 #if TICKS == 6
 #warning If you are using 6T mode for STC89 series MCUs,        \
-    double FOSC rather than change TICKS from 12
+    double FOSC rather than change TICKS from 12 to 6
 #endif
 
 /* R: Register
@@ -99,18 +99,18 @@ void _nop_(void);
 #define __DELAY_LOOP0   0x7E
 #define __DELAY_INNER                                           \
     (__DELAY_MOV + __DELAY_DJNZ * (__DELAY_LOOP0 + 1))
-#define __DELAY_LOOP_FIX(n)                                     \
+#define __DELAY_CUTOFF(n)                                       \
     (((n) > 0) ? ((n) + __DELAY_MOV) : 0)
 #define __DELAY_LOOP1(n)                                        \
     (((int)(n) - __DELAY_MOV) / __DELAY_INNER - 1)
 #define __DELAY_N1(n)                                           \
-    ((n) - __DELAY_LOOP_FIX(__DELAY_LOOP1(n) * __DELAY_INNER))
+    ((n) - __DELAY_CUTOFF(__DELAY_LOOP1(n) * __DELAY_INNER))
 #define __DELAY_LOOP2(n)                                        \
     ((__DELAY_N1(n) <= 8) \
      ? 0 : ((__DELAY_N1(n) - __DELAY_MOV) / __DELAY_DJNZ))
 #define __DELAY_N2(n)                                           \
     (__DELAY_N1(n)                                              \
-     - __DELAY_LOOP_FIX(__DELAY_LOOP2(n) * __DELAY_DJNZ))
+     - __DELAY_CUTOFF(__DELAY_LOOP2(n) * __DELAY_DJNZ))
 #define DELAY_CYCLES(n)                                         \
     do {                                                        \
         __DELAY_TYPE unsigned char i;                           \

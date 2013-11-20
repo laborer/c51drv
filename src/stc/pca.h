@@ -50,31 +50,31 @@
         CR = 1;                                                 \
     } while (0)
 
-#define PCA_INT0(enable)                                        \
+#define PCA0_INTR(enable)                                       \
     do {                                                        \
         CCAPM0 |= (enable) ? 1 : 0;                             \
     } while (0)
 
-#define PCA_CAPTURE0(edge)                                      \
+#define PCA0_CAPTURE(edge)                                      \
     do {                                                        \
         CCAPM0 = (edge);                                        \
     } while (0)
 
-#define PCA_TIMER0(t)                                           \
+#define PCA0_TIMER(t)                                           \
     do {                                                        \
         CCAP0L = (t) & 0xFF;                                    \
         CCAP0H = (t) >> 8;                                      \
         CCAPM0 = 0x48;                                          \
     } while (0)
 
-#define PCA_SQUAREOUT0(t)                                       \
+#define PCA0_SQUAREOUT(t)                                       \
     do {                                                        \
         CCAP0L = (t) & 0xFF;                                    \
         CCAP0H = (t) >> 8;                                      \
         CCAPM0 = 0x4C;                                          \
     } while (0)
 
-#define PCA_PWMOUT0(duty)                                       \
+#define PCA0_PWMOUT(duty)                                       \
     do {                                                        \
         PCA_PWM0 = 0;                                           \
         CCAP0H = (duty);                                        \
@@ -82,36 +82,36 @@
         CCAPM0 = 0x42;                                          \
     } while (0)
 
-#define PCA_OFF0()                                              \
+#define PCA0_OFF()                                              \
     do {                                                        \
         CCAPM0 = 0;                                             \
     } while (0)
 
-#define PCA_INT1(enable)                                        \
+#define PCA1_INTR(enable)                                       \
     do {                                                        \
         CCAPM1 |= (enable) ? 1 : 0;                             \
     } while (0)
 
-#define PCA_CAPTURE1(edge)                                      \
+#define PCA1_CAPTURE(edge)                                      \
     do {                                                        \
         CCAPM1 = (edge);                                        \
     } while (0)
 
-#define PCA_TIMER1(t)                                           \
+#define PCA1_TIMER(t)                                           \
     do {                                                        \
         CCAP1L = (t) & 0xFF;                                    \
         CCAP1H = (t) >> 8;                                      \
         CCAPM1 = 0x48;                                          \
     } while (0)
 
-#define PCA_SQUAREOUT1(t)                                       \
+#define PCA1_SQUAREOUT(t)                                       \
     do {                                                        \
         CCAP1L = (t) & 0xFF;                                    \
         CCAP1H = (t) >> 8;                                      \
         CCAPM1 = 0x4C;                                          \
     } while (0)
 
-#define PCA_PWMOUT1(duty)                                       \
+#define PCA1_PWMOUT(duty)                                       \
     do {                                                        \
         PCA_PWM1 = 0;                                           \
         CCAP1H = (duty);                                        \
@@ -119,7 +119,7 @@
         CCAPM1 = 0x42;                                          \
     } while (0)
 
-#define PCA_OFF1()                                              \
+#define PCA1_OFF()                                              \
     do {                                                        \
         CCAPM1 = 0;                                             \
     } while (0)

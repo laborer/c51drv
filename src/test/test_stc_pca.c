@@ -23,9 +23,9 @@ void main(void) {
 
     PCA_INIT(PCA_SYSCLK_8);
 
-    PCA_PWMOUT0(128);
+    PCA0_PWMOUT(128);
 
-    PCA_PWMOUT1(192);
+    PCA1_PWMOUT(192);
 
     while (1);
 }

@@ -15,7 +15,7 @@ void welcome(void)
 }
 
 /* Send an unsigned int */
-void uart_putulong(unsigned long i)
+void _uart_putulong(unsigned long i)
 {
     unsigned char __idata       buf[10];
     unsigned char               j;
@@ -42,15 +42,15 @@ void main(void) {
     /*     DELAY_US(3423); */
     /* } */
 
-    uart_putulong(12345L);
+    _uart_putulong(12345L);
     uart_putchar('\n');
-    uart_putulong(12312424L);
+    _uart_putulong(12312424L);
     uart_putchar('\n');
-    uart_putulong(4294967295L);
+    _uart_putulong(4294967295L);
     uart_putchar('\n');
-    uart_putulong(3932154463L);
+    _uart_putulong(3932154463L);
     uart_putchar('\n');
-    uart_putulong(3932159463L);
+    _uart_putulong(3932159463L);
     uart_putchar('\n');
 
     while (1);
