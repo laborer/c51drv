@@ -7,9 +7,20 @@
 #define __STC_H
 
 
-/* #include "stc89c5xrc_rdp.h" */
+#include "modeldb.h"
+
+#if defined(TARGET_FAMILY_STC89C)
+
+#include "stc89c5xrc_rdp.h"
+
+#elif defined(TARGET_FAMILY_STC12C52) \
+    || defined(TARGET_FAMILY_STC12C5A) \
+    || defined(TARGET_FAMILY_STC10F) \
+    || defined(TARGET_FAMILY_STC11F)
 
 #include "stc12c5a60s2.h"
+
+#endif /* TARGET_FAMILY_x */
 
 
 #endif /* __STC_H */
