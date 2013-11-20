@@ -10,24 +10,26 @@ ASLINKFLAGS	:=
 MODULES		:= common tools uart timer irrc5 irnec ds1820 rom9346 rom2402 lcd1602
 MODULES		:= $(MODULES) stc/eeprom
 TESTS		:= $(subst /,_,$(MODULES)) stc_wdt stc_gpio stc_adc stc_pca 1 2 3 4 5 6
-TARGETS		:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
+BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
-# AT89C2051
-#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 2048 --iram-size 128 --xram-size 0
-#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
-# AT89C51
-#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 4096 --iram-size 128 --xram-size 0
-#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
-# STC89C52RC
-#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --iram-size 256 --xram-size 256
-#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
-# STC89C54RD+
-#ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
-#SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
-# STC12C5A16S2
-ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
-SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052 -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+# TARGET		:= STC89C52RC
 
+ifeq ($(TARGET), STC89C52RC)
+    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --iram-size 256 --xram-size 256
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
+else ifeq ($(TARGET), STC89C54RD+)
+    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
+else ifeq ($(TARGET), STC12C5A16S2)
+    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --iram-size 256 --xram-size 1024
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052 -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+else ifeq ($(TARGET), AT89C2051)
+    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 2048 --iram-size 128 --xram-size 0
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
+else # 8051
+    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 4096 --iram-size 128 --xram-size 0
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
+endif
 
 TESTCFLAGS	= $(if $(findstring /test/, $@), -Isrc)
 
@@ -39,7 +41,7 @@ testf		= $(patsubst %,$(BUILDDIR)/test/test_%.ihx,$(1))
 
 .PRECIOUS: $(BUILDDIR)/%.rel
 
-all: $(TARGETS)
+all: $(BINARIES)
 
 $(BUILDDIR)/%.rel: src/%.c
 	@mkdir -p $(@D)
@@ -84,4 +86,4 @@ clean:
 
 
 -include $(MODULES:%=$(BUILDDIR)/%.dep)
--include $(TARGETS:%.bin=%.dep)
+-include $(BINARIES:%.bin=%.dep)
