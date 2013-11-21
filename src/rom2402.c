@@ -4,138 +4,37 @@
 
 
 #include "common.h"
+#include "iic.h"
 #include "rom2402.h"
 
 
-#define PAGE (1 << ROM2402_PAGE_BITS)
+#define PAGEMASK ((1 << ROM2402_PAGEBITS) - 1)
 
-#define SCL ROM2402_SCL
-#define SDA ROM2402_SDA
-
-
-static __bit send_byte(unsigned char c)
-{
-    unsigned char i;
-
-    SCL = 0;
-    DELAY_US(3);
-
-    for (i = 8; i != 0; i--) {
-        SDA = c & 0x80;
-        SCL = 1;
-        DELAY_US(3);
-        c <<= 1;
-        SCL = 0;
-        DELAY_US(3);
-    }
-
-    SDA = 1;
-    SCL = 1;
-    DELAY_US(3);
-
-    return SDA;
-}
-
-static unsigned char recv_byte(__bit ack)
-{
-    unsigned char i;
-    unsigned char c;
-
-    c = 0;
-
-    SCL = 0;
-    DELAY_US(3);
-    SDA = 1;
-
-    for (i = 8; i != 0; i--) {
-        c <<= 1;
-        SCL = 1;
-        DELAY_US(3);
-        c |= SDA;
-        SCL = 0;
-        DELAY_US(3);
-    }
-
-    SDA = ack;
-    SCL = 1;
-    DELAY_US(3);
-
-    return c;
-}
-
-static void start()
-{
-    SCL = 0;
-    DELAY_US(3);
-
-    SDA = 1;
-    SCL = 1;
-    DELAY_US(3);
-    SDA = 0;
-    DELAY_US(3);
-}
-
-static void stop()
-{
-    SCL = 0;
-    DELAY_US(3);
-    
-    SDA = 0;
-    SCL = 1;
-    DELAY_US(3);
-    SDA = 1;
-    DELAY_US(3);
-}
-
-
-void rom2402_reset()
-{
-    unsigned char i;
-
-    start();
-
-    SCL = 0;
-    DELAY_US(3);
-    SDA = 1;
-        
-    for (i = 9; i != 0; i--) {
-        SCL = 1;
-        DELAY_US(3);
-        SCL = 0;
-        DELAY_US(3);
-    }
-
-    start();
-    stop();
-
-    SCL = 0;
-    DELAY_US(3);
-}
 
 unsigned char rom2402_read(unsigned char dev, unsigned char addr)
 {
     unsigned char c;
 
  start:
-    start();
+    iic_start();
     
-    if (send_byte((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
         goto start;
     }
 
-    if (send_byte(addr)) {
+    if (iic_send(addr)) {
         goto start;
     }
 
-    start();
+    iic_start();
 
-    if (send_byte((dev << 1) & 0x0E | 0xA1)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA1)) {
         goto start;
     }
 
-    c = recv_byte(1);
+    c = iic_recv(1);
 
-    stop();
+    iic_stop();
 
     return c;
 }
@@ -148,23 +47,23 @@ void rom2402_readstr(unsigned char dev,
     unsigned char i;
 
  start:
-    start();
+    iic_start();
     
-    if (send_byte((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
         goto start;
     }
 
-    if (send_byte(addr)) {
+    if (iic_send(addr)) {
         goto start;
     }
 
-    start();
+    iic_start();
 
-    if (send_byte((dev << 1) & 0x0E | 0xA1)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA1)) {
         goto start;
     }
 
-    i = (~addr & (PAGE - 1)) + 1;
+    i = (~addr & PAGEMASK) + 1;
     i = (i > n) ? n : i;
     n -= i;
     addr += i;
@@ -173,10 +72,10 @@ void rom2402_readstr(unsigned char dev,
     }
 
     for (; i != 0; p++, i--) {
-        *p = recv_byte(i == 1);
+        *p = iic_recv(i == 1);
     }
 
-    stop();
+    iic_stop();
 
     if (n > 0) {
         goto start;
@@ -186,21 +85,21 @@ void rom2402_readstr(unsigned char dev,
 void rom2402_write(unsigned char dev, unsigned char addr, unsigned char c)
 {
  start:
-    start();
+    iic_start();
     
-    if (send_byte((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
         goto start;
     }
 
-    if (send_byte(addr)) {
+    if (iic_send(addr)) {
         goto start;
     }
 
-    if (send_byte(c)) {
+    if (iic_send(c)) {
         goto start;
     }
 
-    stop();
+    iic_stop();
 }
 
 void rom2402_writestr(unsigned char dev, 
@@ -212,22 +111,22 @@ void rom2402_writestr(unsigned char dev,
     unsigned char k;
 
  start:
-    start();
+    iic_start();
     
-    if (send_byte((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
         goto start;
     }
 
-    if (send_byte(addr)) {
+    if (iic_send(addr)) {
         goto start;
     }
 
-    i = (~addr & (PAGE - 1)) + 1;
+    i = (~addr & PAGEMASK) + 1;
     i = (i > n) ? n : i;
     k = i;
 
     for (; i != 0; p++, i--) {
-        if (send_byte(*p)) {
+        if (iic_send(*p)) {
             p -= k - i;
             goto start;
         }
@@ -239,7 +138,7 @@ void rom2402_writestr(unsigned char dev,
         dev += 1;
     }
 
-    stop();
+    iic_stop();
 
     if (n > 0) {
         goto start;

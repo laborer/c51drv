@@ -7,13 +7,9 @@
 #define __ROM2402_H
 
 
-#define ROM2402_PAGE_BITS        3
-
-#define ROM2402_SCL              P2_1
-#define ROM2402_SDA              P2_0
+#define ROM2402_PAGEBITS 3
 
 
-void rom2402_reset();
 unsigned char rom2402_read(unsigned char dev, unsigned char addr);
 void rom2402_readstr(unsigned char dev, 
                      unsigned char addr, 

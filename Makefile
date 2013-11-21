@@ -13,7 +13,7 @@ BUILDDIR	:= build
 SDCCFLAGS	:= $(SDCCFLAGS) --less-pedantic --disable-warning 84
 
 # Specify modules to compile
-MODULES		:= common tools uart timer irrc5 irnec ds1820 rom9346 rom2402 lcd1602
+MODULES		:= common tools uart timer iic irrc5 irnec ds1820 rom9346 rom2402 lcd1602
 
 # Include modules and test cases designed for certain microcontrollers
 ifneq ($(findstring ^STC89, ^$(TARGET)), )
@@ -36,6 +36,7 @@ BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
 # Tell C program the name of the target microcontroller model
 SDCCFLAGS	:= $(SDCCFLAGS) -DTARGET_MODEL_$(subst +,_,$(TARGET))
+SDCCFLAGS	:= $(SDCCFLAGS) -DFOSC=11059200L
 
 # Set memory usage limit for some known microcontollers
 ifeq ($(TARGET), STC89C52RC)
@@ -78,10 +79,11 @@ $(BUILDDIR)/%.rel: src/%.c
 $(call testf, common): 		$(call libf, common)
 $(call testf, uart): 		$(call libf, common uart)
 $(call testf, timer): 		$(call libf, common uart timer)
+$(call testf, iic):		$(call libf, common uart iic)
 $(call testf, irrc5):		$(call libf, common uart timer irrc5)
 $(call testf, irnec):		$(call libf, common uart timer irnec)
 $(call testf, rom9346):		$(call libf, common uart rom9346)
-$(call testf, rom2402): 	$(call libf, common uart rom2402)
+$(call testf, rom2402): 	$(call libf, common uart iic rom2402)
 $(call testf, ds1820): 		$(call libf, common tools uart ds1820)
 $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 

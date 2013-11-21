@@ -22,24 +22,28 @@ void main(void) {
 
     welcome();
 
+    uart_getchar();
+
+    /* Disable write protect */
+    P1_0 = 0;
+
     for (i = 0; i < 16; i++) {
-        p[i] = 'a' + i;
+        p[i] = 'A' + i;
     }
-    rom2402_writestr(0, 0, p, 16);
+    rom2402_writestr(7, 0, p, 16);
 
     for (i = 2; i < 6; i++) {
-        rom2402_write(0, i, 'A' + i);
+        rom2402_write(7, i, 'a' + i);
     }
-    
+
     for (i = 0; i < 8; i++) {
-        c = rom2402_read(0, i);
+        c = rom2402_read(7, i);
         uart_putchar(c);
     }
 
-    rom2402_reset();
     uart_putchar(' ');
 
-    rom2402_readstr(0, 4, p, 8);
+    rom2402_readstr(7, 4, p, 8);
     for (i = 0; i < 8; i++) {
         uart_putchar(p[i]);
     }
