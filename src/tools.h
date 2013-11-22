@@ -84,6 +84,10 @@
 #define MAX(a, b)                                               \
     (((a) > (b)) ? (a) : (b))
 
+#define BCD2UCHAR(x)                                            \
+    ((unsigned char)(((unsigned char)(x) >> 4) * 10             \
+                     + ((unsigned char)(x) & 0x0F)))
+
 
 unsigned char crc8(unsigned char crc, unsigned char c);
 

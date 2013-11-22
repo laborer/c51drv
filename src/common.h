@@ -137,6 +137,7 @@ void _nop_(void);
 
 
 unsigned char reverse(unsigned char c);
+unsigned char uchar2bcd(unsigned char x);
 void uint2bcd(unsigned int x, unsigned char __idata *d);
 void ulong2bcd(unsigned long x, unsigned char __idata *d);
 void delay_ms(unsigned int i);

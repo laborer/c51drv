@@ -13,7 +13,7 @@ BUILDDIR	:= build
 SDCCFLAGS	:= $(SDCCFLAGS) --less-pedantic --disable-warning 84
 
 # Specify modules to compile
-MODULES		:= common tools uart timer iic irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591
+MODULES		:= common tools uart timer iic irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302
 
 # Include modules and test cases designed for certain microcontrollers
 ifneq ($(findstring ^STC89, ^$(TARGET)), )
@@ -73,8 +73,12 @@ $(BUILDDIR)/%.rel: src/%.c
 	$(SDCC) -c $(SDCCFLAGS) $(TESTCFLAGS) $< -o $(@D)/
 
 # Link .rel files
-%.ihx: %.rel
+%.ihx: %.rel 
 	$(SDCC) $(SDCCFLAGS) $(ASLINKFLAGS) $^ -o $(@D)/
+
+# Link every module in every test case.  This could result large
+# binary files
+# $(BINARIES:%.bin=%.ihx): $(MODULES:%=$(BUILDDIR)/%.rel)
 
 # To build a test case in the left column, we need modules from the
 # right column
@@ -89,6 +93,7 @@ $(call testf, rom2402): 	$(call libf, common uart iic rom2402)
 $(call testf, ds1820): 		$(call libf, common tools uart ds1820)
 $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 $(call testf, pcf8591): 	$(call libf, common uart iic pcf8591)
+$(call testf, ds1302): 		$(call libf, common uart ds1302)
 
 $(call testf, stc_wdt): 	$(call libf, common uart)
 $(call testf, stc_gpio): 	$(call libf, common uart)
