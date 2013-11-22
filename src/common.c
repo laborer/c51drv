@@ -17,6 +17,11 @@ unsigned char reverse(unsigned char c)
     return (lookup[c & 0x0F] << 4) | lookup[c >> 4];
 }
 
+unsigned char uchar2bcd(unsigned char x)
+{
+    return ((x / 10) << 4) | B;
+}
+
 /* See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3731568
    See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3587651
    See also: http://www.cs.uiowa.edu/~jones/bcd/decimal.html

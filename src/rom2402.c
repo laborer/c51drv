@@ -8,7 +8,10 @@
 #include "rom2402.h"
 
 
-#define PAGEMASK ((1 << ROM2402_PAGEBITS) - 1)
+#define DEVADDR         0xA0
+#define DEVWRITE        0
+#define DEVREAD         1
+#define PAGEMASK        ((1 << ROM2402_PAGEBITS) - 1)
 
 
 unsigned char rom2402_read(unsigned char dev, unsigned char addr)
@@ -18,7 +21,7 @@ unsigned char rom2402_read(unsigned char dev, unsigned char addr)
  start:
     iic_start();
     
-    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
 
@@ -28,7 +31,7 @@ unsigned char rom2402_read(unsigned char dev, unsigned char addr)
 
     iic_start();
 
-    if (iic_send((dev << 1) & 0x0E | 0xA1)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVREAD)) {
         goto start;
     }
 
@@ -49,7 +52,7 @@ void rom2402_readstr(unsigned char dev,
  start:
     iic_start();
     
-    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
 
@@ -59,7 +62,7 @@ void rom2402_readstr(unsigned char dev,
 
     iic_start();
 
-    if (iic_send((dev << 1) & 0x0E | 0xA1)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVREAD)) {
         goto start;
     }
 
@@ -87,7 +90,7 @@ void rom2402_write(unsigned char dev, unsigned char addr, unsigned char c)
  start:
     iic_start();
     
-    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
 
@@ -113,7 +116,7 @@ void rom2402_writestr(unsigned char dev,
  start:
     iic_start();
     
-    if (iic_send((dev << 1) & 0x0E | 0xA0)) {
+    if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
 
