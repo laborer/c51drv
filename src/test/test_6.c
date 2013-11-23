@@ -33,8 +33,6 @@ void main(void) {
 
     welcome();
 
-    for (i = 6; i != 0; i--);
-    
     uart_getchar();
 
     /* for (p = 0; p < 8 * 1024; p++) { */

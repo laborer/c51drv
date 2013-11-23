@@ -53,8 +53,6 @@ unsigned int timer2_get16()
 
 #endif /* MICROCONTROLLER_8052 */
 
-#ifndef NO_TIMER0_32
-
 #if defined SDCC || defined __SDCC
 
 static unsigned int __data t0_h32;
@@ -65,21 +63,21 @@ unsigned long timer0_get32() __naked
       loop$:
         mov     a, _TH0
         mov     dpl, _TL0
-        jbc     _TF0, tfbegin$
-      tfend$:
         mov     b, _t0_h32
         mov     dph, (_t0_h32 + 1)
+        jb      _TF0, tfbegin$
+      tfend$:
         cjne    a, _TH0, loop$
         xch     a, dph
         ret
 
       tfbegin$:
-        xch     a, _t0_h32
+        xch     a, b
         inc     a
         jnz     nocarry$
-        inc     (_t0_h32 + 1)
+        inc     dph
       nocarry$:
-        xch     a, _t0_h32
+        xch     a, b
         sjmp    tfend$
     __endasm;
 }
@@ -96,6 +94,7 @@ unsigned long timer0_get32(void)
     do {
         th = TH0;
         tl = TL0;
+        t_h32 = t0_h32;
         /* The following part is to make sure that the higher 16-bit
            of the 32-bit timer increases even if timer0_get32(...) is
            called within an interrupt service routine.  Since this
@@ -109,19 +108,10 @@ unsigned long timer0_get32(void)
            priority than any other interrupt routines using
            timer0_get32(...), this problem will not occur, however, it
            might not always be feasible to have multiple priorities
-           for interrupt routines.  To ensure the correctness of the
-           aforementioned idea, testing TF0==1 and setting TF0=0 must
-           be done atomically, as otherwise, it is possible to
-           incorrectly increase to_h32 twice by the following
-           statements and the timer interrupt routine under some
-           improbable condition.  Therefore, it is recommended to use
-           jbc instruction, which tests and clears a bit in one step.
-           Normally, a decent compiler would use jbc.  */
+           for interrupt routines. */
         if (TF0 == 1) {
-            TF0 = 0;
-            t0_h32 += 1;
+            t_h32 += 1;
         }
-        t_h32 = t0_h32;
     } while (th != TH0);
 
     return (long)t_h32 << 16 | ((int)th << 8) | tl;
@@ -135,10 +125,15 @@ void timer0_set32(unsigned long t)
     t0_h32 = t >> 16;
 }
 
-void timer0_interrupt32(void) __interrupt TF0_VECTOR __using 1
+#ifdef TIMER0_CALLBACK
+extern void timer0_callback(void);
+#endif /* TIMER0_CALLBACK */
+
+void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1
 {
     TF0 = 0;
     t0_h32 += 1;
+#ifdef TIMER0_CALLBACK
+    timer0_callback();
+#endif /* TIMER0_CALLBACK */
 }
-
-#endif /* NO_TIMER0_32 */

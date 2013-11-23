@@ -114,7 +114,7 @@ void main(void) {
     }
 
     {
-        unsigned long t0, t1;
+        unsigned long t0, t1, t2;
 
         ET0 = 0;
         t0 = TIMER0_GET32();
@@ -123,6 +123,9 @@ void main(void) {
 
         uart_putchar(TF0 ? '1' : '0');
         uart_putchar('\n');
+
+        ET0 = 1;
+        t2 = TIMER0_GET32();
 
         uart_putuint(t0 >> 16);
         uart_putchar('.');
@@ -133,10 +136,18 @@ void main(void) {
         uart_putuint(t1);
         uart_putchar('\n ');
 
-        uart_putuint((t1 - t0) >> 16);
-        uart_putchar(' ');
-        uart_putuint(t1 - t0);
+        /* uart_putuint((t1 - t0) >> 16); */
+        /* uart_putchar(' '); */
+        /* uart_putuint(t1 - t0); */
+        /* uart_putchar('\n'); */
+
+        uart_putchar(TF0 ? '1' : '0');
         uart_putchar('\n');
+
+        uart_putuint(t2 >> 16);
+        uart_putchar('.');
+        uart_putuint(t2);
+        uart_putchar('\n ');
     }
 
     while (1);

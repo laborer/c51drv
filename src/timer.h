@@ -117,8 +117,6 @@ unsigned int timer0_get16();
 #endif /* MICROCONTROLLER_8052 */
 
 
-#ifndef NO_TIMER0_32
-
 #define TIMER0_INIT32()                                         \
     do {                                                        \
         TIMER0_INIT16();                                        \
@@ -134,16 +132,13 @@ unsigned int timer0_get16();
 #define TIMER0_SET32(t)                                         \
     timer0_set32(t)
 
-#if defined SDCC || defined __SDCC
-
-void timer0_interrupt32(void) __interrupt TF0_VECTOR __using 1;
-
-#endif /* SDCC */
-
 unsigned long timer0_get32(void);
 void timer0_set32(unsigned long t);
 
-#endif /* NO_TIMER0_32 */
+
+#if defined SDCC || defined __SDCC
+void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1;
+#endif /* SDCC */
 
 
 #endif /* __TIMER_H */

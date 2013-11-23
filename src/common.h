@@ -56,6 +56,9 @@
 
 #define SI0_VECTOR      SIO_VECTOR
 #define IDL             IDL_
+#define PD              PD_
+#define GF0             GF0_
+#define GF1             GF1_
 #define SMOD            SMOD_
 #define T1_M0           T1_M0_
 #define T1_M1           T1_M1_
@@ -134,6 +137,16 @@ void _nop_(void);
     } while (0)
 #define DELAY_US(t)                                             \
     DELAY_CYCLES(CYCLES_US(t))
+
+#define POWER_IDLE()                                            \
+    do {                                                        \
+        PCON |= IDL;                                            \
+    } while (0)
+
+#define POWER_DOWN()                                            \
+    do {                                                        \
+        PCON |= PD;                                             \
+    } while (0)
 
 
 unsigned char reverse(unsigned char c);

@@ -2,9 +2,10 @@
 # at ~/Downloads/sdcc-3.3.0/bin/sdcc
 SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc-3.3.0/bin/sdcc)
 
-# Find where sdcc is, so we can also locate packihx there
+# Find where sdcc is, so we can also locate packihx and makebin there
 SDCCBINDIR	:= $(shell $(SDCC) --print-search-dirs | sed -n '/^programs:$$/{n;p}')
 PACKIHX		:= $(SDCCBINDIR)/packihx
+MAKEBIN		:= $(SDCCBINDIR)/makebin -p
 
 # The name of the directory which holds all the compile binaries
 BUILDDIR	:= build
@@ -38,7 +39,7 @@ BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 SDCCFLAGS	:= $(SDCCFLAGS) -DTARGET_MODEL_$(subst +,_,$(TARGET))
 
 # Set frequency of the oscillator
-SDCCFLAGS	:= $(SDCCFLAGS) -DFOSC=11059200L
+# SDCCFLAGS	:= $(SDCCFLAGS) -DFOSC=11059200L
 
 # Set memory usage limit for some known microcontollers
 ifeq ($(TARGET), STC89C52RC)
@@ -115,7 +116,7 @@ $(call testf, 6): 		$(call libf, common uart)
 
 # Convert .ihx file to .bin
 %.bin: %.ihx
-	objcopy -Iihex -Obinary $< $@
+	$(MAKEBIN) $< $@
 
 # Clean up
 clean:
