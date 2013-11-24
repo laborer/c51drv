@@ -18,7 +18,6 @@ void main(void) {
     unsigned char q0;
     unsigned char q1;
     unsigned char q2;
-    unsigned char q3;
     unsigned char i;
     unsigned char j;
     unsigned char k;

@@ -28,8 +28,8 @@ void _uart_putulong(unsigned long i)
 }
 
 void main(void) {
-    unsigned char __code *p;
-    unsigned char i;
+    /* unsigned char __code *p; */
+    /* unsigned char i; */
 
     welcome();
 

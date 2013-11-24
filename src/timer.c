@@ -126,7 +126,7 @@ void timer0_set32(unsigned long t)
 }
 
 #ifdef TIMER0_CALLBACK
-extern void timer0_callback(void);
+extern void TIMER0_CALLBACK(void);
 #endif /* TIMER0_CALLBACK */
 
 void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1
@@ -134,6 +134,6 @@ void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1
     TF0 = 0;
     t0_h32 += 1;
 #ifdef TIMER0_CALLBACK
-    timer0_callback();
+    TIMER0_CALLBACK();
 #endif /* TIMER0_CALLBACK */
 }

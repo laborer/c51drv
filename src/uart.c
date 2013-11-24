@@ -17,33 +17,45 @@ struct buffer
 
 
 /* Transmitting buffer */
-struct buffer txbuf;
+static struct buffer txbuf;
 /* Receiving buffer */
-struct buffer rcbuf;
+static struct buffer rcbuf;
 
 /* Transmitting is turned off */
-char txoff;
+static char txoff;
 /* Receiving buffer is overflow */
-char rcoff;
+static char rcoff;
 
+
+#ifdef UART_CALLBACK
+void UART_CALLBACK(unsigned char c);
+#endif /* UART_CALLBACK */
 
 /* UART interrupt routine */
 void uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 {
+    unsigned char c;
+
     /* Check if UART is ready to read */
     if (RI) {
         /* Reset receiving interrupt flag */
         RI = 0;
+        /* Read one byte from SBUF */
+        c = SBUF;
         /* Check if receiving buffer is full */
         if (BUF_FULL(rcbuf)) {
-            /* Set buffer-is-full flag */
+            /* Set buffer overflow flag */
             rcoff = 1;
         } else {
             /* Read one byte from SBUF and put it in receiving
                buffer */
-            BUF_PUT(rcbuf, SBUF);
+            BUF_PUT(rcbuf, c);
         }
+#ifdef UART_CALLBACK
+        UART_CALLBACK(c);
+#endif /* UART_CALLBACK */
     }
+
     /* Check if UART is ready to write */
     if (TI) {
         /* Reset transmitting interrupt flag */

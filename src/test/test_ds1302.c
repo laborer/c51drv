@@ -17,7 +17,6 @@ void welcome(void)
 }
 
 void main(void) {
-    unsigned char               c;
     unsigned char               i;
     unsigned char               j;
     unsigned char __idata       p[7];

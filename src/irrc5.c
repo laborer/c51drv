@@ -29,26 +29,25 @@ void irrc5_init(void)
 char irrc5_falling(void)
 {
     unsigned int t;
-    unsigned int duration;
 
-    t = timer0_get16();
-    duration = t - time;
-    time = t;
+    t = time;
+    time = timer0_get16();
+    t = time - t;
 
     if (state & 1) {
         if (state == 1) {
             state = 2;
         } else {
-            if (duration > 3 * BITHALF + TIME_ERROR) {
+            if (t > 3 * BITHALF + TIME_ERROR) {
                 state = 2;
                 return IRRC5_ERR_LONGBIT;
-            } else if (duration < 2 * BITHALF - TIME_ERROR) {
+            } else if (t < 2 * BITHALF - TIME_ERROR) {
                 state = 2;
                 return IRRC5_ERR_SHORTBIT;
             }
 
             data <<= 1;
-            if (duration > 5 * BITHALF / 2) {
+            if (t > 5 * BITHALF / 2) {
                 /* 1|01|10| */
                 state += 3;
                 data += 1;
@@ -58,17 +57,17 @@ char irrc5_falling(void)
             }
         }
     } else {
-        if (duration > 4 * BITHALF + TIME_ERROR) {
+        if (t > 4 * BITHALF + TIME_ERROR) {
             state = 2;
             return IRRC5_ERR_LONGBIT;
-        } else if (duration < 2 * BITHALF - TIME_ERROR) {
+        } else if (t < 2 * BITHALF - TIME_ERROR) {
             state = 2;
             return IRRC5_ERR_SHORTBIT;
         } 
         
-        if (duration > 5 * BITHALF / 2) {
+        if (t > 5 * BITHALF / 2) {
             data <<= 2;
-            if (duration > 7 * BITHALF / 2) {
+            if (t > 7 * BITHALF / 2) {
                 /* |10|01|10| */
                 state += 4;
                 data += 1;
@@ -94,11 +93,9 @@ char irrc5_falling(void)
 char irrc5_rising_last(void)
 {
     unsigned int t;
-    unsigned int duration;
 
-    t = timer0_get16();
-    duration = t - time;
-    time = t;
+    t = time;
+    time = timer0_get16();
 
     /* This routine should only be called when the state is
        IRRC5_LASTBIT. */
@@ -110,14 +107,15 @@ char irrc5_rising_last(void)
        a rising edge. */
     state = 1;
 
-    if (duration > 2 * BITHALF + TIME_ERROR) {
+    t = time - t;
+    if (t > 2 * BITHALF + TIME_ERROR) {
         return IRRC5_ERR_LONGBIT;
-    } else if (duration < BITHALF - TIME_ERROR) {
+    } else if (t < BITHALF - TIME_ERROR) {
         return IRRC5_ERR_SHORTBIT;
     } 
 
     data <<= 1;
-    if (duration > 3 * BITHALF / 2) {
+    if (t > 3 * BITHALF / 2) {
         data += 1;
     }
     return 0;

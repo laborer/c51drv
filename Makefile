@@ -10,22 +10,29 @@ MAKEBIN		:= $(SDCCBINDIR)/makebin -p
 # The name of the directory which holds all the compile binaries
 BUILDDIR	:= build
 
+# Enable AutoISP for STC MCUs
+AUTOISP		:= yes
+
 # Disable some unnecessary warnings
 SDCCFLAGS	:= $(SDCCFLAGS) --less-pedantic --disable-warning 84
 
 # Specify modules to compile
 MODULES		:= common tools uart timer iic irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302
 
-# Include modules and test cases designed for certain microcontrollers
-ifneq ($(findstring ^STC89, ^$(TARGET)), )
-    MODULES	:= $(MODULES) stc/eeprom
+# Include modules and test cases designed for certain MCUs
+ifneq ($(findstring ^STC, ^$(TARGET)), )
+    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
+    # If AutoISP is enabled, register autoisp_check as a UART callback
+    # function
+    SDCCFLAGS	:= $(SDCCFLAGS) $(if $(AUTOISP), -DUART_CALLBACK=autoisp_check) 
+    MODULES	:= $(MODULES) stc/eeprom stc/autoisp
     TESTS	:= $(TESTS) stc/wdt
-    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
-else ifneq ($(findstring ^STC, ^$(TARGET)), )
-    MODULES	:= $(MODULES) stc/eeprom
-    TESTS	:= $(TESTS) stc/wdt stc/gpio stc/adc stc/pca 
-    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
-    SDCCFLAGS	:= $(SDCCFLAGS) -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+    # The following modules and test cases only work for non-STC89C
+    # series MCUs
+    ifeq ($(findstring ^STC89, ^$(TARGET)), )
+        TESTS	:= $(TESTS) stc/gpio stc/adc stc/pca 
+        SDCCFLAGS := $(SDCCFLAGS) -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+    endif
 else
     SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
 endif
@@ -35,13 +42,13 @@ TESTS		:= $(MODULES) $(TESTS) 1 2 3 4 5 6
 TESTS		:= $(subst /,_,$(TESTS))
 BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
-# Tell C program the name of the target microcontroller model
+# Tell C program the name of the target MCU model
 SDCCFLAGS	:= $(SDCCFLAGS) -DTARGET_MODEL_$(subst +,_,$(TARGET))
 
 # Set frequency of the oscillator
 # SDCCFLAGS	:= $(SDCCFLAGS) -DFOSC=11059200L
 
-# Set memory usage limit for some known microcontollers
+# Set memory usage limit for some known MCUs
 ifeq ($(TARGET), STC89C52RC)
     ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --xram-size 256
 else ifeq ($(TARGET), STC89C54RD+)
@@ -81,9 +88,17 @@ $(BUILDDIR)/%.rel: src/%.c
 # binary files
 # $(BINARIES:%.bin=%.ihx): $(MODULES:%=$(BUILDDIR)/%.rel)
 
+# AutoISP
+ifneq ($(AUTOISP), )
+ifneq ($(findstring ^STC, ^$(TARGET)), )
+$(BINARIES:%.bin=%.ihx): $(BUILDDIR)/stc/autoisp.rel
+endif
+endif
+
 # To build a test case in the left column, we need modules from the
 # right column
 $(call testf, common): 		$(call libf, common)
+$(call testf, tools): 		$(call libf, common)
 $(call testf, uart): 		$(call libf, common uart)
 $(call testf, timer): 		$(call libf, common uart timer)
 $(call testf, iic):		$(call libf, common uart iic)
@@ -91,7 +106,7 @@ $(call testf, irrc5):		$(call libf, common uart timer irrc5)
 $(call testf, irnec):		$(call libf, common uart timer irnec)
 $(call testf, rom9346):		$(call libf, common uart rom9346)
 $(call testf, rom2402): 	$(call libf, common uart iic rom2402)
-$(call testf, ds1820): 		$(call libf, common tools uart ds1820)
+$(call testf, ds1820): 		$(call libf, common uart tools ds1820)
 $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 $(call testf, pcf8591): 	$(call libf, common uart iic pcf8591)
 $(call testf, ds1302): 		$(call libf, common uart ds1302)
@@ -101,12 +116,13 @@ $(call testf, stc_gpio): 	$(call libf, common uart)
 $(call testf, stc_adc): 	$(call libf, common uart)
 $(call testf, stc_pca): 	$(call libf, common uart)
 $(call testf, stc_eeprom): 	$(call libf, common uart stc/eeprom)
+$(call testf, stc_autoisp): 	$(call libf, common uart)
 
 $(call testf, 1): 		$(call libf, common)
 $(call testf, 2): 		$(call libf, common uart)
 $(call testf, 3): 		$(call libf, common uart)
 $(call testf, 4): 		$(call libf, common uart timer)
-$(call testf, 5): 		$(call libf, common tools uart timer rom9346 ds1820 lcd1602 irnec)
+$(call testf, 5): 		$(call libf, common uart tools timer rom9346 ds1820 lcd1602 irnec)
 $(call testf, 6): 		$(call libf, common uart)
 
 # Pack .ihx file to .hex.  By default, this makefile only generates
@@ -123,8 +139,8 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 # The file name of the official STC ISP programmer, we use it to
-# compile a list of microcontroller models, which are then grouped
-# into families in modeldb.h
+# compile a list of MCU models, which are then grouped into families
+# in modeldb.h
 STCISP_EXE	:= stc-isp-15xx-v6.61.exe
 src/stc/modeldb.h:
 	test -s $(STCISP_EXE) || exit 1

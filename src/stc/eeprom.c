@@ -20,13 +20,6 @@
 #    define ENABLE_IAP  0x83
 #  endif
 
-#  define IAP_DATA      ISP_DATA
-#  define IAP_ADDRH     ISP_ADDRH
-#  define IAP_ADDRL     ISP_ADDRL
-#  define IAP_CMD       ISP_CMD
-#  define IAP_TRIG      ISP_TRIG
-#  define IAP_CONTR     ISP_CONTR
-
 #  define TRIG_CMD1     0x46
 #  define TRIG_CMD2     0xB9
 

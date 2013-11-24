@@ -23,4 +23,14 @@
 #endif /* TARGET_FAMILY_x */
 
 
+#if defined __STC89C5XRC_RDP_H_
+#  define IAP_DATA      ISP_DATA
+#  define IAP_ADDRH     ISP_ADDRH
+#  define IAP_ADDRL     ISP_ADDRL
+#  define IAP_CMD       ISP_CMD
+#  define IAP_TRIG      ISP_TRIG
+#  define IAP_CONTR     ISP_CONTR
+#endif /* __STC89C5XRC_RDP_H_ */
+
+
 #endif /* __STC_H */

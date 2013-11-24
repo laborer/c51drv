@@ -34,23 +34,22 @@ void irnec_init(void)
 char irnec_falling(void) 
 {
     unsigned int t;
-    unsigned int duration;
 
-    t = timer0_get16();
-    duration = t - time;
-    time = t;
+    t = time;
+    time = timer0_get16();
+    t = time - t;
 
     if (state > 3) {
-        if (duration > BIT0 + BIT1 + TIME_ERROR) {
+        if (t > BIT0 + BIT1 + TIME_ERROR) {
             state = 2;
             return IRNEC_ERR_LONGBIT;
-        } else if (duration < BIT0 + BIT0 - TIME_ERROR) {
+        } else if (t < BIT0 + BIT0 - TIME_ERROR) {
             state = 2;
             return IRNEC_ERR_SHORTBIT;
         }
 
         buf >>= 1;
-        if (duration >= BIT0 + BIT1 - TIME_ERROR) {
+        if (t >= BIT0 + BIT1 - TIME_ERROR) {
             buf |= 0x80;
         }
 
@@ -75,13 +74,13 @@ char irnec_falling(void)
         }
         state += 2;
     } else if (state == 2) {
-        if (duration > STATE2 + STATE3 + TIME_ERROR * 8) {
+        if (t > STATE2 + STATE3 + TIME_ERROR * 8) {
             state = 2;
             return IRNEC_ERR_LONGBIT;
-        } else if (duration < STATE2 + REPEAT - TIME_ERROR) {
+        } else if (t < STATE2 + REPEAT - TIME_ERROR) {
             state = 2;
             return IRNEC_ERR_SHORTBIT;
-        } else if (duration < STATE2 + STATE3 - TIME_ERROR) {
+        } else if (t < STATE2 + STATE3 - TIME_ERROR) {
             state = 2;
             return IRNEC_ERR_REPEAT;
         }

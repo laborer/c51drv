@@ -22,26 +22,28 @@ void main(void) {
     char i;
     __bit b;
 
-    welcome();
-
     TIMER0_INIT16();
     TIMER0_START();
 
-    P3_2 = 1;
+    P3_0 = 1;
     b = 1;
     
     for (i = 0; i < 80; i++) {
-        while (b == P3_2);
+        while (b == P3_0);
         t[i] = TIMER0_GET16();
         b = !b;
     }
 
-    for (i = 1; i < 80; i++) {
-        uart_putuint(i);
-        uart_putstr(" +");
-        uart_putuint(t[i] - t[i - 1]);
-        uart_putchar('\n');
-    }
+    while (1) {
+        welcome();
 
-    while (1);
+        for (i = 1; i < 80; i++) {
+            uart_putuint(i);
+            uart_putstr(" +");
+            uart_putuint(t[i] - t[i - 1]);
+            uart_putchar('\n');
+        }
+
+        delay_ms(5000);
+    }
 }
