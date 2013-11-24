@@ -83,6 +83,53 @@
 unsigned int timer0_get16();
 
 
+#define TIMER1_FLAG TF1
+
+#define TIMER1_START()                                          \
+    do {                                                        \
+        TR1 = 1;                                                \
+    } while (0)
+
+#define TIMER1_STOP()                                           \
+    do {                                                        \
+        TR1 = 0;                                                \
+    } while (0)
+
+#define TIMER1_INIT16()                                         \
+    do {                                                        \
+        /* Set Timer0 to be a 16-bit timer */                   \
+        /* GATE1 C/T1# M11 M01 GATE0 C/T0# M10 M00              \
+           0     0     0   1   -     -     -   -   */           \
+        TMOD &= ~T1_MASK;                                       \
+        TMOD |= T1_M0;                                          \
+        TR1 = 0;                                                \
+        TF1 = 0;                                                \
+    } while (0)
+
+/* Different than TIMER0_GET16(), TIMER1_GET16() can only get correct
+   reading when the timer is stopped */
+#define TIMER1_GET16()                                          \
+    (TH1 * 256 + TL1)
+
+#define TIMER1_SET16(t)                                         \
+    do {                                                        \
+        TL1 = (t);                                              \
+        TH1 = (unsigned int)(t) >> 8;                           \
+    } while (0)
+
+#define TIMER1_INIT8(t)                                         \
+    do {                                                        \
+        /* Set Timer0 to be an 8-bit auto-reload timer */       \
+        /* GATE1 C/T1# M11 M01 GATE0 C/T0# M10 M00              \
+           0     0     1   0   -     -     -   -   */           \
+        TMOD &= ~T1_MASK;                                       \
+        TMOD |= T1_M1;                                          \
+        TR1 = 0;                                                \
+        TF1 = 0;                                                \
+        TH1 = (t);                                              \
+    } while (0)
+
+
 #ifdef MICROCONTROLLER_8052
 
 #define TIMER2_FLAG TF2

@@ -5,7 +5,6 @@
 
 #include "common.h"
 #include "uart.h"
-#include "stc/autoisp.h"
 #include "stc/stc.h"
 
 
