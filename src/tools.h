@@ -51,11 +51,17 @@
 
 /* Test if the buffer is full */
 #define BUF_FULL(buf)                                           \
-    (!(((buf).in + 1 - (buf).out) & BUF_MASK(buf)))
+    ((sizeof((buf).in) == 1)                                    \
+     ? (!((unsigned char)((buf).in - (buf).out + 1)             \
+          & BUF_MASK(buf)))                                     \
+     : (!(((buf).in - (buf).out + 1) & BUF_MASK(buf))))
 
 /* Return the number of elements in the buffer */
 #define BUF_LEN(buf)                                            \
-    (((buf).in - (buf).out) & BUF_MASK(buf))
+    ((sizeof((buf).in) == 1)                                    \
+     ? ((unsigned char)((buf).in - (buf).out) & BUF_MASK(buf))  \
+     : (((buf).in - (buf).out) & BUF_MASK(buf)))
+
 
 #define __BIN_FROM_HEX(h)                                       \
     (  ((h >> 21) & 0x80)                                       \
