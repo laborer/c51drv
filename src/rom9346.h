@@ -24,9 +24,6 @@ typedef unsigned int rom9346_word_t;
 /* typedef unsigned char rom9346_word_t; */
 
 #define ROM9346_CS       P2_3
-#define ROM9346_CLK      P2_2
-#define ROM9346_DI       P2_1
-#define ROM9346_DO       P2_0
 
 
 void rom9346_ewen();

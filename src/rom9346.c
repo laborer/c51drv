@@ -5,73 +5,56 @@
 
 #include "common.h"
 #include "rom9346.h"
+#include "spi.h"
 
 
 #define CS              ROM9346_CS
-#define CLK             ROM9346_CLK
-#define DI              ROM9346_DI
-#define DO              ROM9346_DO
 #define ADDR_LEN        ROM9346_ADDR_LEN
 #define word_t          rom9346_word_t
 
 
-/* Send low n bits in c to the chip */
-static void send_bits(unsigned char c, unsigned char n)
-{
-    c <<= 8 - n;
-    for (; n != 0; n--) {
-        CLK = 0;
-        DELAY_US(1);
-        DI = c & 0x80;
-        CLK = 1;
-        DELAY_US(1);
-        c <<= 1;
-    }
-}
-
 /* Send an instruction to the chip */
 static void send_cmd(unsigned char opcode, unsigned int addr)
 {
+    /* Clear CS first to reset the internal control logic */
     CS = 0;
     DELAY_US(1);
 
+    SPI_MISO = 1;
     CS = 1;
+    DELAY_US(1);
+    while (!SPI_MISO);
 
-    DO = 1;
-    while (!DO);
-
-    send_bits(4 | opcode, 3);
+    SPI_EXCH(4 | opcode, 3);
     if (ADDR_LEN > 8) {
-        send_bits(addr >> 8, ADDR_LEN - 8);
-        send_bits(addr, 8);
+        SPI_EXCH(addr >> 8, ADDR_LEN - 8);
+        SPI_SEND(addr);
     } else {
-        send_bits(addr, ADDR_LEN);
+        SPI_EXCH(addr, ADDR_LEN);
     }
+}
+
+static void send_word(word_t w)
+{
+    if (sizeof(word_t) == 2) {
+        SPI_SEND(w >> 8);
+    }
+    SPI_SEND(w);
 }
 
 /* Receive a word from the chip */
 static word_t recv_word()
 {
-    word_t              c;
-    unsigned char       i;
-
-    c = 0;
-    for (i = sizeof(c) * 8; i != 0; i--) {
-        CLK = 0;
-        DELAY_US(1);
-        CLK = 1;
-        DELAY_US(1);
-        c <<= 1;
-        c |= DO;
+    if (sizeof(word_t) == 2) {
+        return (SPI_RECV() << 8) + SPI_RECV();
     }
 
-    return c;
+    return SPI_RECV();
 }
 
 /* Enable erase and write. */
 void rom9346_ewen()
 {
-    /* Clear CS first to reset the internal control logic */
     send_cmd(0, 3 << (ADDR_LEN - 2));
     CS = 0;
 }
@@ -120,23 +103,17 @@ void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
 }
 
 /* Write one word c to addr */
-void rom9346_write(unsigned int addr, word_t c)
+void rom9346_write(unsigned int addr, word_t w)
 {
     send_cmd(1, addr);
-    if (sizeof(c) == 2) {
-        send_bits(c >> 8, 8);
-    }
-    send_bits(c, 8);
+    send_word(w);
     CS = 0;
 }
 
 /* Write c to all memory.  Note: this doesn't erase automatically. */
-void rom9346_wral(word_t c)
+void rom9346_wral(word_t w)
 {
     send_cmd(0, 1 << (ADDR_LEN - 2));
-    if (sizeof(c) == 2) {
-        send_bits(c >> 8, 8);
-    }
-    send_bits(c, 8);
+    send_word(w);
     CS = 0;
 }

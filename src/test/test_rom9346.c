@@ -14,7 +14,7 @@
             uart_putchar((c) >> 8);                             \
         }                                                       \
         uart_putchar(c);                                        \
-    } while (0);
+    } while (0)
 
 
 void welcome(void)
@@ -36,8 +36,8 @@ void main(void)
 
     rom9346_eral();
 
-    for (i = 0; i < 3; i++) {
-        rom9346_write(1 + i, 'A' + i);
+    for (i = 0; i < 16; i++) {
+        rom9346_write(i, 'A' + i);
     }
 
     rom9346_ewds();
@@ -47,7 +47,7 @@ void main(void)
         OUTPUT(c);
     }
     
-    rom9346_readstr(0, p, 5);
+    rom9346_readstr(5, p, 5);
     for (i = 0; i < 5; i++) {
         OUTPUT(p[i]);
     }

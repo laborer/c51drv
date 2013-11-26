@@ -18,7 +18,7 @@ void autoisp_check(unsigned char c)
         if ((unsigned char)AUTOISP_COMMAND[state] == 0) {
             EA = 0;
             TXD = 0;
-            delay_ms(2000);
+            delay_ms(AUTOISP_WAIT);
             /* Reboot to ISP section */
             /* IAPEN SWBS SWRST CMD_FAIL - WT2 WT1 WT0 */
             IAP_CONTR = 0x60;

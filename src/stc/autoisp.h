@@ -11,6 +11,8 @@
 #define AUTOISP_COMMAND "6af23Qtr"
 #endif
 
+#define AUTOISP_WAIT    3000
+
 
 void autoisp_check(unsigned char c);
 
