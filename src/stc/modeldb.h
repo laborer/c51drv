@@ -20,7 +20,6 @@
     || defined TARGET_MODEL_STC12C5206                          \
     || defined TARGET_MODEL_STC12C5206AD                        \
     || defined TARGET_MODEL_STC12C5206PWM                       \
-    || defined TARGET_MODEL_STC12C52xx                          \
     || defined TARGET_MODEL_STC12LE5201                         \
     || defined TARGET_MODEL_STC12LE5201AD                       \
     || defined TARGET_MODEL_STC12LE5201PWM                      \
@@ -146,7 +145,6 @@
     || defined TARGET_MODEL_STC12C5A60CCP                       \
     || defined TARGET_MODEL_STC12C5A60S2                        \
     || defined TARGET_MODEL_STC12C5A60X                         \
-    || defined TARGET_MODEL_STC12C5Axx                          \
     || defined TARGET_MODEL_STC12LE5A08AD                       \
     || defined TARGET_MODEL_STC12LE5A08CCP                      \
     || defined TARGET_MODEL_STC12LE5A08S2                       \
@@ -228,7 +226,6 @@
     || defined TARGET_MODEL_STC10F12                            \
     || defined TARGET_MODEL_STC10F12X                           \
     || defined TARGET_MODEL_STC10F12XE                          \
-    || defined TARGET_MODEL_STC10Fxx                            \
     || defined TARGET_MODEL_STC10L02                            \
     || defined TARGET_MODEL_STC10L02X                           \
     || defined TARGET_MODEL_STC10L02XE                          \
@@ -246,8 +243,7 @@
     || defined TARGET_MODEL_STC10L10XE                          \
     || defined TARGET_MODEL_STC10L12                            \
     || defined TARGET_MODEL_STC10L12X                           \
-    || defined TARGET_MODEL_STC10L12XE                          \
-    || defined TARGET_MODEL_STC10Lxx
+    || defined TARGET_MODEL_STC10L12XE
 #define TARGET_FAMILY_STC10F
 #endif
 
@@ -368,7 +364,6 @@
     || defined TARGET_MODEL_STC11F60                            \
     || defined TARGET_MODEL_STC11F60X                           \
     || defined TARGET_MODEL_STC11F60XE                          \
-    || defined TARGET_MODEL_STC11Fxx                            \
     || defined TARGET_MODEL_STC11L01                            \
     || defined TARGET_MODEL_STC11L01E                           \
     || defined TARGET_MODEL_STC11L02                            \
@@ -405,9 +400,193 @@
     || defined TARGET_MODEL_STC11L56XE                          \
     || defined TARGET_MODEL_STC11L60                            \
     || defined TARGET_MODEL_STC11L60X                           \
-    || defined TARGET_MODEL_STC11L60XE                          \
-    || defined TARGET_MODEL_STC11Lxx
+    || defined TARGET_MODEL_STC11L60XE
 #define TARGET_FAMILY_STC11F
+#endif
+
+#if defined TARGET_MODEL_STC12C5401                             \
+    || defined TARGET_MODEL_STC12C5401AD                        \
+    || defined TARGET_MODEL_STC12C5402                          \
+    || defined TARGET_MODEL_STC12C5402AD                        \
+    || defined TARGET_MODEL_STC12C5404                          \
+    || defined TARGET_MODEL_STC12C5404AD                        \
+    || defined TARGET_MODEL_STC12C5406                          \
+    || defined TARGET_MODEL_STC12C5406AD                        \
+    || defined TARGET_MODEL_STC12C5408                          \
+    || defined TARGET_MODEL_STC12C5408AD                        \
+    || defined TARGET_MODEL_STC12C5410                          \
+    || defined TARGET_MODEL_STC12C5410AD                        \
+    || defined TARGET_MODEL_STC12C5412                          \
+    || defined TARGET_MODEL_STC12C5412AD                        \
+    || defined TARGET_MODEL_STC12C5416                          \
+    || defined TARGET_MODEL_STC12C5416AD                        \
+    || defined TARGET_MODEL_STC12C5420                          \
+    || defined TARGET_MODEL_STC12C5420AD                        \
+    || defined TARGET_MODEL_STC12C5424                          \
+    || defined TARGET_MODEL_STC12C5424AD                        \
+    || defined TARGET_MODEL_STC12C5428                          \
+    || defined TARGET_MODEL_STC12C5428AD                        \
+    || defined TARGET_MODEL_STC12LE5401                         \
+    || defined TARGET_MODEL_STC12LE5401AD                       \
+    || defined TARGET_MODEL_STC12LE5402                         \
+    || defined TARGET_MODEL_STC12LE5402AD                       \
+    || defined TARGET_MODEL_STC12LE5404                         \
+    || defined TARGET_MODEL_STC12LE5404AD                       \
+    || defined TARGET_MODEL_STC12LE5406                         \
+    || defined TARGET_MODEL_STC12LE5406AD                       \
+    || defined TARGET_MODEL_STC12LE5408                         \
+    || defined TARGET_MODEL_STC12LE5408AD                       \
+    || defined TARGET_MODEL_STC12LE5410                         \
+    || defined TARGET_MODEL_STC12LE5410AD                       \
+    || defined TARGET_MODEL_STC12LE5412                         \
+    || defined TARGET_MODEL_STC12LE5412AD                       \
+    || defined TARGET_MODEL_STC12LE5416                         \
+    || defined TARGET_MODEL_STC12LE5416AD                       \
+    || defined TARGET_MODEL_STC12LE5420                         \
+    || defined TARGET_MODEL_STC12LE5420AD                       \
+    || defined TARGET_MODEL_STC12LE5424                         \
+    || defined TARGET_MODEL_STC12LE5424AD                       \
+    || defined TARGET_MODEL_STC12LE5428                         \
+    || defined TARGET_MODEL_STC12LE5428AD
+#define TARGET_FAMILY_STC12C54
+#endif
+
+#if defined TARGET_MODEL_STC12C5601                             \
+    || defined TARGET_MODEL_STC12C5601AD                        \
+    || defined TARGET_MODEL_STC12C5602                          \
+    || defined TARGET_MODEL_STC12C5602AD                        \
+    || defined TARGET_MODEL_STC12C5603                          \
+    || defined TARGET_MODEL_STC12C5603AD                        \
+    || defined TARGET_MODEL_STC12C5604                          \
+    || defined TARGET_MODEL_STC12C5604AD                        \
+    || defined TARGET_MODEL_STC12C5605                          \
+    || defined TARGET_MODEL_STC12C5605AD                        \
+    || defined TARGET_MODEL_STC12C5606                          \
+    || defined TARGET_MODEL_STC12C5606AD                        \
+    || defined TARGET_MODEL_STC12C5608                          \
+    || defined TARGET_MODEL_STC12C5608AD                        \
+    || defined TARGET_MODEL_STC12C5612                          \
+    || defined TARGET_MODEL_STC12C5612AD                        \
+    || defined TARGET_MODEL_STC12C5616                          \
+    || defined TARGET_MODEL_STC12C5616AD                        \
+    || defined TARGET_MODEL_STC12C5620                          \
+    || defined TARGET_MODEL_STC12C5620AD                        \
+    || defined TARGET_MODEL_STC12C5624                          \
+    || defined TARGET_MODEL_STC12C5624AD                        \
+    || defined TARGET_MODEL_STC12C5628                          \
+    || defined TARGET_MODEL_STC12C5628AD                        \
+    || defined TARGET_MODEL_STC12C5630                          \
+    || defined TARGET_MODEL_STC12C5630AD                        \
+    || defined TARGET_MODEL_STC12LE5601                         \
+    || defined TARGET_MODEL_STC12LE5601AD                       \
+    || defined TARGET_MODEL_STC12LE5602                         \
+    || defined TARGET_MODEL_STC12LE5602AD                       \
+    || defined TARGET_MODEL_STC12LE5603                         \
+    || defined TARGET_MODEL_STC12LE5603AD                       \
+    || defined TARGET_MODEL_STC12LE5604                         \
+    || defined TARGET_MODEL_STC12LE5604AD                       \
+    || defined TARGET_MODEL_STC12LE5605                         \
+    || defined TARGET_MODEL_STC12LE5605AD                       \
+    || defined TARGET_MODEL_STC12LE5606                         \
+    || defined TARGET_MODEL_STC12LE5606AD                       \
+    || defined TARGET_MODEL_STC12LE5608                         \
+    || defined TARGET_MODEL_STC12LE5608AD                       \
+    || defined TARGET_MODEL_STC12LE5612                         \
+    || defined TARGET_MODEL_STC12LE5612AD                       \
+    || defined TARGET_MODEL_STC12LE5616                         \
+    || defined TARGET_MODEL_STC12LE5616AD                       \
+    || defined TARGET_MODEL_STC12LE5620                         \
+    || defined TARGET_MODEL_STC12LE5620AD                       \
+    || defined TARGET_MODEL_STC12LE5624                         \
+    || defined TARGET_MODEL_STC12LE5624AD                       \
+    || defined TARGET_MODEL_STC12LE5628                         \
+    || defined TARGET_MODEL_STC12LE5628AD                       \
+    || defined TARGET_MODEL_STC12LE5630                         \
+    || defined TARGET_MODEL_STC12LE5630AD
+#define TARGET_FAMILY_STC12C56
+#endif
+
+#if defined TARGET_MODEL_STC12C1052                             \
+    || defined TARGET_MODEL_STC12C1052AD                        \
+    || defined TARGET_MODEL_STC12C2052                          \
+    || defined TARGET_MODEL_STC12C2052AD                        \
+    || defined TARGET_MODEL_STC12C3052                          \
+    || defined TARGET_MODEL_STC12C3052AD                        \
+    || defined TARGET_MODEL_STC12C4052                          \
+    || defined TARGET_MODEL_STC12C4052AD                        \
+    || defined TARGET_MODEL_STC12C5052                          \
+    || defined TARGET_MODEL_STC12C5052AD                        \
+    || defined TARGET_MODEL_STC12LE1052                         \
+    || defined TARGET_MODEL_STC12LE1052AD                       \
+    || defined TARGET_MODEL_STC12LE2052                         \
+    || defined TARGET_MODEL_STC12LE2052AD                       \
+    || defined TARGET_MODEL_STC12LE3052                         \
+    || defined TARGET_MODEL_STC12LE3052AD                       \
+    || defined TARGET_MODEL_STC12LE4052                         \
+    || defined TARGET_MODEL_STC12LE4052AD                       \
+    || defined TARGET_MODEL_STC12LE5052                         \
+    || defined TARGET_MODEL_STC12LE5052AD
+#define TARGET_FAMILY_STC12Cx052
+#endif
+
+#if defined TARGET_MODEL_STC90C510AD                            \
+    || defined TARGET_MODEL_STC90C512AD                         \
+    || defined TARGET_MODEL_STC90C513AD                         \
+    || defined TARGET_MODEL_STC90C514AD                         \
+    || defined TARGET_MODEL_STC90C516AD                         \
+    || defined TARGET_MODEL_STC90C51AD                          \
+    || defined TARGET_MODEL_STC90C52AD                          \
+    || defined TARGET_MODEL_STC90C54AD                          \
+    || defined TARGET_MODEL_STC90C55AD                          \
+    || defined TARGET_MODEL_STC90C58AD                          \
+    || defined TARGET_MODEL_STC90LE510AD                        \
+    || defined TARGET_MODEL_STC90LE512AD                        \
+    || defined TARGET_MODEL_STC90LE513AD                        \
+    || defined TARGET_MODEL_STC90LE514AD                        \
+    || defined TARGET_MODEL_STC90LE516AD                        \
+    || defined TARGET_MODEL_STC90LE51AD                         \
+    || defined TARGET_MODEL_STC90LE52AD                         \
+    || defined TARGET_MODEL_STC90LE54AD                         \
+    || defined TARGET_MODEL_STC90LE55AD                         \
+    || defined TARGET_MODEL_STC90LE58AD
+#define TARGET_FAMILY_STC90CxAD
+#endif
+
+#if defined TARGET_MODEL_STC90C06RC                             \
+    || defined TARGET_MODEL_STC90C07RC                          \
+    || defined TARGET_MODEL_STC90C10RC                          \
+    || defined TARGET_MODEL_STC90C12RC                          \
+    || defined TARGET_MODEL_STC90C510RD_                        \
+    || defined TARGET_MODEL_STC90C512RD_                        \
+    || defined TARGET_MODEL_STC90C513RD_                        \
+    || defined TARGET_MODEL_STC90C514RD_                        \
+    || defined TARGET_MODEL_STC90C516RD_                        \
+    || defined TARGET_MODEL_STC90C51RC                          \
+    || defined TARGET_MODEL_STC90C51RD_                         \
+    || defined TARGET_MODEL_STC90C52RC                          \
+    || defined TARGET_MODEL_STC90C52RD_                         \
+    || defined TARGET_MODEL_STC90C53RC                          \
+    || defined TARGET_MODEL_STC90C54RD_                         \
+    || defined TARGET_MODEL_STC90C55RD_                         \
+    || defined TARGET_MODEL_STC90C58RD_                         \
+    || defined TARGET_MODEL_STC90LE06RC                         \
+    || defined TARGET_MODEL_STC90LE07RC                         \
+    || defined TARGET_MODEL_STC90LE10RC                         \
+    || defined TARGET_MODEL_STC90LE12RC                         \
+    || defined TARGET_MODEL_STC90LE510RD_                       \
+    || defined TARGET_MODEL_STC90LE512RD_                       \
+    || defined TARGET_MODEL_STC90LE513RD_                       \
+    || defined TARGET_MODEL_STC90LE514RD_                       \
+    || defined TARGET_MODEL_STC90LE516RD_                       \
+    || defined TARGET_MODEL_STC90LE51RC                         \
+    || defined TARGET_MODEL_STC90LE51RD_                        \
+    || defined TARGET_MODEL_STC90LE52RC                         \
+    || defined TARGET_MODEL_STC90LE52RD_                        \
+    || defined TARGET_MODEL_STC90LE53RC                         \
+    || defined TARGET_MODEL_STC90LE54RD_                        \
+    || defined TARGET_MODEL_STC90LE55RD_                        \
+    || defined TARGET_MODEL_STC90LE58RD_
+#define TARGET_FAMILY_STC90CxR
 #endif
 
 #if defined TARGET_MODEL_STC89C516RD_                           \
@@ -416,16 +595,12 @@
     || defined TARGET_MODEL_STC89C53RC                          \
     || defined TARGET_MODEL_STC89C54RD_                         \
     || defined TARGET_MODEL_STC89C58RD_                         \
-    || defined TARGET_MODEL_STC89C5xRC                          \
-    || defined TARGET_MODEL_STC89CxRC                           \
-    || defined TARGET_MODEL_STC89Cxx                            \
     || defined TARGET_MODEL_STC89LE516RD_                       \
     || defined TARGET_MODEL_STC89LE51RC                         \
     || defined TARGET_MODEL_STC89LE52RC                         \
     || defined TARGET_MODEL_STC89LE53RC                         \
     || defined TARGET_MODEL_STC89LE54RD_                        \
-    || defined TARGET_MODEL_STC89LE58RD_                        \
-    || defined TARGET_MODEL_STC89LExx
+    || defined TARGET_MODEL_STC89LE58RD_
 #define TARGET_FAMILY_STC89C
 #endif
 

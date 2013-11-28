@@ -3,12 +3,8 @@
  */
 
 
-#ifndef __STC89C5xRC_RDP_H_
-#define __STC89C5xRC_RDP_H_
-
-
-/* cpp STC89C5xRC_RDP.h |
-   sed 's/^sfr \+\([^ =]\+\) *= *\([^;]\+\);.*$/__sfr __at (\U\2) \1;/' */
+#ifndef __STC90C5xAD_H_
+#define __STC90C5xAD_H_
 
 
 #include <8052.h>
@@ -28,13 +24,13 @@ __sbit __at (0xCF) TF2;
 __sbit __at (0x90) T2;
 __sbit __at (0x91) T2EX;
 
-__sfr __at (0xE8) P4;
-__sbit __at (0xE8) P40;
-__sbit __at (0xE9) P41;
-__sbit __at (0xEA) P42;
-__sbit __at (0xEB) P43;
+__sfr __at (0xC0) P4;
+__sbit __at (0xC0) P40;
+__sbit __at (0xC1) P41;
+__sbit __at (0xC2) P42;
+__sbit __at (0xC3) P43;
 
-__sfr __at (0xC0) XICON;
+__sfr __at (0xE8) XICON;
 __sfr __at (0xE1) WDT_CONTR;
 __sfr __at (0XE2) ISP_DATA;
 __sfr __at (0XE3) ISP_ADDRH;
@@ -51,4 +47,4 @@ __sfr __at (0XB9) SADEN;
 __sfr __at (0XC9) T2MOD;
 
 
-#endif /* __STC89C5xRC_RDP_H_ */
+#endif /* __STC90C5xAD_H_ */

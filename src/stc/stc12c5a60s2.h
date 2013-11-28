@@ -10,15 +10,15 @@
 #include <8052.h>
 
 
-#define CP_RL2  T2CON_0
-#define C_T2    T2CON_1
-#define TR2     T2CON_2
-#define EXEN2   T2CON_3
-#define TCLK    T2CON_4
-#define RCLK    T2CON_5
-#define EXF2    T2CON_6
-#define TF2     T2CON_7
-
+/* __sfr __at (0xC8) T2CON; */
+__sbit __at (0xC8) CP_RL2;
+__sbit __at (0xC9) C_T2;
+__sbit __at (0xCA) TR2;
+__sbit __at (0xCB) EXEN2;
+__sbit __at (0xCC) TCLK;
+__sbit __at (0xCD) RCLK;
+__sbit __at (0xCE) EXF2;
+__sbit __at (0xCF) TF2;
 
 /* __sfr __at (0xA8) IE; */
 __sbit __at (0xAD) EADC;
@@ -83,6 +83,7 @@ __sfr __at (0XFB) CCAP1H;
 
 __sfr __at (0XF2) PCA_PWM0;
 __sfr __at (0XF3) PCA_PWM1;
+
 __sfr __at (0XBC) ADC_CONTR;
 __sfr __at (0XBD) ADC_RES;
 __sfr __at (0XBE) ADC_RESL;

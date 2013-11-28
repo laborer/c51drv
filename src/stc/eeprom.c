@@ -8,7 +8,7 @@
 #include "../common.h"
 
 
-#if defined __STC89C5XRC_RDP_H_
+#if defined __STC89C5xRC_RDP_H_
 
 #  if FOSC > 20000000L
 #    define ENABLE_IAP  0x80

@@ -154,14 +154,19 @@ src/stc/modeldb.h:
 	echo >>$@
 	echo >>$@
 
-	for i in '\(12C52\|12LE52\) STC12C52'						\
-		'\(12C5A\|12LE5A\) STC12C5A'						\
-		'\(10F\|10L\) STC10F'							\
-		'\(11F\|11L\) STC11F'							\
-		'\(89C\|89LE\) STC89C';							\
+	for i in '\(12C52\|12LE52\)[[:digit:]]\+ STC12C52'				\
+		'\(12C5A\|12LE5A\)[[:digit:]]\+ STC12C5A'				\
+		'\(10F\|10L\)[[:digit:]]\+ STC10F'					\
+		'\(11F\|11L\)[[:digit:]]\+ STC11F'					\
+		'\(12C54\|12LE54\)[[:digit:]]\+ STC12C54'				\
+		'\(12C56\|12LE56\)[[:digit:]]\+ STC12C56'				\
+		'\(12C\|12LE\)[[:digit:]]\+052 STC12Cx052'				\
+		'\(90C\|90LE\)[[:digit:]]\+AD STC90CxAD'				\
+		'\(90C\|90LE\)[[:digit:]]\+R[CD] STC90CxR'				\
+		'\(89C\|89LE\)5[[:digit:]]\+ STC89C';					\
 	do										\
 		strings $(STCISP_EXE) |							\
-		grep -o '^\(STC\|IAP\)'$${i% *}'[^ /.]\+' |				\
+		grep -o '^\(STC\|IAP\)'$${i% *}'[[:digit:][:upper:]+]*' |		\
 		sort -u |								\
 		sed 's/+/_/; s/^/ defined TARGET_MODEL_/; 1s/^/#if/; 1!s/^/    ||/' |	\
 		sed '$$!s/$$/                                            /' |		\
