@@ -172,7 +172,7 @@ src/stc/modeldb.h:
 		sed 's/+/_/; s/^/ defined TARGET_MODEL_/; 1s/^/#if/; 1!s/^/    ||/' |	\
 		sed '$$!s/$$/                                            /' |		\
 		sed '$$!s/^\(.\{64\}\).*$$/\1\\/' >>$@;					\
-		echo '#define TARGET_FAMILY_'$${i#* } >>$@;				\
+		echo '#define TARGET_FAMILY_'$${i##* } >>$@;				\
 		echo '#endif' >>$@;							\
 		echo >>$@;								\
 	done

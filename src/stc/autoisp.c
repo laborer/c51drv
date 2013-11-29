@@ -13,9 +13,9 @@ static unsigned char state = 0;
 
 void autoisp_check(unsigned char c)
 {       
-    if ((unsigned char)AUTOISP_COMMAND[state] == c) {
+    if ((unsigned char)AUTOISP_MAGIC[state] == c) {
         state += 1;
-        if ((unsigned char)AUTOISP_COMMAND[state] == 0) {
+        if ((unsigned char)AUTOISP_MAGIC[state] == 0) {
             EA = 0;
             TXD = 0;
             delay_ms(AUTOISP_WAIT);
@@ -24,6 +24,6 @@ void autoisp_check(unsigned char c)
             IAP_CONTR = 0x60;
         }
     } else {
-        state = ((unsigned char)AUTOISP_COMMAND[0] == c) ? 1 : 0;
+        state = ((unsigned char)AUTOISP_MAGIC[0] == c) ? 1 : 0;
     }
 }

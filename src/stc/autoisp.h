@@ -7,11 +7,11 @@
 #define __AUTOISP_H
 
 
-#ifndef AUTOISP_COMMAND
-#define AUTOISP_COMMAND "6af23Qtr"
+#ifndef AUTOISP_MAGIC
+#define AUTOISP_MAGIC   "6af23Qtr"
 #endif
 
-#define AUTOISP_WAIT    3000
+#define AUTOISP_WAIT    1500
 
 
 void autoisp_check(unsigned char c);

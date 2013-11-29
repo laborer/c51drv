@@ -9,6 +9,7 @@
 
 #include "modeldb.h"
 
+
 #if defined TARGET_FAMILY_STC89C                                \
     || defined TARGET_FAMILY_STC90CxR
 

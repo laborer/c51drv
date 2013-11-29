@@ -92,7 +92,7 @@
     || defined TARGET_MODEL_STC15W4K48S4                        \
     || defined TARGET_MODEL_STC15W4K56S4                        \
     || defined TARGET_MODEL_STC15W4K60S4
-#define TARGET_FAMILY_ STC15F
+#define TARGET_FAMILY_STC15F
 #endif
 
 #if defined TARGET_MODEL_STC12C5201                             \
@@ -131,7 +131,7 @@
     || defined TARGET_MODEL_STC12LE5206                         \
     || defined TARGET_MODEL_STC12LE5206AD                       \
     || defined TARGET_MODEL_STC12LE5206PWM
-#define TARGET_FAMILY_ STC12C52
+#define TARGET_FAMILY_STC12C52
 #endif
 
 #if defined TARGET_MODEL_IAP12C5A08                             \
@@ -270,7 +270,7 @@
     || defined TARGET_MODEL_STC12LE5A60CCP                      \
     || defined TARGET_MODEL_STC12LE5A60S2                       \
     || defined TARGET_MODEL_STC12LE5A60X
-#define TARGET_FAMILY_ STC12C5A
+#define TARGET_FAMILY_STC12C5A
 #endif
 
 #if defined TARGET_MODEL_IAP10F02                               \
@@ -337,7 +337,7 @@
     || defined TARGET_MODEL_STC10L12                            \
     || defined TARGET_MODEL_STC10L12X                           \
     || defined TARGET_MODEL_STC10L12XE
-#define TARGET_FAMILY_ STC10F
+#define TARGET_FAMILY_STC10F
 #endif
 
 #if defined TARGET_MODEL_IAP11F01                               \
@@ -494,7 +494,7 @@
     || defined TARGET_MODEL_STC11L60                            \
     || defined TARGET_MODEL_STC11L60X                           \
     || defined TARGET_MODEL_STC11L60XE
-#define TARGET_FAMILY_ STC11F
+#define TARGET_FAMILY_STC11F
 #endif
 
 #if defined TARGET_MODEL_STC12C5401                             \
@@ -541,7 +541,7 @@
     || defined TARGET_MODEL_STC12LE5424AD                       \
     || defined TARGET_MODEL_STC12LE5428                         \
     || defined TARGET_MODEL_STC12LE5428AD
-#define TARGET_FAMILY_ STC12C54
+#define TARGET_FAMILY_STC12C54
 #endif
 
 #if defined TARGET_MODEL_STC12C5601                             \
@@ -596,7 +596,7 @@
     || defined TARGET_MODEL_STC12LE5628AD                       \
     || defined TARGET_MODEL_STC12LE5630                         \
     || defined TARGET_MODEL_STC12LE5630AD
-#define TARGET_FAMILY_ STC12C56
+#define TARGET_FAMILY_STC12C56
 #endif
 
 #if defined TARGET_MODEL_STC12C1052                             \
@@ -619,7 +619,7 @@
     || defined TARGET_MODEL_STC12LE4052AD                       \
     || defined TARGET_MODEL_STC12LE5052                         \
     || defined TARGET_MODEL_STC12LE5052AD
-#define TARGET_FAMILY_ STC12Cx052
+#define TARGET_FAMILY_STC12Cx052
 #endif
 
 #if defined TARGET_MODEL_STC90C510AD                            \
@@ -642,7 +642,7 @@
     || defined TARGET_MODEL_STC90LE54AD                         \
     || defined TARGET_MODEL_STC90LE55AD                         \
     || defined TARGET_MODEL_STC90LE58AD
-#define TARGET_FAMILY_ STC90CxAD
+#define TARGET_FAMILY_STC90CxAD
 #endif
 
 #if defined TARGET_MODEL_STC90C06RC                             \
@@ -679,7 +679,7 @@
     || defined TARGET_MODEL_STC90LE54RD_                        \
     || defined TARGET_MODEL_STC90LE55RD_                        \
     || defined TARGET_MODEL_STC90LE58RD_
-#define TARGET_FAMILY_ STC90CxR
+#define TARGET_FAMILY_STC90CxR
 #endif
 
 #if defined TARGET_MODEL_STC89C516RD_                           \
@@ -694,7 +694,7 @@
     || defined TARGET_MODEL_STC89LE53RC                         \
     || defined TARGET_MODEL_STC89LE54RD_                        \
     || defined TARGET_MODEL_STC89LE58RD_
-#define TARGET_FAMILY_ STC89C
+#define TARGET_FAMILY_STC89C
 #endif
 
 
