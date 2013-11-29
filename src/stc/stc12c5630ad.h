@@ -2,6 +2,9 @@
 #define __STC12C5630AD_H_
 
 
+#include <8052.h>
+
+
 /* __sfr __at (0x90) P1; */
 __sbit __at (0x90) T2;
 __sbit __at (0x91) T2EX;

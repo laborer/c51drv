@@ -9,7 +9,7 @@
 
 #include "modeldb.h"
 
-#if defined TARGET_FAMILY_STC89C \
+#if defined TARGET_FAMILY_STC89C                                \
     || defined TARGET_FAMILY_STC90CxR
 
 #include "stc89c5xrc_rdp.h"
@@ -30,20 +30,24 @@
 
 #include "stc12c5410ad.h"
 
-#elif defined TARGET_FAMILY_STC12C52 \
-    || defined TARGET_FAMILY_STC12C5A \
-    || defined TARGET_FAMILY_STC10F \
+#elif defined TARGET_FAMILY_STC12C52                            \
+    || defined TARGET_FAMILY_STC12C5A                           \
+    || defined TARGET_FAMILY_STC10F                             \
     || defined TARGET_FAMILY_STC11F
 
 #include "stc12c5a60s2.h"
 
+#elif defined TARGET_FAMILY_STC15F
+
+#include "stc15f2k60s2.h"
+
 #endif /* TARGET_FAMILY_x */
 
 
-#if defined __STC89C5xRC_RDP_H_ \
-    || defined __STC90C5xAD_H_ \
-    || defined __STC12C5630AD_H_ \
-    || defined __STC12C5410AD_H_ \
+#if defined __STC89C5xRC_RDP_H_                                 \
+    || defined __STC90C5xAD_H_                                  \
+    || defined __STC12C5630AD_H_                                \
+    || defined __STC12C5410AD_H_                                \
     || defined __STC12C2052AD_H_
 
 #  define IAP_DATA      ISP_DATA
