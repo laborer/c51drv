@@ -127,7 +127,7 @@ $(call testf, 2): 		$(call libf, common uart)
 $(call testf, 3): 		$(call libf, common uart)
 $(call testf, 4): 		$(call libf, common uart timer)
 $(call testf, 5): 		$(call libf, common uart tools timer spi rom9346 ds1820 lcd1602 irnec)
-$(call testf, 6): 		$(call libf, common uart)
+$(call testf, 6): 		$(call libf, common uart timer)
 
 # Pack .ihx file to .hex.  By default, this makefile only generates
 # .bin file, and this rule is not used

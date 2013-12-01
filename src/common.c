@@ -69,6 +69,9 @@ void ulong2bcd(unsigned long x, unsigned char __idata *d)
 
     for (i = 5; i != 0; i--) {
         p = d + i - 1;
+        if (*p == 0) {
+            continue;
+        }
         j = *p * 5;       /* j = d[i - 1] * 5; */
         k = *p + j;       /* k = d[i - 1] * 6; */
         *p = 0;           /* d[i - 1] = 0 */

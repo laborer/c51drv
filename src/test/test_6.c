@@ -5,6 +5,8 @@
 
 #include "common.h"
 #include "uart.h"
+#include "timer.h"
+#include <stdlib.h>
 
 
 void welcome(void)
@@ -30,6 +32,8 @@ void _uart_putulong(unsigned long i)
 void main(void) {
     /* unsigned char __code *p; */
     /* unsigned char i; */
+    unsigned long t;
+    unsigned char __idata buf[10];
 
     welcome();
 
@@ -40,15 +44,49 @@ void main(void) {
     /*     DELAY_US(3423); */
     /* } */
 
-    _uart_putulong(12345L);
+    /* _uart_putulong(12345L); */
+    /* uart_putchar('\n'); */
+    /* _uart_putulong(12312424L); */
+    /* uart_putchar('\n'); */
+    /* _uart_putulong(4294967295L); */
+    /* uart_putchar('\n'); */
+    /* _uart_putulong(3932154463L); */
+    /* uart_putchar('\n'); */
+
+
+    delay_ms(1000);
+
+    TIMER0_INIT32();
+    TIMER0_START();
+
+    t = TIMER0_GET32();
+    ulong2bcd(393215L, buf);
+    t = TIMER0_GET32() - t;
+    _uart_putulong(t);
     uart_putchar('\n');
-    _uart_putulong(12312424L);
+
+    delay_ms(1000);
+
+    t = TIMER0_GET32();
+    ulong2bcd(3932159463L, buf);
+    t = TIMER0_GET32() - t;
+    _uart_putulong(t);
     uart_putchar('\n');
-    _uart_putulong(4294967295L);
+
+    delay_ms(1000);
+
+    t = TIMER0_GET32();
+    _ultoa(393215L, buf, 10);
+    t = TIMER0_GET32() - t;
+    _uart_putulong(t);
     uart_putchar('\n');
-    _uart_putulong(3932154463L);
-    uart_putchar('\n');
-    _uart_putulong(3932159463L);
+
+    delay_ms(1000);
+
+    t = TIMER0_GET32();
+    _ultoa(3932159463L, buf, 10);
+    t = TIMER0_GET32() - t;
+    _uart_putulong(t);
     uart_putchar('\n');
 
     while (1);
