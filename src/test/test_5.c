@@ -13,24 +13,25 @@
 #include "print.h"
 
 
-#define PUTCHAR(c)                                              \
+#define LCDCHAR(c)                                              \
     do {                                                        \
         lcd1602_putchar(c);                                     \
     } while (0)
 
-#define PUTSTR(str)                                             \
+#define LCDSTR(str)                                             \
     do {                                                        \
         print_str(lcd1602_putchar, 0, 0, str);                  \
     } while (0)
 
-#define PUTUINT(num)                                            \
+#define LCDUINT(num)                                            \
     do {                                                        \
         print_int(lcd1602_putchar, PRINT_UNSIGNED, 0, num);     \
     } while (0)
 
-#define PUTHEXINT(num)                                          \
+#define LCDHEX4(num)                                            \
     do {                                                        \
-        print_int(lcd1602_putchar, PRINT_HEX, 0, num);          \
+        print_int(lcd1602_putchar,                              \
+                  PRINT_HEX | PRINT_ZERO, 4, num);              \
     } while (0)
 
 
@@ -38,7 +39,7 @@ static void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 static volatile char irstate;
@@ -57,17 +58,17 @@ static void display_init()
     lcd1602_init();
 
     lcd1602_position(0, 0);
-    PUTSTR("TEMP: ");
+    LCDSTR("TEMP: ");
 
     lcd1602_position(0, 1);
-    PUTSTR("CODE: ");
+    LCDSTR("CODE: ");
 
 }
 
 static void display_temp_clear()
 {
     lcd1602_position(6, 0);
-    PUTSTR("        ");
+    LCDSTR("        ");
 }
 
 static void display_temp(int tempcode)
@@ -77,32 +78,29 @@ static void display_temp(int tempcode)
     lcd1602_position(6, 0);
     if (tempcode < 0) {
         tempcode = -tempcode;
-        PUTCHAR('-');
+        LCDCHAR('-');
     }
     
-    PUTUINT(tempcode >> 4);
-    PUTCHAR('.');
+    LCDUINT(tempcode >> 4);
+    LCDCHAR('.');
     
     k = (unsigned char)(((unsigned char)tempcode & 0x0F) * 10 + 8) >> 4;
     
-    PUTCHAR('0' + k);
-    PUTCHAR('\xDF');
-    PUTCHAR('C');
+    LCDCHAR('0' + k);
+    LCDCHAR('\xDF');
+    LCDCHAR('C');
 }
 
 static void display_ir_clear()
 {
     lcd1602_position(6, 1);
-    PUTSTR("    ");
+    LCDSTR("    ");
 }
 
 static void display_ir(unsigned int ircode)
 {
     lcd1602_position(6, 1);
-    PUTHEXINT(ircode >> 12);
-    PUTHEXINT(ircode >> 8);
-    PUTHEXINT(ircode >> 4);
-    PUTHEXINT(ircode);
+    LCDHEX4(ircode);
 }
 
 void main(void) {

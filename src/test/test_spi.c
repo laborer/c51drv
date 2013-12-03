@@ -6,13 +6,14 @@
 #include "common.h"
 #include "spi.h"
 #include "uart.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {

@@ -6,13 +6,14 @@
 #include "common.h"
 #include "pcf8591.h"
 #include "uart.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -25,14 +26,14 @@ void main(void) {
     while (1) {
         pcf8591_ctrl(0, 4);
         pcf8591_adcstr(0, p, 4);
-        uart_putuint(p[0]);
-        uart_putchar('\n');
-        uart_putuint(p[1]);
-        uart_putchar('\n');
-        uart_putuint(p[2]);
-        uart_putchar('\n');
-        uart_putuint(p[3]);
-        uart_putchar('\n');
+        UARTUINT(p[0]);
+        UARTCHAR('\n');
+        UARTUINT(p[1]);
+        UARTCHAR('\n');
+        UARTUINT(p[2]);
+        UARTCHAR('\n');
+        UARTUINT(p[3]);
+        UARTCHAR('\n');
         delay_ms(500);
     }
 

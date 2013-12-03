@@ -5,13 +5,14 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -37,31 +38,31 @@ void main(void) {
         k = q0 ^ P0;
         for (i = 1, j = 0; i > 0; i <<= 1, j++) {
             if (k & i) {
-                uart_putstr("P0_");
-                uart_putchar('0' + j);
-                uart_putchar('=');
-                uart_putchar((q0 & i) ? '0' : '1');
-                uart_putchar(' ');
+                UARTSTR("P0_");
+                UARTCHAR('0' + j);
+                UARTCHAR('=');
+                UARTCHAR((q0 & i) ? '0' : '1');
+                UARTCHAR(' ');
             }
         }
         k = q1 ^ P1;
         for (i = 1, j = 0; i > 0; i <<= 1, j++) {
             if (k & i) {
-                uart_putstr("P1_");
-                uart_putchar('0' + j);
-                uart_putchar('=');
-                uart_putchar((q1 & i) ? '0' : '1');
-                uart_putchar(' ');
+                UARTSTR("P1_");
+                UARTCHAR('0' + j);
+                UARTCHAR('=');
+                UARTCHAR((q1 & i) ? '0' : '1');
+                UARTCHAR(' ');
             }
         }
         k = q2 ^ P2;
         for (i = 1, j = 0; i > 0; i <<= 1, j++) {
             if (k & i) {
-                uart_putstr("P2_");
-                uart_putchar('0' + j);
-                uart_putchar('=');
-                uart_putchar((q2 & i) ? '0' : '1');
-                uart_putchar(' ');
+                UARTSTR("P2_");
+                UARTCHAR('0' + j);
+                UARTCHAR('=');
+                UARTCHAR((q2 & i) ? '0' : '1');
+                UARTCHAR(' ');
             }
         }
     }

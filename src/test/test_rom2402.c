@@ -6,13 +6,14 @@
 #include "common.h"
 #include "rom2402.h"
 #include "uart.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -38,14 +39,14 @@ void main(void) {
 
     for (i = 0; i < 8; i++) {
         c = rom2402_read(7, i);
-        uart_putchar(c);
+        UARTCHAR(c);
     }
 
-    uart_putchar(' ');
+    UARTCHAR(' ');
 
     rom2402_readstr(7, 4, p, 8);
     for (i = 0; i < 8; i++) {
-        uart_putchar(p[i]);
+        UARTCHAR(p[i]);
     }
 
     while (1);

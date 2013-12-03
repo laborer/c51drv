@@ -6,13 +6,14 @@
 #include "common.h"
 #include "uart.h"
 #include "irrc5.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 static volatile char irstate;
@@ -33,12 +34,6 @@ void _irrc5_int0(void) __interrupt IE0_VECTOR __using 1
     }
 }
 
-void _uart_puthex(char c)
-{
-    c &= 0x0F;
-    uart_putchar((c > 9) ? ('A' - 10 + c) : ('0' + c));
-}       
-
 void main(void) {
     unsigned char ret;
 
@@ -55,16 +50,13 @@ void main(void) {
         while (irstate > 0);
         if (irstate == 0) {
             irstate = 1;
-            _uart_puthex(ircode >> 12);
-            _uart_puthex(ircode >> 8);
-            _uart_puthex(ircode >> 4);
-            _uart_puthex(ircode);
+            UARTHEX4(ircode);
         } else {
             ret = '0' - irstate;
             irstate = 1;
-            uart_putchar('E');
-            uart_putchar(ret);
+            UARTCHAR('E');
+            UARTCHAR(ret);
         }
-        uart_putchar(' ');
+        UARTCHAR(' ');
     }
 }

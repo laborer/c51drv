@@ -6,12 +6,14 @@
 #include "common.h"
 #include "uart.h"
 #include "lcd1602.h"
+#include "print.h"
+
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -69,7 +71,7 @@ void main(void) {
 
     lcd1602_write_cgram(0, 'A');
 
-    uart_putchar(lcd1602_read_cgram(0));
+    UARTCHAR(lcd1602_read_cgram(0));
 
     lcd1602_position(0, 1);
 

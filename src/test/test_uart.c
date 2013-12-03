@@ -9,9 +9,13 @@
 
 void welcome(void)
 {
+    unsigned char __code *p;
+
     while (uart_baudrate_auto());
     uart_init();
-    uart_putstr("c51drv\n");
+    for (p = "c51drv\n"; *p != 0; p++) {
+        uart_putchar(*p);
+    }
 }
 
 void main(void) {
@@ -24,7 +28,5 @@ void main(void) {
         uart_putchar(' ');
         uart_putchar(c);
         uart_putchar('(');
-        uart_putint(c);
-        uart_putchar(')');
     }
 }

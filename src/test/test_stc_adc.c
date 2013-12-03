@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "stc/stc.h"
 #include "stc/adc.h"
 
@@ -13,7 +14,7 @@ static void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -26,9 +27,9 @@ void main(void) {
     while (1) {
         ADC_START(0, 0);
         DELAY_CYCLES(4);
-        uart_putstr("adc: ");
+        UARTSTR("adc: ");
         while (!ADC_FLAG());
-        uart_putuint(ADC_RES);
-        uart_putchar('\n');
+        UARTUINT(ADC_RES);
+        UARTCHAR('\n');
     }
 }

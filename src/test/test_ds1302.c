@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "tools.h"
 #include "ds1302.h"
 
@@ -13,7 +14,7 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -41,16 +42,16 @@ void main(void) {
     for (i = 90; i != 0; i--) {
         ds1302_read_clock(p);
         for (j = 7; j != 0; j--) {
-            uart_putuint(BCD2UCHAR(p[j - 1]));
-            uart_putchar(' ');
+            UARTUINT(BCD2UCHAR(p[j - 1]));
+            UARTCHAR(' ');
         }
-        uart_putchar('\n');
+        UARTCHAR('\n');
         delay_ms(1000);
     }
 
-    uart_putstr("clock halt\n");
+    UARTSTR("clock halt\n");
     DS1302_CLOCK_HALT();
-    uart_putstr("write protect\n");
+    UARTSTR("write protect\n");
     DS1302_WRITE_PROTECT();
 
     ds1302_write(DS1302_YEAR, uchar2packedbcd(99));
@@ -58,10 +59,10 @@ void main(void) {
     for (i = 5; i != 0; i--) {
         ds1302_read_clock(p);
         for (j = 7; j != 0; j--) {
-            uart_putuint(BCD2UCHAR(p[j - 1]));
-            uart_putchar(' ');
+            UARTUINT(BCD2UCHAR(p[j - 1]));
+            UARTCHAR(' ');
         }
-        uart_putchar('\n');
+        UARTCHAR('\n');
         delay_ms(1000);
     }
 

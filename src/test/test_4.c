@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "timer.h"
 
 
@@ -15,7 +16,7 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -38,10 +39,10 @@ void main(void) {
         welcome();
 
         for (i = 1; i < 80; i++) {
-            uart_putuint(i);
-            uart_putstr(" +");
-            uart_putuint(t[i] - t[i - 1]);
-            uart_putchar('\n');
+            UARTUINT(i);
+            UARTSTR(" +");
+            UARTUINT(t[i] - t[i - 1]);
+            UARTCHAR('\n');
         }
 
         delay_ms(5000);

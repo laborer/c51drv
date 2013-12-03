@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "timer.h"
 #include <stdlib.h>
 
@@ -13,7 +14,7 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 /* Send an unsigned int */
@@ -25,7 +26,7 @@ void _uart_putulong(unsigned long i)
     ulong2bcd(i, buf);
     for (j = 0; j < 9 && buf[j] == 0; j++);
     for (; j < 10; j++) {
-        uart_putchar('0' + buf[j]);
+        UARTCHAR('0' + buf[j]);
     }
 }
 
@@ -40,18 +41,18 @@ void main(void) {
     uart_getchar();
 
     /* for (p = 0; p < 8 * 1024; p++) { */
-    /*     uart_putchar(*p); */
+    /*     UARTCHAR(*p); */
     /*     DELAY_US(3423); */
     /* } */
 
     /* _uart_putulong(12345L); */
-    /* uart_putchar('\n'); */
+    /* UARTCHAR('\n'); */
     /* _uart_putulong(12312424L); */
-    /* uart_putchar('\n'); */
+    /* UARTCHAR('\n'); */
     /* _uart_putulong(4294967295L); */
-    /* uart_putchar('\n'); */
+    /* UARTCHAR('\n'); */
     /* _uart_putulong(3932154463L); */
-    /* uart_putchar('\n'); */
+    /* UARTCHAR('\n'); */
 
 
     delay_ms(1000);
@@ -63,7 +64,7 @@ void main(void) {
     ulong2bcd(393215L, buf);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
-    uart_putchar('\n');
+    UARTCHAR('\n');
 
     delay_ms(1000);
 
@@ -71,7 +72,7 @@ void main(void) {
     ulong2bcd(3932159463L, buf);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
-    uart_putchar('\n');
+    UARTCHAR('\n');
 
     delay_ms(1000);
 
@@ -79,7 +80,7 @@ void main(void) {
     _ultoa(393215L, buf, 10);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
-    uart_putchar('\n');
+    UARTCHAR('\n');
 
     delay_ms(1000);
 
@@ -87,7 +88,7 @@ void main(void) {
     _ultoa(3932159463L, buf, 10);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
-    uart_putchar('\n');
+    UARTCHAR('\n');
 
     while (1);
 }

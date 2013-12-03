@@ -9,27 +9,11 @@
 #include "timer.h"
 
 
-#define PUTCHAR(c)                                              \
-    do {                                                        \
-        uart_putchar(c);                                        \
-    } while (0)
-
-#define PUTSTR(str)                                             \
-    do {                                                        \
-        print_str(uart_putchar, 0, 0, str);                     \
-    } while (0)
-
-#define PUTUINT(num)                                            \
-    do {                                                        \
-        print_int(uart_putchar, PRINT_UNSIGNED, 0, num);        \
-    } while (0)
-
-
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    PUTSTR("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -49,8 +33,8 @@ void main(void) {
         DELAY_US(10000);
         t1 = TIMER0_GET16();
 
-        PUTUINT(t1 - t0);
-        PUTCHAR('\n');
+        UARTUINT(t1 - t0);
+        UARTCHAR('\n');
 
         delay_ms(100);
         
@@ -58,8 +42,8 @@ void main(void) {
         delay_ms(10);
         t1 = TIMER0_GET16();
 
-        PUTUINT(t1 - t0);
-        PUTCHAR('\n');
+        UARTUINT(t1 - t0);
+        UARTCHAR('\n');
 
         delay_ms(100);
         
@@ -67,8 +51,8 @@ void main(void) {
         delay_ms(50);
         t1 = TIMER0_GET16();
 
-        PUTUINT(t1 - t0);
-        PUTCHAR('\n');
+        UARTUINT(t1 - t0);
+        UARTCHAR('\n');
     }
 
     {
@@ -83,10 +67,10 @@ void main(void) {
         DELAY_US(10000);
         t1 = TIMER0_GET32();
 
-        PUTUINT((t1 - t0) >> 16);
-        PUTCHAR(' ');
-        PUTUINT(t1 - t0);
-        PUTCHAR('\n');
+        UARTUINT((t1 - t0) >> 16);
+        UARTCHAR(' ');
+        UARTUINT(t1 - t0);
+        UARTCHAR('\n');
 
         delay_ms(100);
         
@@ -94,10 +78,10 @@ void main(void) {
         delay_ms(10);
         t1 = TIMER0_GET32();
 
-        PUTUINT((t1 - t0) >> 16);
-        PUTCHAR(' ');
-        PUTUINT(t1 - t0);
-        PUTCHAR('\n');
+        UARTUINT((t1 - t0) >> 16);
+        UARTCHAR(' ');
+        UARTUINT(t1 - t0);
+        UARTCHAR('\n');
     }
 
     {
@@ -108,28 +92,28 @@ void main(void) {
         TF0 = 1;
         t1 = TIMER0_GET32();
 
-        PUTCHAR(TF0 ? '1' : '0');
-        PUTCHAR('\n');
+        UARTCHAR(TF0 ? '1' : '0');
+        UARTCHAR('\n');
 
         ET0 = 1;
         t2 = TIMER0_GET32();
 
-        PUTUINT(t0 >> 16);
-        PUTCHAR('.');
-        PUTUINT(t0);
-        PUTCHAR(' ');
-        PUTUINT(t1 >> 16);
-        PUTCHAR('.');
-        PUTUINT(t1);
-        PUTCHAR('\n ');
+        UARTUINT(t0 >> 16);
+        UARTCHAR('.');
+        UARTUINT(t0);
+        UARTCHAR(' ');
+        UARTUINT(t1 >> 16);
+        UARTCHAR('.');
+        UARTUINT(t1);
+        UARTCHAR('\n ');
 
-        PUTCHAR(TF0 ? '1' : '0');
-        PUTCHAR('\n');
+        UARTCHAR(TF0 ? '1' : '0');
+        UARTCHAR('\n');
 
-        PUTUINT(t2 >> 16);
-        PUTCHAR('.');
-        PUTUINT(t2);
-        PUTCHAR('\n ');
+        UARTUINT(t2 >> 16);
+        UARTCHAR('.');
+        UARTUINT(t2);
+        UARTCHAR('\n ');
     }
 
     while (1);

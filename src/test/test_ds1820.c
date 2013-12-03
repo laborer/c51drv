@@ -6,13 +6,14 @@
 #include "common.h"
 #include "uart.h"
 #include "ds1820.h"
+#include "print.h"
 
 
 void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -33,70 +34,70 @@ void main(void) {
     rom[6] = 0;
     rom[7] = 0;
 
-    uart_putchar('0' + ds1820_search_rom(rom));
+    UARTCHAR('0' + ds1820_search_rom(rom));
 
     for (i = 0; i < 8; i++) {
-        uart_putchar(rom[i]);
+        UARTCHAR(rom[i]);
     }
 
-    /* uart_putchar('0' + ds1820_search_rom(rom)); */
+    /* UARTCHAR('0' + ds1820_search_rom(rom)); */
 
     /* for (i = 0; i < 8; i++) { */
-    /*     uart_putchar(rom[i]); */
+    /*     UARTCHAR(rom[i]); */
     /* } */
 
     
-    uart_putstr(" P");
-    uart_putchar('0' + ds1820_read_power_supply(0));
-    uart_putchar('0' + ds1820_read_power_supply(rom));
+    UARTSTR(" P");
+    UARTCHAR('0' + ds1820_read_power_supply(0));
+    UARTCHAR('0' + ds1820_read_power_supply(rom));
 
-    uart_putstr(" R");
-    uart_putchar('0' + ds1820_write_resolution(rom, 10));
-    uart_putchar('0' + ds1820_read_resolution(rom) - 9);
+    UARTSTR(" R");
+    UARTCHAR('0' + ds1820_write_resolution(rom, 10));
+    UARTCHAR('0' + ds1820_read_resolution(rom) - 9);
 
-    uart_putstr(" T");
-    uart_putchar('0' + ds1820_write_triggers(rom, 'c', 'd'));
-    uart_putchar('0' + ds1820_read_triggers(rom, &a, &b));
-    uart_putchar(a);
-    uart_putchar(b);
+    UARTSTR(" T");
+    UARTCHAR('0' + ds1820_write_triggers(rom, 'c', 'd'));
+    UARTCHAR('0' + ds1820_read_triggers(rom, &a, &b));
+    UARTCHAR(a);
+    UARTCHAR(b);
 
-    /* uart_putchar('C'); */
+    /* UARTCHAR('C'); */
 
-    /* uart_putchar('0' + ds1820_recall_e2(rom)); */
+    /* UARTCHAR('0' + ds1820_recall_e2(rom)); */
 
     /* delay_ms(100); */
 
-    /* uart_putchar('0' + ds1820_read_resolution(rom) - 9); */
+    /* UARTCHAR('0' + ds1820_read_resolution(rom) - 9); */
 
-    /* uart_putchar('0' + ds1820_read_triggers(rom, &buf[0], &buf[1])); */
+    /* UARTCHAR('0' + ds1820_read_triggers(rom, &buf[0], &buf[1])); */
     
-    /* uart_putchar(buf[0]); */
-    /* uart_putchar(buf[1]); */
+    /* UARTCHAR(buf[0]); */
+    /* UARTCHAR(buf[1]); */
 
-    /* uart_putchar('W'); */
+    /* UARTCHAR('W'); */
 
-    /* uart_putint(ds1820_read_temperature(rom) / 16); */
+    /* UARTINT(ds1820_read_temperature(rom) / 16); */
 
-    /* uart_putchar('0' + ds1820_read_temperature(0)); */
+    /* UARTCHAR('0' + ds1820_read_temperature(0)); */
     
-    uart_putstr(" W");
-    uart_putchar('0' + ds1820_write_resolution(0, 12));
+    UARTSTR(" W");
+    UARTCHAR('0' + ds1820_write_resolution(0, 12));
     t = ds1820_measure_temperature(0);
     if (((unsigned int)t >> 8) == 0x80) {
-        uart_putchar('0' + (t & 0xFF));
+        UARTCHAR('0' + (t & 0xFF));
     } else {
-        /* uart_putint(t / 16); */
-        uart_putint(t >> 4);
+        /* UARTINT(t / 16); */
+        UARTINT(t >> 4);
     }
 
-    uart_putstr(" W");
-    uart_putchar('0' + ds1820_write_resolution(0, 9));
+    UARTSTR(" W");
+    UARTCHAR('0' + ds1820_write_resolution(0, 9));
     t = ds1820_measure_temperature(0);
     if (((unsigned int)t >> 8) == 0x80) {
-        uart_putchar('0' + (t & 0xFF));
+        UARTCHAR('0' + (t & 0xFF));
     } else {
-        /* uart_putint(t / 16); */
-        uart_putint(t >> 4);
+        /* UARTINT(t / 16); */
+        UARTINT(t >> 4);
     }
 
     while (1);

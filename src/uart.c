@@ -247,35 +247,3 @@ void uart_init(void)
     /* Enable global interrupt */
     EA = 1;
 }
-
-/* Send a string */
-void uart_putstr(const unsigned char __code *s)
-{
-    for (; *s != 0; s++) {
-        uart_putchar(*s);
-    }
-}
-
-/* Send an unsigned int */
-void uart_putuint(unsigned int i)
-{
-    unsigned char __idata       buf[5];
-    unsigned char               j;
-    
-    uint2bcd(i, buf);
-    for (j = 0; j < 4 && buf[j] == 0; j++);
-    for (; j < 5; j++) {
-        uart_putchar('0' + buf[j]);
-    }
-}
-
-/* Send an int */
-void uart_putint(int i)
-{
-    if (i < 0) {
-        uart_putchar('-');
-        i = -i;
-    }
-    uart_putuint(i);
-}
-

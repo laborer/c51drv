@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "stc/eeprom.h"
 
 
@@ -12,7 +13,7 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
@@ -27,7 +28,7 @@ void main(void) {
     eeprom_erase(0x2000);
 
     for (i = 0; i < 256; i++) {
-        uart_putchar(eeprom_read(i + 0x2000 + 256 + 128));
+        UARTCHAR(eeprom_read(i + 0x2000 + 256 + 128));
     }
 
     while (1);

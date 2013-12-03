@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "uart.h"
+#include "print.h"
 #include "stc/stc.h"
 
 
@@ -12,14 +13,14 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void) {
     welcome();
 
     while (1) {
-        uart_putchar('0');
+        UARTCHAR('0');
         delay_ms(500);
     }
 }

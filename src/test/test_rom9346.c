@@ -6,14 +6,15 @@
 #include "common.h"
 #include "uart.h"
 #include "rom9346.h"
+#include "print.h"
 
 
 #define OUTPUT(c)                                               \
     do {                                                        \
         if (sizeof(c) == 2) {                                   \
-            uart_putchar((c) >> 8);                             \
+            UARTCHAR((c) >> 8);                                 \
         }                                                       \
-        uart_putchar(c);                                        \
+        UARTCHAR(c);                                            \
     } while (0)
 
 
@@ -21,7 +22,7 @@ void welcome(void)
 {
     uart_baudrate();
     uart_init();
-    uart_putstr("c51drv\n");
+    UARTSTR("c51drv\n");
 }
 
 void main(void)
