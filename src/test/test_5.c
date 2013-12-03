@@ -10,6 +10,28 @@
 #include "rom9346.h"
 #include "ds1820.h"
 #include "timer.h"
+#include "print.h"
+
+
+#define PUTCHAR(c)                                              \
+    do {                                                        \
+        lcd1602_putchar(c);                                     \
+    } while (0)
+
+#define PUTSTR(str)                                             \
+    do {                                                        \
+        print_str(lcd1602_putchar, 0, 0, str);                  \
+    } while (0)
+
+#define PUTUINT(num)                                            \
+    do {                                                        \
+        print_int(lcd1602_putchar, PRINT_UNSIGNED, 0, num);     \
+    } while (0)
+
+#define PUTHEXINT(num)                                          \
+    do {                                                        \
+        print_int(lcd1602_putchar, PRINT_HEX, 0, num);          \
+    } while (0)
 
 
 static void welcome(void)
@@ -18,31 +40,6 @@ static void welcome(void)
     uart_init();
     uart_putstr("c51drv\n");
 }
-
-static void _lcd1602_putstr(const unsigned char __code *s)
-{
-    for (; *s != 0; s++) {
-        lcd1602_putchar(*s);
-    }
-}
-
-static void _lcd1602_putuint(unsigned int i)
-{
-    unsigned char __idata       buf[5];
-    unsigned char               j;
-    
-    uint2bcd(i, buf);
-    for (j = 0; j < 4 && buf[j] == 0; j++);
-    for (; j < 5; j++) {
-        lcd1602_putchar('0' + buf[j]);
-    }
-}
-
-static void _lcd1602_puthex(char c)
-{
-    c &= 0x0F;
-    lcd1602_putchar((c > 9) ? ('A' - 10 + c) : ('0' + c));
-}       
 
 static volatile char irstate;
 static unsigned int ircode;
@@ -60,17 +57,17 @@ static void display_init()
     lcd1602_init();
 
     lcd1602_position(0, 0);
-    _lcd1602_putstr("TEMP: ");
+    PUTSTR("TEMP: ");
 
     lcd1602_position(0, 1);
-    _lcd1602_putstr("CODE: ");
+    PUTSTR("CODE: ");
 
 }
 
 static void display_temp_clear()
 {
     lcd1602_position(6, 0);
-    _lcd1602_putstr("        ");
+    PUTSTR("        ");
 }
 
 static void display_temp(int tempcode)
@@ -80,32 +77,32 @@ static void display_temp(int tempcode)
     lcd1602_position(6, 0);
     if (tempcode < 0) {
         tempcode = -tempcode;
-        lcd1602_putchar('-');
+        PUTCHAR('-');
     }
     
-    _lcd1602_putuint(tempcode >> 4);
-    lcd1602_putchar('.');
+    PUTUINT(tempcode >> 4);
+    PUTCHAR('.');
     
     k = (unsigned char)(((unsigned char)tempcode & 0x0F) * 10 + 8) >> 4;
     
-    lcd1602_putchar('0' + k);
-    lcd1602_putchar('\xDF');
-    lcd1602_putchar('C');
+    PUTCHAR('0' + k);
+    PUTCHAR('\xDF');
+    PUTCHAR('C');
 }
 
 static void display_ir_clear()
 {
     lcd1602_position(6, 1);
-    _lcd1602_putstr("    ");
+    PUTSTR("    ");
 }
 
 static void display_ir(unsigned int ircode)
 {
     lcd1602_position(6, 1);
-    _lcd1602_puthex(ircode >> 12);
-    _lcd1602_puthex(ircode >> 8);
-    _lcd1602_puthex(ircode >> 4);
-    _lcd1602_puthex(ircode);
+    PUTHEXINT(ircode >> 12);
+    PUTHEXINT(ircode >> 8);
+    PUTHEXINT(ircode >> 4);
+    PUTHEXINT(ircode);
 }
 
 void main(void) {
@@ -145,7 +142,6 @@ void main(void) {
                     display_temp_clear();
                 }
                 tempstate = 0;
-                /* uart_putchar('T'); */
             }
         }
 
@@ -153,7 +149,6 @@ void main(void) {
             irstate = 2;
             display_ir(ircode);
             irtime = TIMER0_GET32();
-            /* uart_putchar('I'); */
         } else if (irstate == 2) {
             if (TIMER0_GET32() - irtime > 2000UL * TIMER_CYCLES_US(1000)) {
                 irstate = 0;

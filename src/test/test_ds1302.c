@@ -28,13 +28,13 @@ void main(void) {
     DS1302_WRITE_ENABLE();
     DS1302_CLOCK_RESUME();
 
-    p[0] = uchar2bcd(30);
-    p[1] = uchar2bcd(25);
-    p[2] = uchar2bcd(10);
-    p[3] = uchar2bcd(22);
-    p[4] = uchar2bcd(11);
-    p[5] = uchar2bcd(6);
-    p[6] = uchar2bcd(13);
+    p[0] = uchar2packedbcd(30);
+    p[1] = uchar2packedbcd(25);
+    p[2] = uchar2packedbcd(10);
+    p[3] = uchar2packedbcd(22);
+    p[4] = uchar2packedbcd(11);
+    p[5] = uchar2packedbcd(6);
+    p[6] = uchar2packedbcd(13);
 
     ds1302_write_clock(p);
     
@@ -53,7 +53,7 @@ void main(void) {
     uart_putstr("write protect\n");
     DS1302_WRITE_PROTECT();
 
-    ds1302_write(DS1302_YEAR, uchar2bcd(99));
+    ds1302_write(DS1302_YEAR, uchar2packedbcd(99));
     
     for (i = 5; i != 0; i--) {
         ds1302_read_clock(p);

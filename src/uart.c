@@ -9,18 +9,17 @@
 
 
 /* Ring buffer struct for UART I/O */
-struct buffer
-{
+typedef struct {
     unsigned char dat[4];
     unsigned char in;
     unsigned char out;
-};
+} buffer_t;
 
 
 /* Transmitting buffer */
-static struct buffer txbuf;
+static buffer_t txbuf;
 /* Receiving buffer */
-static struct buffer rcbuf;
+static buffer_t rcbuf;
 
 /* Transmitting is turned off */
 static char txoff;

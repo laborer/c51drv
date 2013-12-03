@@ -17,9 +17,17 @@ unsigned char reverse(unsigned char c)
     return (lookup[c & 0x0F] << 4) | lookup[c >> 4];
 }
 
-unsigned char uchar2bcd(unsigned char x)
+unsigned char uchar2packedbcd(unsigned char x)
 {
     return ((x / 10) << 4) | B;
+}
+
+void uchar2bcd(unsigned char x, unsigned char __idata *d)
+{
+    x = x / 10;
+    d[2] = B;
+    d[0] = x / 10;
+    d[1] = B;
 }
 
 /* See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3731568
@@ -88,6 +96,17 @@ void ulong2bcd(unsigned long x, unsigned char __idata *d)
         *p = B;           /* d[i] = d[i] % 10 */
         *(--p) += k;      /* d[i - 1] += k */
     }
+}
+
+void uint2hex(unsigned int x, unsigned char __idata *d)
+{
+    unsigned char __idata *p;
+
+    p = d;
+    *(p++) = x >> 12;
+    *(p++) = (x >> 8) & 0x0F;
+    *(p++) = (unsigned char)x >> 4;
+    *p = x & 0x0F;
 }
 
 void delay_ms(unsigned int i)

@@ -26,7 +26,7 @@ SDCCFLAGS	:= $(SDCCFLAGS) -DTARGET_MODEL_$(subst +,_,$(TARGET))
 AUTOISP		:= yes
 
 # Specify modules to compile
-MODULES		:= common tools uart timer iic spi irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302
+MODULES		:= common tools uart timer print iic spi irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302
 
 # Include modules and test cases designed for certain MCUs
 ifneq ($(findstring ^STC, ^$(TARGET)), )
@@ -103,7 +103,7 @@ endif
 $(call testf, common): 		$(call libf, common)
 $(call testf, tools): 		$(call libf, common)
 $(call testf, uart): 		$(call libf, common uart)
-$(call testf, timer): 		$(call libf, common uart timer)
+$(call testf, timer): 		$(call libf, common uart print timer)
 $(call testf, iic):		$(call libf, common uart iic)
 $(call testf, spi):		$(call libf, common uart spi)
 $(call testf, irrc5):		$(call libf, common uart timer irrc5)
@@ -114,6 +114,7 @@ $(call testf, ds1820): 		$(call libf, common uart tools ds1820)
 $(call testf, lcd1602): 	$(call libf, common uart lcd1602)
 $(call testf, pcf8591): 	$(call libf, common uart iic pcf8591)
 $(call testf, ds1302): 		$(call libf, common uart ds1302)
+$(call testf, print):		$(call libf, common uart print)
 
 $(call testf, stc_wdt): 	$(call libf, common uart)
 $(call testf, stc_gpio): 	$(call libf, common uart)
@@ -126,7 +127,7 @@ $(call testf, 1): 		$(call libf, common)
 $(call testf, 2): 		$(call libf, common uart)
 $(call testf, 3): 		$(call libf, common uart)
 $(call testf, 4): 		$(call libf, common uart timer)
-$(call testf, 5): 		$(call libf, common uart tools timer spi rom9346 ds1820 lcd1602 irnec)
+$(call testf, 5): 		$(call libf, common uart print tools timer spi rom9346 ds1820 lcd1602 irnec)
 $(call testf, 6): 		$(call libf, common uart timer)
 
 # Pack .ihx file to .hex.  By default, this makefile only generates

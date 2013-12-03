@@ -150,9 +150,11 @@ void _nop_(void);
 
 
 unsigned char reverse(unsigned char c);
-unsigned char uchar2bcd(unsigned char x);
+unsigned char uchar2packedbcd(unsigned char x);
+void uchar2bcd(unsigned char x, unsigned char __idata *d);
 void uint2bcd(unsigned int x, unsigned char __idata *d);
 void ulong2bcd(unsigned long x, unsigned char __idata *d);
+void uint2hex(unsigned int x, unsigned char __idata *d);
 void delay_ms(unsigned int i);
 
 
