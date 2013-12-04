@@ -74,7 +74,7 @@ void pcf8591_dac(unsigned char dev, unsigned char ctrl, unsigned char c)
         goto start;
     }
 
-    if (iic_send(ctrl)) {
+    if (iic_send(PCF8591_OUTPUTENABLE | ctrl)) {
         goto start;
     }
 
@@ -97,7 +97,7 @@ void pcf8591_dacstr(unsigned char dev,
         goto start;
     }
 
-    if (iic_send(ctrl)) {
+    if (iic_send(PCF8591_OUTPUTENABLE | ctrl)) {
         goto start;
     }
 

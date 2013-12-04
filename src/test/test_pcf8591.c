@@ -17,25 +17,29 @@ void welcome(void)
 }
 
 void main(void) {
-    unsigned char __idata p[4];
+    unsigned char __idata       p[5];
+    unsigned char               ctrl;
 
     welcome();
 
     uart_getchar();
 
+    ctrl = PCF8591_OUTPUTENABLE | PCF8591_INPUTCONFIG0 | PCF8591_AUTOINCREMENT;
+    pcf8591_ctrl(0, ctrl);
+
     while (1) {
-        pcf8591_ctrl(0, 4);
-        pcf8591_adcstr(0, p, 4);
-        UARTUINT(p[0]);
-        UARTCHAR('\n');
+        pcf8591_adcstr(0, p, 5);
+        pcf8591_dac(0, ctrl, p[1]);
+
         UARTUINT(p[1]);
-        UARTCHAR('\n');
+        UARTCHAR(' ');
         UARTUINT(p[2]);
-        UARTCHAR('\n');
+        UARTCHAR(' ');
         UARTUINT(p[3]);
+        UARTCHAR(' ');
+        UARTUINT(p[4]);
         UARTCHAR('\n');
+
         delay_ms(500);
     }
-
-    /* while (1); */
 }

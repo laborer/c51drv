@@ -26,8 +26,8 @@ void main(void) {
 
     uart_getchar();
 
-    DS1302_WRITE_ENABLE();
-    DS1302_CLOCK_RESUME();
+    DS1302_WRITEPROTECT_DISABLE();
+    DS1302_CLOCKHALT_DISABLE();
 
     p[0] = uchar2packedbcd(30);
     p[1] = uchar2packedbcd(25);
@@ -50,9 +50,9 @@ void main(void) {
     }
 
     UARTSTR("clock halt\n");
-    DS1302_CLOCK_HALT();
+    DS1302_CLOCKHALT_ENABLE();
     UARTSTR("write protect\n");
-    DS1302_WRITE_PROTECT();
+    DS1302_WRITEPROTECT_ENABLE();
 
     ds1302_write(DS1302_YEAR, uchar2packedbcd(99));
     

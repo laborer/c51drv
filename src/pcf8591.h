@@ -7,6 +7,14 @@
 #define __PCF8591_H
 
 
+#define PCF8591_INPUTCONFIG0    0x00
+#define PCF8591_INPUTCONFIG1    0x10
+#define PCF8591_INPUTCONFIG2    0x20
+#define PCF8591_INPUTCONFIG3    0x30
+#define PCF8591_AUTOINCREMENT   0x04
+#define PCF8591_OUTPUTENABLE    0x40
+
+
 unsigned char pcf8591_adc(unsigned char dev);
 void pcf8591_adcstr(unsigned char dev, 
                     unsigned char __idata *p,

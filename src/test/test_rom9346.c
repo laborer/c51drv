@@ -35,15 +35,15 @@ void main(void)
 
     welcome();
 
-    rom9346_ewen();
+    rom9346_write_enable();
 
-    rom9346_eral();
+    rom9346_erase_all();
 
     for (i = 0; i < 64; i++) {
         rom9346_write(i, i);
     }
 
-    rom9346_ewds();
+    rom9346_write_disable();
 
     for (i = 0; i < 5; i++) {
         c = rom9346_read(i);

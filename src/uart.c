@@ -22,9 +22,9 @@ static buffer_t txbuf;
 static buffer_t rcbuf;
 
 /* Transmitting is turned off */
-static char txoff;
+static __bit txoff;
 /* Receiving buffer is overflow */
-static char rcoff;
+static __bit rcoff;
 
 
 #ifdef UART_CALLBACK
@@ -72,26 +72,21 @@ void uart_interrupt(void) __interrupt SI0_VECTOR __using 1
     }
 }
 
-/* Check if receiving buffer is empty */
-char uart_rcempty(void)
-{
-    return BUF_EMPTY(rcbuf);
+/* Test if there are data ready to be read */
+char uart_rcready() {
+    return !BUF_EMPTY(rcbuf);
 }
 
-/* Read a byte from receiving buffer */
-int uart_rcget(void)
-{
-    if (BUF_EMPTY(rcbuf)) {
-        return -1;
-    }
-    return BUF_GET(rcbuf);
+/* Test if it is ready to send data */
+char uart_txready() {
+    return !BUF_FULL(txbuf);
 }
 
-/* Send a byte to transmitting buffer */
-char uart_txput(unsigned char c)
+/* Send a byte in block mode */
+void uart_putchar(unsigned char c)
 {
-    if (BUF_FULL(txbuf)) {
-        return -1;
+    while (BUF_FULL(txbuf)) {
+        POWER_IDLE();
     }
 
     BUF_PUT(txbuf, c);
@@ -102,39 +97,33 @@ char uart_txput(unsigned char c)
         /* Set transmitting interrupt flag to be ready */
         TI = 1;
     }
-    return 0;
-}
-
-/* Send a byte in block mode */
-void uart_putchar(unsigned char c)
-{
-    while (uart_txput(c)) {
-        /* Enter idle mode */
-        POWER_IDLE();
-    }
 }
 
 /* Read a byte in block mode */
 unsigned char uart_getchar(void)
 {
-    while (uart_rcempty()) {
-        /* Enter idle mode */
+    while (BUF_EMPTY(rcbuf)) {
         POWER_IDLE();
     }
-    return uart_rcget();
+
+    return BUF_GET(rcbuf);
 }
 
 /* Set a fixed baudrate */
 void uart_baudrate(void)
 {
     /* Set ratio for baud rate and oscillator frequency */
-    /* SMOD1 SMOD0 - POF GF1 GF0 PD IDL
-       1     -     - -   -   -   -  -   */
-    PCON |= SMOD;
+    if (UART_SMOD) {
+        /* SMOD1 SMOD0 - POF GF1 GF0 PD IDL
+           1     -     - -   -   -   -  -   */
+        PCON |= SMOD;
+    } else {
+        PCON &= ~SMOD;
+    }
 
     /* Set timer */
     /* 256 - FOSC * (SMOD1 + 1) / BAUD / 32 / 12 */ 
-    TIMER1_INIT8(256 - (unsigned char)(FOSC * (1 + 1) / UART_BAUD / 32 / 12));
+    TIMER1_INIT8(-(FOSC / UART_BAUD / (UART_SMOD ? 16 : 32) / 12));
     TIMER1_START();
 }
 

@@ -53,14 +53,14 @@ static word_t recv_word()
 }
 
 /* Enable erase and write. */
-void rom9346_ewen()
+void rom9346_write_enable()
 {
     send_cmd(0, 3 << (ADDR_LEN - 2));
     CS = 0;
 }
 
 /* Disable erase and write. */
-void rom9346_ewds()
+void rom9346_write_disable()
 {
     send_cmd(0, 0 << (ADDR_LEN - 2));
     CS = 0;
@@ -74,7 +74,7 @@ void rom9346_erase(unsigned int addr)
 }
 
 /* Erase all. */
-void rom9346_eral()
+void rom9346_erase_all()
 {
     send_cmd(0, 2 << (ADDR_LEN - 2));
     CS = 0;
@@ -111,7 +111,7 @@ void rom9346_write(unsigned int addr, word_t w)
 }
 
 /* Write c to all memory.  Note: this doesn't erase automatically. */
-void rom9346_wral(word_t w)
+void rom9346_write_all(word_t w)
 {
     send_cmd(0, 1 << (ADDR_LEN - 2));
     send_word(w);

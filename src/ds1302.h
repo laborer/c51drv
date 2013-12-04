@@ -20,22 +20,22 @@
 #define DS1302_YEAR     6
 
 
-#define DS1302_CLOCK_HALT()                                     \
+#define DS1302_CLOCKHALT_ENABLE()                               \
     ds1302_write(0, 0x80)
 
-#define DS1302_CLOCK_RESUME()                                   \
+#define DS1302_CLOCKHALT_DISABLE()                              \
     ds1302_write(0, 0x00)
 
-#define DS1302_CLOCK_HALT_STATUS()                              \
+#define DS1302_CLOCKHALT_STATUS()                               \
     (ds1302_read(0) & 0x80) 
 
-#define DS1302_WRITE_PROTECT()                                  \
+#define DS1302_WRITEPROTECT_ENABLE()                            \
     ds1302_write(7, 0x80)
 
-#define DS1302_WRITE_ENABLE()                                   \
+#define DS1302_WRITEPROTECT_DISABLE()                           \
     ds1302_write(7, 0x00)
 
-#define DS1302_WRITE_PROTECT_STATUS()                           \
+#define DS1302_WRITEPROTECT_STATUS()                            \
     ds1302_read(7)
 
 
