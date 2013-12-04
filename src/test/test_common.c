@@ -23,6 +23,6 @@ void main(void) {
     P0 = 0;
     while (1) {
         P0 ^= mask;
-        for (i = 60000; i > 0; i--);
+        delay_ms(1000);
     }
 }

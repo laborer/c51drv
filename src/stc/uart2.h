@@ -8,9 +8,8 @@
 
 
 #define UART2_SMOD      1
-#define UART2_BAUD      57600
-//#define UART2_BAUD      4800
-#define UART2_BRTX12    1
+#define UART2_BAUD      4800
+#define UART2_BRTX12    0
 
 
 #if defined SDCC || defined __SDCC

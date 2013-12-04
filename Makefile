@@ -11,53 +11,54 @@ MAKEBIN		:= $(SDCCBINDIR)/makebin -p
 BUILDDIR	:= build
 
 # Disable some unnecessary warnings
-SDCCFLAGS	:= $(SDCCFLAGS) --less-pedantic --disable-warning 84
+SDCCFLAGS	+= --less-pedantic --disable-warning 84
 
 # Set the model name of the target MCU
 # TARGET		:= STC89C51RC
 
 # Tell C program the name of the target MCU model
-SDCCFLAGS	:= $(SDCCFLAGS) -DTARGET_MODEL_$(subst +,_,$(TARGET))
+SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
 
 # Set frequency of the oscillator
-# SDCCFLAGS	:= $(SDCCFLAGS) -DFOSC=11059200L
+# SDCCFLAGS	+= -DFOSC=11059200L
 
 # Enable AutoISP for STC MCUs
 AUTOISP		:= yes
 
 # Specify modules to compile
-MODULES		:= common tools uart timer print iic spi irrc5 irnec ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302
+MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg
+MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 
 
 # Include modules and test cases designed for certain MCUs
 ifneq ($(findstring ^STC, ^$(TARGET)), )
-    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8052
+    SDCCFLAGS	+= -DMICROCONTROLLER_8052
     # If AutoISP is enabled, register autoisp_check as a UART callback
     # function
-    SDCCFLAGS	:= $(SDCCFLAGS) $(if $(AUTOISP), -DUART_CALLBACK=autoisp_check) 
-    MODULES	:= $(MODULES) stc/eeprom stc/autoisp
-    TESTS	:= $(TESTS) stc/wdt
+    SDCCFLAGS	+= $(if $(AUTOISP), -DUART_CALLBACK=autoisp_check) 
+    MODULES	+= stc/eeprom stc/autoisp
+    TESTS	+= stc/wdt
     # The following modules and test cases only work for non-STC89C
     # series MCUs
     ifeq ($(findstring ^STC89, ^$(TARGET)), )
-        TESTS	:= $(TESTS) stc/gpio stc/adc stc/pca stc/spi stc/uart2
-        SDCCFLAGS := $(SDCCFLAGS) -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
+        TESTS	+= stc/gpio stc/adc stc/pca stc/spi stc/uart2
+        SDCCFLAGS += -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
     endif
 else
-    SDCCFLAGS	:= $(SDCCFLAGS) -DMICROCONTROLLER_8051
+    SDCCFLAGS	+= -DMICROCONTROLLER_8051
 endif
 
 # Build a list of test cases
-TESTS		:= $(MODULES) $(TESTS) 1 2 3 4 5 6
+TESTS		+= $(MODULES) 1 2 3 4 5 6
 TESTS		:= $(subst /,_,$(TESTS))
 BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
 
 # Set memory usage limit for some known MCUs
 ifeq ($(TARGET), STC89C52RC)
-    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 8192 --xram-size 256
+    ASLINKFLAGS	+= --code-size 8192 --xram-size 256
 else ifeq ($(TARGET), STC89C54RD+)
-    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --xram-size 1024
+    ASLINKFLAGS	+= --code-size 16384 --xram-size 1024
 else ifeq ($(TARGET), STC12C5A16S2)
-    ASLINKFLAGS	:= $(ASLINKFLAGS) --code-size 16384 --xram-size 1024
+    ASLINKFLAGS	+= --code-size 16384 --xram-size 1024
 endif
 
 # Tell test cases where to find modules' header files
@@ -108,6 +109,7 @@ $(call testf, iic):		$(call libf, common uart print iic)
 $(call testf, spi):		$(call libf, common uart print spi)
 $(call testf, irrc5):		$(call libf, common uart print timer irrc5)
 $(call testf, irnec):		$(call libf, common uart print timer irnec)
+$(call testf, led7seg):		$(call libf, common uart print led7seg)
 $(call testf, rom9346):		$(call libf, common uart print spi rom9346)
 $(call testf, rom2402): 	$(call libf, common uart print iic rom2402)
 $(call testf, ds1820): 		$(call libf, common uart print tools ds1820)
