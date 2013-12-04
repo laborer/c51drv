@@ -39,7 +39,7 @@ ifneq ($(findstring ^STC, ^$(TARGET)), )
     # The following modules and test cases only work for non-STC89C
     # series MCUs
     ifeq ($(findstring ^STC89, ^$(TARGET)), )
-        TESTS	:= $(TESTS) stc/gpio stc/adc stc/pca 
+        TESTS	:= $(TESTS) stc/gpio stc/adc stc/pca stc/spi
         SDCCFLAGS := $(SDCCFLAGS) -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
     endif
 else
@@ -122,6 +122,7 @@ $(call testf, stc_adc): 	$(call libf, common uart print)
 $(call testf, stc_pca): 	$(call libf, common uart print)
 $(call testf, stc_eeprom): 	$(call libf, common uart print stc/eeprom)
 $(call testf, stc_autoisp): 	$(call libf, common uart print)
+$(call testf, stc_spi): 	$(call libf, common uart print stc/spi)
 
 $(call testf, 1): 		$(call libf, common)
 $(call testf, 2): 		$(call libf, common uart print)

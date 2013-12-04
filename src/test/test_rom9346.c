@@ -12,9 +12,11 @@
 #define OUTPUT(c)                                               \
     do {                                                        \
         if (sizeof(c) == 2) {                                   \
-            UARTCHAR((c) >> 8);                                 \
+            UARTHEX4(c);                                        \
+        } else {                                                \
+            UARTHEX2(c);                                        \
         }                                                       \
-        UARTCHAR(c);                                            \
+        UARTCHAR(' ');                                          \
     } while (0)
 
 
@@ -37,8 +39,8 @@ void main(void)
 
     rom9346_eral();
 
-    for (i = 0; i < 16; i++) {
-        rom9346_write(i, 'A' + i);
+    for (i = 0; i < 64; i++) {
+        rom9346_write(i, i);
     }
 
     rom9346_ewds();
