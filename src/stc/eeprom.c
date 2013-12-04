@@ -3,9 +3,9 @@
  */
 
 
+#include "../common.h"
 #include "stc.h"
 #include "eeprom.h"
-#include "../common.h"
 
 
 #if defined __STC89C5xRC_RDP_H_                                 \

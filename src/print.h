@@ -15,37 +15,29 @@
 typedef void (*putchar_func)(unsigned char);
 
 
-#define UARTCHAR(c)                                              \
-    do {                                                        \
-        uart_putchar(c);                                        \
-    } while (0)
+#define UARTCHAR(c)                                             \
+    uart_putchar(c)
 
-#define UARTUINT(num)                                            \
-    do {                                                        \
-        print_int(uart_putchar, PRINT_UNSIGNED, 0, num);        \
-    } while (0)
+#define UARTUINT(num)                                           \
+    print_int(uart_putchar, PRINT_UNSIGNED, 0, num)
 
-#define UARTINT(num)                                             \
-    do {                                                        \
-        print_int(uart_putchar, PRINT_UNSIGNED, 0, num);        \
-    } while (0)
+#define UARTINT(num)                                            \
+    print_int(uart_putchar, PRINT_UNSIGNED, 0, num)
 
-#define UARTHEX2(num)                                            \
-    do {                                                        \
-        print_int(uart_putchar,                                 \
-                  PRINT_HEX | PRINT_ZERO, 2, num);              \
-    } while (0)
+#define UARTHEX2(num)                                           \
+    print_int(uart_putchar,                                     \
+              PRINT_HEX | PRINT_UPPERCASE | PRINT_ZERO,         \
+              2,                                                \
+              num)
 
-#define UARTHEX4(num)                                            \
-    do {                                                        \
-        print_int(uart_putchar,                                 \
-                  PRINT_HEX | PRINT_ZERO, 4, num);              \
-    } while (0)
+#define UARTHEX4(num)                                           \
+    print_int(uart_putchar,                                     \
+              PRINT_HEX | PRINT_UPPERCASE | PRINT_ZERO,         \
+              4,                                                \
+              num)
 
-#define UARTSTR(str)                                             \
-    do {                                                        \
-        print_str(uart_putchar, 0, 0, str);                     \
-    } while (0)
+#define UARTSTR(str)                                            \
+    print_str(uart_putchar, 0, 0, str)
 
 
 unsigned char print_int(putchar_func putchar,

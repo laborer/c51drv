@@ -14,25 +14,26 @@
 
 
 #define LCDCHAR(c)                                              \
-    do {                                                        \
-        lcd1602_putchar(c);                                     \
-    } while (0)
+    lcd1602_putchar(c);
 
 #define LCDSTR(str)                                             \
-    do {                                                        \
-        print_str(lcd1602_putchar, 0, 0, str);                  \
-    } while (0)
+    print_str(lcd1602_putchar, 0, 0, str)
+
+#define LCDINT4(num)                                            \
+    print_int(lcd1602_putchar, 0, 4, num)
 
 #define LCDUINT(num)                                            \
-    do {                                                        \
-        print_int(lcd1602_putchar, PRINT_UNSIGNED, 0, num);     \
-    } while (0)
+    print_int(lcd1602_putchar, PRINT_UNSIGNED, 0, num)
 
 #define LCDHEX4(num)                                            \
-    do {                                                        \
-        print_int(lcd1602_putchar,                              \
-                  PRINT_HEX | PRINT_ZERO, 4, num);              \
-    } while (0)
+    print_int(lcd1602_putchar,                                  \
+              PRINT_HEX | PRINT_UPPERCASE | PRINT_ZERO,         \
+              4,                                                \
+              num)
+
+
+static volatile char irstate;
+static unsigned int ircode;
 
 
 static void welcome(void)
@@ -41,9 +42,6 @@ static void welcome(void)
     uart_init();
     UARTSTR("c51drv\n");
 }
-
-static volatile char irstate;
-static unsigned int ircode;
 
 void _irnec_int0(void) __interrupt IE0_VECTOR __using 1
 {
@@ -56,18 +54,11 @@ void _irnec_int0(void) __interrupt IE0_VECTOR __using 1
 static void display_init()
 {
     lcd1602_init();
-
-    lcd1602_position(0, 0);
-    LCDSTR("TEMP: ");
-
-    lcd1602_position(0, 1);
-    LCDSTR("CODE: ");
-
 }
 
 static void display_temp_clear()
 {
-    lcd1602_position(6, 0);
+    lcd1602_position(0, 0);
     LCDSTR("        ");
 }
 
@@ -75,17 +66,16 @@ static void display_temp(int tempcode)
 {
     unsigned int k;
 
-    lcd1602_position(6, 0);
-    if (tempcode < 0) {
-        tempcode = -tempcode;
-        LCDCHAR('-');
-    }
-    
-    LCDUINT(tempcode >> 4);
+    lcd1602_position(0, 0);
+    LCDINT4(tempcode >> 4);
     LCDCHAR('.');
-    
-    k = (unsigned char)(((unsigned char)tempcode & 0x0F) * 10 + 8) >> 4;
-    
+
+    k = tempcode & 0x0F;
+    if (tempcode < 0) {
+        k = 0x10 - k;
+    }
+    k = (unsigned char)(k * 10 + 8) >> 4;
+
     LCDCHAR('0' + k);
     LCDCHAR('\xDF');
     LCDCHAR('C');
@@ -93,14 +83,35 @@ static void display_temp(int tempcode)
 
 static void display_ir_clear()
 {
-    lcd1602_position(6, 1);
+    lcd1602_position(10, 0);
     LCDSTR("    ");
 }
 
 static void display_ir(unsigned int ircode)
 {
-    lcd1602_position(6, 1);
+    lcd1602_position(10, 0);
     LCDHEX4(ircode);
+}
+
+static void display_rom()
+{
+    static unsigned char pos;
+    unsigned char i;
+    unsigned char c;
+
+    for (i = 0; i < 18; i++) {
+        lcd1602_position(i + 1, 1);
+        c = lcd1602_getchar();
+        lcd1602_position(i, 1);
+        LCDCHAR(c);
+    }
+
+    /* pos = (pos + 1) & (64 * 4 - 1); */
+    pos += 1;
+    if (!(pos & 0x03)) {
+        lcd1602_position(15, 1);
+        LCDHEX4(rom9346_read(pos >> 2));
+    }
 }
 
 void main(void) {
@@ -108,12 +119,14 @@ void main(void) {
     int                 tempcode;
     unsigned long       temptime;
     unsigned long       irtime;
+    unsigned char       romstate;
 
     welcome();
 
     display_init();
 
     irnec_init(); 
+    /* INT0 */
     P3_2 = 1;
     irstate = 0;
     IT0 = 1;
@@ -121,6 +134,8 @@ void main(void) {
     EA = 1;
 
     tempstate = 0;
+
+    romstate = 0;
 
     TIMER0_INIT32();
     TIMER0_START();
@@ -153,7 +168,12 @@ void main(void) {
                 display_ir_clear();
             }
         }
-        
-        PCON |= IDL;
+
+        if (romstate == 0) {
+            display_rom();
+        }
+        romstate = (romstate + 1) & 0x03;
+
+        POWER_IDLE();
     }
 }
