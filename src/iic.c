@@ -11,6 +11,7 @@
 #define SDA     IIC_SDA
 
 
+/* Send byte c */
 __bit iic_send(unsigned char c)
 {
     unsigned char i;
@@ -34,6 +35,7 @@ __bit iic_send(unsigned char c)
     return SDA;
 }
 
+/* Receive a byte and acknowledge with bit ack */
 unsigned char iic_recv(__bit ack)
 {
     unsigned char i;
@@ -62,6 +64,7 @@ unsigned char iic_recv(__bit ack)
     return c;
 }
 
+/* Send iic start condition */
 void iic_start()
 {
     SCL = 0;
@@ -74,6 +77,7 @@ void iic_start()
     DELAY_US(2);
 }
 
+/* Send iic stop condition */
 void iic_stop()
 {
     SCL = 0;
@@ -86,7 +90,7 @@ void iic_stop()
     DELAY_US(2);
 }
 
-
+/* Reset all iic slaves */
 void iic_reset()
 {
     unsigned char i;

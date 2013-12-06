@@ -7,6 +7,19 @@
 #include "print.h"
 
 
+/* Print integer num using function putchar and return the number of
+   characters printed.  It provides the similar functionality as
+   printf("%d", num). E.g.,
+   print_int(uart_putchar, 0, 10, num) 
+       is same as printf("%10d", num);
+   print_int(uart_putchar, PRINT_ZERO, 4, num) 
+       is same as printf("%04d", num); 
+   print_int(uart_putchar, PRINT_LEFTALIGN, 6, num) 
+       is same as printf("%-6d", num);
+   print_int(uart_putchar, PRINT_UNSIGNED, 0, num)
+       is same as printf("%u", num);
+   print_int(uart_putchar, PRINT_HEX | PRINT_UPPERCASE, 0, num)
+       is same as printf("%X", num); */
 unsigned char print_int(putchar_func putchar,
                         unsigned char fmt,
                         unsigned char width,
@@ -18,6 +31,7 @@ unsigned char print_int(putchar_func putchar,
     unsigned char               n;
     unsigned char               ret;
 
+    /* Decide which sign should be used */
     if (num < 0 && !(fmt & (PRINT_UNSIGNED | PRINT_HEX))) {
         num = -num;
         sign = '-';
@@ -29,6 +43,7 @@ unsigned char print_int(putchar_func putchar,
         sign = 0;
     }
 
+    /* Convert num to hex or bcd format according to fmt */
     if (fmt & PRINT_HEX) {
         uint2hex(num, buf);
         n = 4;
@@ -37,8 +52,11 @@ unsigned char print_int(putchar_func putchar,
         n = 5;
     }
 
+    /* Trim zeros at the front */
     for (p = buf; *p == 0 && n != 1; p++, n--);
 
+    /* Calculate the size of the padding and number of characters to
+       print */
     if (width > n) {
         ret = width;
         width -= n;
@@ -53,27 +71,33 @@ unsigned char print_int(putchar_func putchar,
         }
     }
 
+    /* Normal case, the padding is at the front */
     if (!(fmt & (PRINT_LEFTALIGN | PRINT_ZERO)) && width) {
         do {
             putchar(' ');
         } while (--width);
     }
 
+    /* Print sign if necessary */
     if (sign) {
         putchar(sign);
     }
 
+    /* Zero padding case (e.g. "%04d"), the padding is in between the sign
+       and number */
     if ((fmt & PRINT_ZERO) && width) {
         do {
             putchar('0');
         } while (--width);
     }
 
+    /* Print the number */
     sign = (fmt & PRINT_UPPERCASE) ? ('A' - 10) : ('a' - 10);
     for (; n != 0; p++, n--) {
         putchar(*p + ((*p > 9) ? sign : '0'));
     }
 
+    /* Left alignment case, the padding is at the end */
     if (width) {
         do {
             putchar(' ');
@@ -83,6 +107,11 @@ unsigned char print_int(putchar_func putchar,
     return ret;
 }
 
+/* Print string str using function putchar and return the number of
+   characters printed.  It provides the similar functionality as
+   printf("%s", num). E.g.,
+   print_int(uart_putchar, 0, 10, str) 
+       is same as printf("%10s", str); */
 unsigned char print_str(putchar_func putchar, 
                         unsigned char fmt, 
                         unsigned char width, 

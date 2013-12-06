@@ -6,6 +6,15 @@
 #include "common.h"
 
 
+/* Array of illuminated segments for each digit from 0 to F
+       a
+     +----+
+   f | g  | b
+     +----+
+   e |    | c
+     +----+
+       d
+  From MSB to LSB: - g f e d c b a */
 const unsigned char __code led7seg_encode[16] = {
     BIN(00111111),  /* 0 */
     BIN(00000110),  /* 1 */

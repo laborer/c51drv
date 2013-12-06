@@ -18,6 +18,7 @@
 static unsigned char crc;
 
 
+/* Send bit b */
 static void send_bit(__bit b)
 {
     DQ = 0;
@@ -28,6 +29,7 @@ static void send_bit(__bit b)
     DELAY_US(1);
 }
 
+/* Send byte c */
 static void send_byte(unsigned char c)
 {
     unsigned char i;
@@ -38,6 +40,7 @@ static void send_byte(unsigned char c)
     }
 }
 
+/* Receive a bit */
 static __bit recv_bit(void)
 {
     __bit b;
@@ -52,6 +55,7 @@ static __bit recv_bit(void)
     return b;
 }
 
+/* Receive a byte */
 static unsigned char recv_byte(void)
 {
     unsigned char i;
@@ -68,6 +72,7 @@ static unsigned char recv_byte(void)
     return c;
 }
 
+/* Initialize conversation */
 static char init(void)
 {
     /* It seems that if DQ is not pulled-up long enough, the chip
@@ -89,6 +94,7 @@ static char init(void)
     return 0;
 }
 
+/* Send out the address of the device we are looking for */
 static void match_rom(unsigned char __idata *rom)
 {
     unsigned char i;
@@ -105,6 +111,8 @@ static void match_rom(unsigned char __idata *rom)
     }
 }
 
+/* Find the device addressed next to rom on the bus.  Parameter cmd
+   decides whether it is a normal or alarm search */
 static char next_rom(unsigned char __idata *rom, unsigned char cmd)
 {
     char i;
@@ -234,6 +242,7 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
     return 0;
 }
 
+/* Read the n and n+1-th byte on the scratchpad */
 static unsigned int read_scratchpad(unsigned char n)
 {
     unsigned char       i;
@@ -258,6 +267,7 @@ static unsigned int read_scratchpad(unsigned char n)
     return ret;
 }
 
+/* Write threshold th, tl and configuration cfg to the scratchpad */
 static void write_scratchpad(unsigned char th, 
                              unsigned char tl, 
                              unsigned char cfg)
@@ -271,6 +281,7 @@ static void write_scratchpad(unsigned char th,
 }
 
 
+/* Read the address of a device */
 char ds1820_read_rom(unsigned char __idata *rom)
 {
     unsigned char i;
@@ -294,6 +305,7 @@ char ds1820_read_rom(unsigned char __idata *rom)
     return 0;
 }
 
+/* Read which power supply a device uses */
 char ds1820_read_power_supply(unsigned char __idata *rom)
 {
     if (init() < 0) {
@@ -308,6 +320,7 @@ char ds1820_read_power_supply(unsigned char __idata *rom)
     return (recv_bit()) ? 1 : 0;
 }
 
+/* Send command to start temperature measurement */
 char ds1820_convert_t(unsigned char __idata *rom)
 {
     if (init() < 0) {
@@ -322,6 +335,7 @@ char ds1820_convert_t(unsigned char __idata *rom)
     return 0;
 }
 
+/* Store scratchpad to eeprom */
 char ds1820_copy_scratchpad(unsigned char __idata *rom)
 {
     if (init() < 0) {
@@ -336,6 +350,7 @@ char ds1820_copy_scratchpad(unsigned char __idata *rom)
     return 0;
 }
 
+/* Reload scratchpad from eeprom */
 char ds1820_recall_e2(unsigned char __idata *rom)
 {
     if (init() < 0) {
@@ -350,18 +365,22 @@ char ds1820_recall_e2(unsigned char __idata *rom)
     return 0;
 }
 
+/* Search the device addressed next to rom */
 char ds1820_search_rom(unsigned char __idata *rom)
 {
     /* Search ROM */
     return next_rom(rom, 0xF0);
 }
 
+/* Search the device addressed next to rom, which triggered its
+   alarm */
 char ds1820_alarm_search(unsigned char __idata *rom)
 {
     /* Alarm Search */
     return next_rom(rom, 0xEC);
 }
 
+/* Read the measured temperature */
 int ds1820_read_temperature(unsigned char __idata *rom)
 {
     unsigned int ret;
@@ -380,6 +399,7 @@ int ds1820_read_temperature(unsigned char __idata *rom)
     return ret;
 }
 
+/* Read the resolution of temperature measurement */
 char ds1820_read_resolution(unsigned char __idata *rom)
 {
     unsigned int ret;
@@ -398,6 +418,7 @@ char ds1820_read_resolution(unsigned char __idata *rom)
     return (((char)ret & 0x7F) >> 5) + 9;
 }
 
+/* Set the resolution of temperature measurement */
 char ds1820_write_resolution(unsigned char __idata *rom, unsigned char res)
 {
     unsigned int ret;
@@ -427,6 +448,7 @@ char ds1820_write_resolution(unsigned char __idata *rom, unsigned char res)
     return 0;
 }
 
+/* Read trigger temperatures */
 char ds1820_read_triggers(unsigned char __idata *rom, 
                           unsigned char __idata *th,
                           unsigned char __idata *tl)
@@ -450,6 +472,7 @@ char ds1820_read_triggers(unsigned char __idata *rom,
     return 0;
 }
 
+/* Set trigger temperatures */
 char ds1820_write_triggers(unsigned char __idata *rom, 
                            unsigned char th,
                            unsigned char tl)

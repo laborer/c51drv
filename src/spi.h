@@ -12,12 +12,16 @@
 #define SPI_MISO        P2_0
 
 
+/* Shift out the last n bits of c from MSB to LSB and return the n
+   bits shifted in during the same time. */
 #define SPI_EXCH(c, n)                                          \
     spi_exchange((c) << (8 - (n)), (n))
 
+/* Send byte c */
 #define SPI_SEND(c)                                             \
     spi_exchange((c), 8)
 
+/* Receive a byte */
 #define SPI_RECV() \
     spi_exchange(0, 8)
 
