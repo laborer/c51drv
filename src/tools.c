@@ -6,7 +6,8 @@
 #include "tools.h"
 
 
-/* See: http://www.hackersdelight.org/crc.pdf */
+/* CRC-8.
+   See: http://www.hackersdelight.org/crc.pdf */
 unsigned char crc8(unsigned char crc, unsigned char c)
 {
     unsigned char i;

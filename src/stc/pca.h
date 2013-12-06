@@ -20,7 +20,7 @@
    
    PCA Comparator: CCAPnL
 
-   PCA_PWMn Register:
+   PCA PWM Mode Auxiliary Register n: PCA_PWMn
    - - - - - - EPCnH EPCnL */
 
 #define PCA_FALLING     0x10
@@ -35,8 +35,8 @@
 #define PCA_SYSCLK_6    0x0C
 #define PCA_SYSCLK_8    0x0E
 
-#define PCA_FLAG0       CCF0
-#define PCA_FLAG1       CCF1
+#define PCA0_FLAG       CCF0
+#define PCA1_FLAG       CCF1
   
 #define PCA_INIT(clock_source)                                  \
     do {                                                        \
@@ -55,6 +55,7 @@
         CCAPM0 |= (enable) ? 1 : 0;                             \
     } while (0)
 
+/* E.g. PCA0_CAPTURE(PCA_FALLING | PCA_RISING) */
 #define PCA0_CAPTURE(edge)                                      \
     do {                                                        \
         CCAPM0 = (edge);                                        \

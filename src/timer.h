@@ -10,29 +10,34 @@
 #include "common.h"
 
 
+/* The increment of timer in t microseconds */
 #define TIMER_CYCLES_US(t)                                      \
     ((unsigned int)((t) / 1000000.0 * FOSC / 12))
 
 
 #if defined SDCC || defined __SDCC
-
+/* These functions manage the stack themselves so caller doesn't need
+   to save and restore registers */
 #pragma callee_saves timer0_get16,timer0_get32
-
 #endif /* SDCC */
 
 
+/* Timer flag indicating if timer overflows */
 #define TIMER0_FLAG TF0
 
+/* Start timer */
 #define TIMER0_START()                                          \
     do {                                                        \
         TR0 = 1;                                                \
     } while (0)
 
+/* Pause timer */
 #define TIMER0_STOP()                                           \
     do {                                                        \
         TR0 = 0;                                                \
     } while (0)
 
+/* Initialize Timer0 as a 16-bit timer */
 #define TIMER0_INIT16()                                         \
     do {                                                        \
         /* Set Timer0 to be a 16-bit timer */                   \
@@ -44,15 +49,18 @@
         TF0 = 0;                                                \
     } while (0)
 
+/* Read Timer0 as a 16-bit timer */
 #define TIMER0_GET16()                                          \
     timer0_get16()
 
+/* Set Timer0 as a 16-bit timer */
 #define TIMER0_SET16(t)                                         \
     do {                                                        \
         TL0 = (t);                                              \
         TH0 = (unsigned int)(t) >> 8;                           \
     } while (0)
 
+/* Initialize Timer0 as an 8-bit auto-reload timer */
 #define TIMER0_INIT8(t)                                         \
     do {                                                        \
         /* Set Timer0 to be an 8-bit auto-reload timer */       \
@@ -65,14 +73,17 @@
         TH0 = (t);                                              \
     } while (0)
 
+/* Read Timer0 as a 8-bit timer */
 #define TIMER0_GET8()                                           \
     (TL0)
 
+/* Set Timer0 as a 8-bit timer */
 #define TIMER0_SET8(t)                                          \
     do {                                                        \
         TL0 = (t);                                              \
     } while (0)
 
+/* Count down t microseconds */
 #define TIMER0_COUNTDOWN_US(t)                                  \
     do {                                                        \
         TIMER0_INIT16();                                        \
@@ -83,18 +94,22 @@
 unsigned int timer0_get16();
 
 
+/* Timer flag indicating if timer overflows */
 #define TIMER1_FLAG TF1
 
+/* Start timer */
 #define TIMER1_START()                                          \
     do {                                                        \
         TR1 = 1;                                                \
     } while (0)
 
+/* Pause timer */
 #define TIMER1_STOP()                                           \
     do {                                                        \
         TR1 = 0;                                                \
     } while (0)
 
+/* Initialize Timer1 as a 16-bit timer */
 #define TIMER1_INIT16()                                         \
     do {                                                        \
         /* Set Timer0 to be a 16-bit timer */                   \
@@ -106,17 +121,20 @@ unsigned int timer0_get16();
         TF1 = 0;                                                \
     } while (0)
 
-/* Different than TIMER0_GET16(), TIMER1_GET16() can only get correct
-   reading when the timer is stopped */
+/* Read Timer1 as a 16-bit timer.  Different than TIMER0_GET16(),
+   TIMER1_GET16() can only get correct reading when the timer isn't
+   running */
 #define TIMER1_GET16()                                          \
     (TH1 * 256 + TL1)
 
+/* Set Timer1 as a 16-bit timer */
 #define TIMER1_SET16(t)                                         \
     do {                                                        \
         TL1 = (t);                                              \
         TH1 = (unsigned int)(t) >> 8;                           \
     } while (0)
 
+/* Initialize Timer1 as an 8-bit auto-reload timer */
 #define TIMER1_INIT8(t)                                         \
     do {                                                        \
         /* Set Timer0 to be an 8-bit auto-reload timer */       \
@@ -130,31 +148,38 @@ unsigned int timer0_get16();
     } while (0)
 
 
+/* Define functions for Timer2 if the target MCU is 8052 */
 #ifdef MICROCONTROLLER_8052
 
+/* Timer flag indicating if timer overflows */
 #define TIMER2_FLAG TF2
 
+/* Start timer */
 #define TIMER2_START()                                          \
     do {                                                        \
         TR2 = 1;                                                \
     } while (0)
 
+/* Pause timer */
 #define TIMER2_STOP()                                           \
     do {                                                        \
         TR2 = 0;                                                \
     } while (0)
 
+/* Initialize Timer2 as a 16-bit timer */
 #define TIMER2_INIT16()                                         \
     do {                                                        \
-        /* Set Timer2 to be a 16-bit auto-reload timer */       \
+        /* Set Timer2 to be a 16-bit timer */                   \
         /* TF2 EXF2 RCLK TCLK EXEN2 TR2 C/T2# CP/RL2#           \
            0   0    0    0    0     0   0     0       */        \
         T2CON = 0;                                              \
     } while (0)
 
+/* Read Timer2 as a 16-bit timer */
 #define TIMER2_GET16()                                          \
     timer2_get16()
 
+/* Set Timer2 as a 16-bit timer */
 #define TIMER2_SET16(t)                                         \
     do {                                                        \
         RCAP2L = (t);                                           \
@@ -164,6 +189,7 @@ unsigned int timer0_get16();
 #endif /* MICROCONTROLLER_8052 */
 
 
+/* Initialize Timer0 as a quasi-32-bit timer */
 #define TIMER0_INIT32()                                         \
     do {                                                        \
         TIMER0_INIT16();                                        \
@@ -173,9 +199,11 @@ unsigned int timer0_get16();
         EA = 1;                                                 \
     } while (0)
 
+/* Read Timer2 as a quasi-32-bit timer */
 #define TIMER0_GET32()                                          \
     timer0_get32()
 
+/* Set Timer2 as a quasi-32-bit timer */
 #define TIMER0_SET32(t)                                         \
     timer0_set32(t)
 

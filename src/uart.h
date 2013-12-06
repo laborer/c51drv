@@ -7,7 +7,10 @@
 #define __UART_H
 
 
+
+/* Should SMOD bit be used in uart_baudrate() */
 #define UART_SMOD       1
+/* Baudrate after calling uart_baudrate() */
 #define UART_BAUD       4800
 
 

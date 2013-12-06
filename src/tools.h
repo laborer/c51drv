@@ -62,7 +62,7 @@
      ? ((unsigned char)((buf).in - (buf).out) & BUF_MASK(buf))  \
      : (((buf).in - (buf).out) & BUF_MASK(buf)))
 
-
+/* Convert binary to byte.  E.g., BIN(11111111) returns 255 */
 #define __BIN_FROM_HEX(h)                                       \
     (  ((h >> 21) & 0x80)                                       \
      | ((h >> 18) & 0x40)                                       \
@@ -75,6 +75,7 @@
 #define BIN(b)                                                  \
     __BIN_FROM_HEX(0x##b##L)
 
+/* Log base 2 of a byte x.  E.g. LOG2_8(16) returns 4 */
 #define LOG2_8(x)                                               \
     (  (((x) >= 0x80) ? 1 : 0)                                  \
      + (((x) >= 0x40) ? 1 : 0)                                  \
@@ -84,13 +85,16 @@
      + (((x) >= 0x04) ? 1 : 0)                                  \
      + (((x) >= 0x02) ? 1 : 0))
 
+/* Minimum of a and b */
 #define MIN(a, b)                                               \
     (((a) > (b)) ? (b) : (a))
 
+/* Maximum of a and b */
 #define MAX(a, b)                                               \
     (((a) > (b)) ? (a) : (b))
 
-#define BCD2UCHAR(x)                                            \
+/* Convert a packed BCD number to a byte */
+#define PACKEDBCD2UCHAR(x)                                      \
     ((unsigned char)(((unsigned char)(x) >> 4) * 10             \
                      + ((unsigned char)(x) & 0x0F)))
 

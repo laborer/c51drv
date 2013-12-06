@@ -18,12 +18,12 @@
         if ((mode) & 1) {                                       \
             P##port##M0 |= 1 << (pin);                          \
         } else {                                                \
-            P##port##M0 &= 0xFF - (1 << (pin));                 \
+            P##port##M0 &= ~(1 << (pin));                       \
         }                                                       \
         if ((mode) & 2) {                                       \
             P##port##M1 |= 1 << (pin);                          \
         } else {                                                \
-            P##port##M1 &= 0xFF - (1 << (pin));                 \
+            P##port##M1 &= ~(1 << (pin));                       \
         }                                                       \
     } while (0)
 

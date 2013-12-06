@@ -10,19 +10,23 @@
 #include "tools.h"
 
 
+/* Frequency of the oscillator */
 #ifndef FOSC
 #define FOSC            12000000L
 #endif /* FOSC */
+/* Number of clock cycles per machine cycle */
 #ifndef TICKS
 #define TICKS           12
 #endif /* TICKS */
 
+/* STC89's 6T mode behaves more like doubling the frequency */
 #if TICKS == 6
 #warning If you are using 6T mode for STC89 series MCUs,        \
     double FOSC rather than change TICKS from 12 to 6
 #endif
 
-/* R: Register
+/* The number of machines cycles of the instructions.
+   R: Register
    N: Number
    D: Direct address 
    E: Relative address */
@@ -96,24 +100,33 @@ void _nop_(void);
 #endif /* Other compiler */
 
 
+/* The number of machine cycles in a microsecond */
 #define CYCLES_US(t)                                            \
     ((unsigned int)((t) / 1000000.0 * FOSC / TICKS))
 
+/* The number of loops of the first inner loop */
 #define __DELAY_LOOP0   0x7E
+/* The number of machine cycles of the first inner loop */
 #define __DELAY_INNER                                           \
     (__DELAY_MOV + __DELAY_DJNZ * (__DELAY_LOOP0 + 1))
+/* Cannot to delay for negative machine cycles */
 #define __DELAY_CUTOFF(n)                                       \
     (((n) > 0) ? ((n) + __DELAY_MOV) : 0)
+/* The number of loops of the first outer loop */
 #define __DELAY_LOOP1(n)                                        \
     (((int)(n) - __DELAY_MOV) / __DELAY_INNER - 1)
+/* The number of machine cycles left after the first loop */
 #define __DELAY_N1(n)                                           \
     ((n) - __DELAY_CUTOFF(__DELAY_LOOP1(n) * __DELAY_INNER))
+/* The number of loops of the second loop */
 #define __DELAY_LOOP2(n)                                        \
     ((__DELAY_N1(n) <= 8) \
      ? 0 : ((__DELAY_N1(n) - __DELAY_MOV) / __DELAY_DJNZ))
+/* The number of machine cycles left after the second loop */
 #define __DELAY_N2(n)                                           \
     (__DELAY_N1(n)                                              \
      - __DELAY_CUTOFF(__DELAY_LOOP2(n) * __DELAY_DJNZ))
+/* Delay for n machine cycles */
 #define DELAY_CYCLES(n)                                         \
     do {                                                        \
         __DELAY_TYPE unsigned char i;                           \
@@ -135,14 +148,17 @@ void _nop_(void);
         if (__DELAY_N2(n) > 6) nop();                           \
         if (__DELAY_N2(n) > 7) nop();                           \
     } while (0)
+/* Delay for t microseconds */
 #define DELAY_US(t)                                             \
     DELAY_CYCLES(CYCLES_US(t))
 
+/* Enter idle mode */
 #define POWER_IDLE()                                            \
     do {                                                        \
         PCON |= IDL;                                            \
     } while (0)
 
+/* Enter power down mode */
 #define POWER_DOWN()                                            \
     do {                                                        \
         PCON |= PD;                                             \
@@ -151,11 +167,11 @@ void _nop_(void);
 
 unsigned char reverse(unsigned char c);
 unsigned char uchar2packedbcd(unsigned char x);
-void uchar2bcd(unsigned char x, unsigned char __idata *d);
-void uint2bcd(unsigned int x, unsigned char __idata *d);
-void ulong2bcd(unsigned long x, unsigned char __idata *d);
-void uint2hex(unsigned int x, unsigned char __idata *d);
-void delay_ms(unsigned int i);
+void uchar2bcd(unsigned char x, unsigned char __idata *buf);
+void uint2bcd(unsigned int x, unsigned char __idata *buf);
+void ulong2bcd(unsigned long x, unsigned char __idata *buf);
+void uint2hex(unsigned int x, unsigned char __idata *buf);
+void delay_ms(unsigned int t);
 
 
 #endif /* __COMMON_H */

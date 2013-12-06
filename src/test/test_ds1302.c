@@ -42,7 +42,7 @@ void main(void) {
     for (i = 90; i != 0; i--) {
         ds1302_read_clock(p);
         for (j = 7; j != 0; j--) {
-            UARTUINT(BCD2UCHAR(p[j - 1]));
+            UARTUINT(PACKEDBCD2UCHAR(p[j - 1]));
             UARTCHAR(' ');
         }
         UARTCHAR('\n');
@@ -59,7 +59,7 @@ void main(void) {
     for (i = 5; i != 0; i--) {
         ds1302_read_clock(p);
         for (j = 7; j != 0; j--) {
-            UARTUINT(BCD2UCHAR(p[j - 1]));
+            UARTUINT(PACKEDBCD2UCHAR(p[j - 1]));
             UARTCHAR(' ');
         }
         UARTCHAR('\n');
