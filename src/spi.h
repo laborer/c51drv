@@ -12,21 +12,17 @@
 #define SPI_MISO        P2_0
 
 
-/* Shift out the last n bits of c from MSB to LSB and return the n
-   bits shifted in during the same time. */
-#define SPI_EXCH(c, n)                                          \
-    spi_exchange((c) << (8 - (n)), (n))
-
-/* Send byte c */
-#define SPI_SEND(c)                                             \
-    spi_exchange((c), 8)
-
-/* Receive a byte */
-#define SPI_RECV() \
-    spi_exchange(0, 8)
+#if defined SDCC || defined __SDCC
+#pragma callee_saves spi_init,spi_isbusy
+#endif /* SDCC */
 
 
-unsigned char spi_exchange(unsigned char c, unsigned char n);
+void spi_init();
+unsigned char spi_isbusy();
+void spi_sendstr(unsigned char __idata *buf, unsigned char n);
+void spi_recvstr(unsigned char __idata *buf, unsigned char n);
+void spi_send(unsigned char c);
+unsigned char spi_recv();
 
 
 #endif /* __SPI_H */

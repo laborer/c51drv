@@ -69,7 +69,7 @@ static unsigned int __data t0_h32;
    timer is still running.  For SDCC, this routine is implemented
    using inline assembly due to the inefficiency of the code SDCC
    (v3.2) generated */
-uunsigned long timer0_get32() __naked
+unsigned long timer0_get32() __naked
 {
     __asm
       loop2$:

@@ -40,7 +40,7 @@ void main(void)
     rom9346_erase_all();
 
     for (i = 0; i < 64; i++) {
-        rom9346_write(i, i);
+        rom9346_write(i, i + 0x10);
     }
 
     rom9346_write_disable();
