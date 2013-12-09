@@ -8,7 +8,7 @@
 
 
 /* 93C46 16-bit mode */
-#define ROM9346_ADDR_LEN 6
+#define ROM9346_ADDRLEN 6
 typedef unsigned int rom9346_word_t;
 
 /* 93C46 8-bit mode */

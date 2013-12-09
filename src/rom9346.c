@@ -11,13 +11,13 @@
 #include "print.h"
 
 
-#define CS              ROM9346_CS
-#define ADDR_LEN        ROM9346_ADDR_LEN
-#define word_t          rom9346_word_t
+#define CS      ROM9346_CS
+#define ADDRLEN ROM9346_ADDRLEN
+#define word_t  rom9346_word_t
 
 
-#define MAKECMD(opcode, addr)                                   \
-    (((4 | (opcode)) << ADDR_LEN) | (addr))
+#define BUILDCMD(opcode)                                        \
+    (BIN(1##opcode) << (ADDRLEN + 2 - LOG2_8(BIN(1##opcode))))
 
 
 /* Send an instruction to the chip */
@@ -59,28 +59,28 @@ static word_t recv_word()
 /* Enable erase and write. */
 void rom9346_write_enable()
 {
-    send_cmd(MAKECMD(0, 3 << (ADDR_LEN - 2)));
+    send_cmd(BUILDCMD(0011));
     CS = 0;
 }
 
 /* Disable erase and write. */
 void rom9346_write_disable()
 {
-    send_cmd(MAKECMD(0, 0 << (ADDR_LEN - 2)));
+    send_cmd(BUILDCMD(0000));
     CS = 0;
 }
 
 /* Erase one word. */
 void rom9346_erase(unsigned int addr)
 {
-    send_cmd(MAKECMD(3, addr));
+    send_cmd(BUILDCMD(11) | addr);
     CS = 0;
 }
 
 /* Erase all. */
 void rom9346_erase_all()
 {
-    send_cmd(MAKECMD(0, 2 << (ADDR_LEN - 2)));
+    send_cmd(BUILDCMD(0010));
     CS = 0;
 }
 
@@ -89,7 +89,7 @@ word_t rom9346_read(unsigned int addr)
 {
     word_t c;
 
-    send_cmd(MAKECMD(2, addr));
+    send_cmd(BUILDCMD(10) | addr);
     c = recv_word();
     CS = 0;
 
@@ -99,7 +99,7 @@ word_t rom9346_read(unsigned int addr)
 /* Read n words from addr to string p */
 void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
 {
-    send_cmd(MAKECMD(2, addr));
+    send_cmd(BUILDCMD(10) | addr);
     for (; n != 0; p++, n--) {
         *p = recv_word();
     }
@@ -109,7 +109,7 @@ void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
 /* Write one word c to addr */
 void rom9346_write(unsigned int addr, word_t w)
 {
-    send_cmd(MAKECMD(1, addr));
+    send_cmd(BUILDCMD(01) | addr);
     send_word(w);
     CS = 0;
 }
@@ -117,7 +117,7 @@ void rom9346_write(unsigned int addr, word_t w)
 /* Write c to all memory.  Note: this doesn't erase automatically. */
 void rom9346_write_all(word_t w)
 {
-    send_cmd(MAKECMD(0, 1 << (ADDR_LEN - 2)));
+    send_cmd(BUILDCMD(0001));
     send_word(w);
     CS = 0;
 }
