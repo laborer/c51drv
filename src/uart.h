@@ -18,7 +18,6 @@
 void uart_interrupt(void) __interrupt SI0_VECTOR __using 1;
 #endif
 
-
 char uart_rcready();
 char uart_txready();
 void uart_putchar(unsigned char c);
