@@ -164,6 +164,26 @@ void _nop_(void);
         PCON |= PD;                                             \
     } while (0)
 
+/* Reverse the order of a byte using a large lookup table.  Comment
+   out this macro to save 256 bytes in code rom if it's not
+   necessary */
+#define REVERSE_FAST(c)                                         \
+    reverse_lookup_table[c]
+
+#ifdef REVERSE_FAST
+
+#define REVERSE(c)                                              \
+    REVERSE_FAST(c)
+
+extern const unsigned char __code reverse_lookup_table[];
+
+#else
+
+#define REVERSE(c)                                              \
+    reverse(c)
+
+#endif
+
 
 unsigned char reverse(unsigned char c);
 unsigned char uchar2packedbcd(unsigned char x);

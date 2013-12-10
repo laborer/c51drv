@@ -26,7 +26,7 @@ void spi_uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 {
     length -= 1;
     if (RI) {
-        *buffer = reverse(SBUF);
+        *buffer = REVERSE(SBUF);
         buffer += 1;
         if (length == 0) {
             REN = 0;

@@ -49,14 +49,15 @@ unsigned int read_9346(unsigned char addr)
     CS = 1;
     while (!spi_recv());
 
-    /* spi_uart_send(0x01); */
-    /* spi_uart_send(0x80 | addr); */
-
     spi_send(0x01);
     spi_send(0x80 | addr);
-    /* spi_uart_send(0x80 | addr); */
 
+#ifdef SPI_UART_RECV_ENABLE
+    c = (spi_uart_recv() << 8) | spi_uart_recv();
+#else
     c = (spi_recv() << 8) | spi_recv();
+#endif
+
     CS = 0;
 
     return c;
@@ -100,10 +101,6 @@ void main(void) {
     welcome();
 
     lcd1602_position(0, 1);
-
-    /* RXD = 1; */
-
-    /* while (1); */
 
 #ifdef SPI_UART_RECV_ENABLE
     spi_uart_init();

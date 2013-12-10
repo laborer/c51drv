@@ -131,7 +131,7 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
     i = 8;
     do {
         i -= 1;
-        rom[i] = reverse(reverse(rom[i]) + 1);
+        rom[i] = REVERSE(REVERSE(rom[i]) + 1);
     } while (i > 0 && rom[i] == 0);
 
     /* Overflow!  There is no next rom. */
