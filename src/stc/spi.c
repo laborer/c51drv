@@ -45,7 +45,7 @@ void spi_interrupt(void) __interrupt 9 __using 1
     }
 }
 
-void spi_init()
+void spi_init(void)
 {
     /* Clear SPI flags */
     /* SPIF WCOL - - - - - - */
@@ -66,7 +66,7 @@ void spi_init()
     length = 0;
 }
 
-unsigned char spi_isbusy()
+unsigned char spi_isbusy(void)
 {
     return length;
 }
@@ -100,7 +100,7 @@ void spi_send(unsigned char c) {
     spi_sendstr(&buf, 1);
 }
 
-unsigned char spi_recv() {
+unsigned char spi_recv(void) {
     unsigned char __idata buf;
 
     spi_recvstr(&buf, 1);

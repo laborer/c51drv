@@ -73,12 +73,12 @@ void uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 }
 
 /* Test if there are data ready to be read */
-char uart_rcready() {
+char uart_rcready(void) {
     return !BUF_EMPTY(rcbuf);
 }
 
 /* Test if it is ready to send data */
-char uart_txready() {
+char uart_txready(void) {
     return !BUF_FULL(txbuf);
 }
 

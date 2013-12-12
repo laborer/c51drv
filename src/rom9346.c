@@ -47,7 +47,7 @@ static void send_word(word_t w)
 }
 
 /* Receive a word from the chip */
-static word_t recv_word()
+static word_t recv_word(void)
 {
     if (sizeof(word_t) == 2) {
         return (spi_recv() << 8) | spi_recv();
@@ -57,14 +57,14 @@ static word_t recv_word()
 }
 
 /* Enable erase and write. */
-void rom9346_write_enable()
+void rom9346_write_enable(void)
 {
     send_cmd(BUILDCMD(0011));
     CS = 0;
 }
 
 /* Disable erase and write. */
-void rom9346_write_disable()
+void rom9346_write_disable(void)
 {
     send_cmd(BUILDCMD(0000));
     CS = 0;
@@ -78,7 +78,7 @@ void rom9346_erase(unsigned int addr)
 }
 
 /* Erase all. */
-void rom9346_erase_all()
+void rom9346_erase_all(void)
 {
     send_cmd(BUILDCMD(0010));
     CS = 0;

@@ -65,7 +65,7 @@ unsigned char iic_recv(__bit ack)
 }
 
 /* Send iic start condition */
-void iic_start()
+void iic_start(void)
 {
     SCL = 0;
     DELAY_US(2);
@@ -78,7 +78,7 @@ void iic_start()
 }
 
 /* Send iic stop condition */
-void iic_stop()
+void iic_stop(void)
 {
     SCL = 0;
     DELAY_US(2);
@@ -91,7 +91,7 @@ void iic_stop()
 }
 
 /* Reset all iic slaves */
-void iic_reset()
+void iic_reset(void)
 {
     unsigned char i;
 

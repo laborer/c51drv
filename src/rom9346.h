@@ -26,10 +26,10 @@ typedef unsigned int rom9346_word_t;
 #define ROM9346_CS       P2_3
 
 
-void rom9346_write_enable();
-void rom9346_write_disable();
+void rom9346_write_enable(void);
+void rom9346_write_disable(void);
 void rom9346_erase(unsigned int addr);
-void rom9346_erase_all();
+void rom9346_erase_all(void);
 rom9346_word_t rom9346_read(unsigned int addr);
 void rom9346_readstr(unsigned int addr, 
                      rom9346_word_t __idata *p,

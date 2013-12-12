@@ -44,7 +44,7 @@ static void send_byte(unsigned char c)
     E = 0;
 }
 
-static unsigned char recv_byte()
+static unsigned char recv_byte(void)
 {
     unsigned char c;
 
@@ -64,7 +64,7 @@ static void set_addr(unsigned char addr)
     SEND_CMD(0x80 | addr & 0x7F);
 }
 
-static unsigned char get_addr()
+static unsigned char get_addr(void)
 {
     WAIT_READY();
     return RECV_CMD() & 0x7F;
@@ -106,7 +106,7 @@ void lcd1602_putchar(unsigned char c)
     SEND_DAT(c);
 }
 
-unsigned char lcd1602_getchar()
+unsigned char lcd1602_getchar(void)
 {
     WAIT_READY();
     return RECV_DAT();

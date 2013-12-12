@@ -20,12 +20,12 @@
 #endif
 
 
-void spi_init();
-unsigned char spi_isbusy();
+void spi_init(void);
+unsigned char spi_isbusy(void);
 void spi_sendstr(unsigned char __idata *buf, unsigned char n);
 void spi_recvstr(unsigned char __idata *buf, unsigned char n);
 void spi_send(unsigned char c);
-unsigned char spi_recv();
+unsigned char spi_recv(void);
 
 #ifdef SPI_UART_RECV_ENABLE
 
@@ -38,10 +38,10 @@ unsigned char spi_recv();
 void spi_uart_interrupt(void) __interrupt SI0_VECTOR __using 1;
 #endif
 
-void spi_uart_init();
-unsigned char spi_uart_isbusy();
+void spi_uart_init(void);
+unsigned char spi_uart_isbusy(void);
 void spi_uart_recvstr(unsigned char __idata *buf, unsigned char n);
-unsigned char spi_uart_recv();
+unsigned char spi_uart_recv(void);
 
 #endif /* SPI_UART_RECV_ENABLE */
 

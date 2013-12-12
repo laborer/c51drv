@@ -77,12 +77,12 @@ void uart2_interrupt(void) __interrupt 8 __using 1
 }
 
 /* Test if there are data ready to be read */
-char uart2_rcready() {
+char uart2_rcready(void) {
     return !BUF_EMPTY(rcbuf);
 }
 
 /* Test if it is ready to send data */
-char uart2_txready() {
+char uart2_txready(void) {
     return !BUF_FULL(txbuf);
 }
 

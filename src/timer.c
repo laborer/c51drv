@@ -13,7 +13,7 @@
    is still running.  For SDCC, this routine is implemented using
    inline assembly due to the inefficiency of the code SDCC (v3.2)
    generated */
-unsigned int timer0_get16() __naked
+unsigned int timer0_get16(void) __naked
 {
     __asm
       loop1$:
@@ -29,7 +29,7 @@ unsigned int timer0_get16() __naked
 
 /* Read Timer0 as a 16-bit timer.  It's safe to call it even the timer
    is still running */
-unsigned int timer0_get16()
+unsigned int timer0_get16(void)
 {
     unsigned char th, tl;
     
@@ -47,7 +47,7 @@ unsigned int timer0_get16()
 #ifdef MICROCONTROLLER_8052
 
 /* Read Timer2 as a 16-bit timer */
-unsigned int timer2_get16()
+unsigned int timer2_get16(void)
 {
     unsigned char th, tl;
     
@@ -69,7 +69,7 @@ static unsigned int __data t0_h32;
    timer is still running.  For SDCC, this routine is implemented
    using inline assembly due to the inefficiency of the code SDCC
    (v3.2) generated */
-unsigned long timer0_get32() __naked
+unsigned long timer0_get32(void) __naked
 {
     __asm
       loop2$:

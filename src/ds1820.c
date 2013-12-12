@@ -126,8 +126,8 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
         return DS1820_ERR_INIT;
     }
 
-    /* Increase rom by one, as we want to find the chip whose ROM is
-       right next to the parameter rom given by user. */
+    /* Increase parameter rom by one, as we want to find the chip
+       whose ROM is right next to rom. */
     i = 8;
     do {
         i -= 1;

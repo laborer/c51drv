@@ -13,9 +13,9 @@
 
 __bit iic_send(unsigned char c);
 unsigned char iic_recv(__bit ack);
-void iic_start();
-void iic_stop();
-void iic_reset();
+void iic_start(void);
+void iic_stop(void);
+void iic_reset(void);
 
 
 #endif /* __IIC_H */

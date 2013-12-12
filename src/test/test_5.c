@@ -51,12 +51,12 @@ void _irnec_int0(void) __interrupt IE0_VECTOR __using 1
     }
 }
 
-static void display_init()
+static void display_init(void)
 {
     lcd1602_init();
 }
 
-static void display_temp_clear()
+static void display_temp_clear(void)
 {
     lcd1602_position(0, 0);
     LCDSTR("        ");
@@ -81,7 +81,7 @@ static void display_temp(int tempcode)
     LCDCHAR('C');
 }
 
-static void display_ir_clear()
+static void display_ir_clear(void)
 {
     lcd1602_position(10, 0);
     LCDSTR("    ");
@@ -93,7 +93,7 @@ static void display_ir(unsigned int ircode)
     LCDHEX4(ircode);
 }
 
-static void display_rom()
+static void display_rom(void)
 {
     static unsigned char pos;
     unsigned char i;

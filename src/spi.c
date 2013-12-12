@@ -36,7 +36,7 @@ void spi_uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 }
 
 /* Initialize UART Mode 0 accelerated SPI */
-void spi_uart_init()
+void spi_uart_init(void)
 {
     /* Use UART Mode 0 */
     /* SM0 SM1 SM2 REN TB8 RB8 TI RI
@@ -61,7 +61,7 @@ void spi_uart_recvstr(unsigned char __idata *buf, unsigned char n)
 }
 
 /* Receive a byte using accelerated SPI */
-unsigned char spi_uart_recv()
+unsigned char spi_uart_recv(void)
 {
     unsigned char __idata buf;
 
@@ -75,14 +75,14 @@ unsigned char spi_uart_recv()
 #endif /* SPI_UART_RECV_ENABLE */
 
 /* Initialize SPI */
-void spi_init()
+void spi_init(void)
 {
     SCLK = 0;
     MISO = 1;
 }
 
 /* If SPI is currently sending or receiving data */
-unsigned char spi_isbusy()
+unsigned char spi_isbusy(void)
 {
 #ifdef SPI_UART_RECV_ENABLE
     return length;
@@ -125,7 +125,7 @@ void spi_send(unsigned char c) {
 }
 
 /* Receive a byte */
-unsigned char spi_recv() {
+unsigned char spi_recv(void) {
     unsigned char       c;
     unsigned char       i;
 

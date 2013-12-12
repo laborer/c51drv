@@ -19,7 +19,7 @@ void lcd1602_entry_mode(__bit direction, __bit shift);
 void lcd1602_switch(__bit display, __bit cursor, __bit blink);
 void lcd1602_shift(__bit display, __bit direction);
 void lcd1602_putchar(unsigned char c);
-unsigned char lcd1602_getchar();
+unsigned char lcd1602_getchar(void);
 void lcd1602_position(unsigned char x, unsigned char y);
 void lcd1602_write_cgram(unsigned char addr, unsigned char c);
 unsigned char lcd1602_read_cgram(unsigned char addr);

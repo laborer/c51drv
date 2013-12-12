@@ -17,8 +17,8 @@ void uart2_interrupt(void) __interrupt 8 __using 1;
 #endif
 
 
-char uart2_rcready();
-char uart2_txready();
+char uart2_rcready(void);
+char uart2_txready(void);
 void uart2_putchar(unsigned char c);
 unsigned char uart2_getchar(void);
 void uart2_baudrate(void);

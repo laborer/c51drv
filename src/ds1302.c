@@ -29,7 +29,7 @@ static void send_byte(unsigned char c)
     }
 }
 
-static unsigned char recv_byte()
+static unsigned char recv_byte(void)
 {
     unsigned char c;
     unsigned char i;
@@ -49,7 +49,7 @@ static unsigned char recv_byte()
     return c;
 }
 
-static void start()
+static void start(void)
 {
     CE = 0;
     SCLK = 0;
@@ -59,7 +59,7 @@ static void start()
     DELAY_US(3);
 }
 
-static void stop()
+static void stop(void)
 {
     CE = 0;
 }

@@ -31,12 +31,12 @@
 void spi_interrupt(void) __interrupt 9 __using 1;
 #endif
 
-void spi_init();
-unsigned char spi_isbusy();
+void spi_init(void);
+unsigned char spi_isbusy(void);
 void spi_sendstr(unsigned char __idata *buf, unsigned char n);
 void spi_recvstr(unsigned char __idata *buf, unsigned char n);
 void spi_send(unsigned char c);
-unsigned char spi_recv();
+unsigned char spi_recv(void);
 
 
 #endif /* __SPI_H */
