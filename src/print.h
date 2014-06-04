@@ -39,7 +39,7 @@ typedef void (*putchar_func)(unsigned char);
     print_int(uart_putchar,                                     \
               PRINT_HEX | PRINT_UPPERCASE | PRINT_ZERO,         \
               2,                                                \
-              num)
+              (unsigned char)num)
 
 /* Print num as 4-digit hexadecimal using UART */
 #define UARTHEX4(num)                                           \

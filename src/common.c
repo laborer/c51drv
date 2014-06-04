@@ -183,3 +183,10 @@ void delay_ms(unsigned int t)
         DELAY_CYCLES(CYCLES_US(1000) - 6);
     }
 }
+
+/* Get the parity bit of c */
+__bit parity(unsigned char c)
+{
+    ACC = c;
+    return P;
+}

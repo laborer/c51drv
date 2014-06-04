@@ -192,6 +192,7 @@ void uint2bcd(unsigned int x, unsigned char __idata *buf);
 void ulong2bcd(unsigned long x, unsigned char __idata *buf);
 void uint2hex(unsigned int x, unsigned char __idata *buf);
 void delay_ms(unsigned int t);
+__bit parity(unsigned char c);
 
 
 #endif /* __COMMON_H */

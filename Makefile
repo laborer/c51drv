@@ -1,6 +1,6 @@
 # Try to use sdcc in the system.  If sdcc is not installed, find sdcc
 # at ~/Downloads/sdcc-3.3.0/bin/sdcc
-SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc-3.3.0/bin/sdcc)
+SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc-3.4.0/bin/sdcc)
 
 # Find where sdcc is, so we can also locate packihx and makebin there
 SDCCBINDIR	:= $(shell $(SDCC) --print-search-dirs | sed -n '/^programs:$$/{n;p}')
@@ -26,7 +26,7 @@ SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
 AUTOISP		:= yes
 
 # Specify modules to compile
-MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg
+MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
 MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 
 
 # Include modules and test cases designed for certain MCUs
@@ -117,6 +117,7 @@ $(call testf, lcd1602): 	$(call libf, common uart print lcd1602)
 $(call testf, pcf8591): 	$(call libf, common uart print iic pcf8591)
 $(call testf, ds1302): 		$(call libf, common uart print ds1302)
 $(call testf, print):		$(call libf, common uart print)
+$(call testf, kbhost):		$(call libf, common uart print kbhost)
 
 $(call testf, stc_wdt): 	$(call libf, common uart print)
 $(call testf, stc_gpio): 	$(call libf, common uart print)
