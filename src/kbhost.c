@@ -46,10 +46,20 @@ static char wait_clk_1(void) __using 1
 {
     unsigned char i;
     
-    for (i = 100; i != 0 && !CLK; i--) {
+    for (i = 100; i != 0; i--) {
+        if (CLK) {
+            break;
+        }
         DELAY_US(1);
     }
-    for (; i != 0 && CLK; i--) {
+    if (i == 0) {
+        return 2;
+    }
+
+    for (i = 100; i != 0; i--) {
+        if (!CLK) {
+            break;
+        }
         DELAY_US(1);
     }
 
@@ -62,11 +72,36 @@ static char wait_clk_0(void)
 {
     unsigned char i;
     
-    for (i = 100; i != 0 && !CLK; i--) {
+    for (i = 100; i != 0; i--) {
+        if (CLK) {
+            break;
+        }
         DELAY_US(1);
     }
-    for (; i != 0 && CLK; i--) {
+    if (i == 0) {
+        return 2;
+    }
+
+    for (i = 100; i != 0; i--) {
+        if (!CLK) {
+            break;
+        }
         DELAY_US(1);
+    }
+
+    return i == 0;
+}
+
+/* Wait keyboard to be ready for receiving */
+static char wait_start(void)
+{
+    unsigned char i;
+    
+    for (i = 250; i != 0; i--) {
+        if (!CLK) {
+            break;
+        }
+        DELAY_US(10);
     }
 
     return i == 0;
@@ -85,10 +120,7 @@ static char send_byte(unsigned char c)
     DATA = 0;
     CLK = 1;
 
-    for (i = 200; i != 0 && CLK; i--) {
-        DELAY_US(5);
-    }
-    if (i == 0) {
+    if (wait_start()) {
         return 1;
     }
 
@@ -110,19 +142,15 @@ static char send_byte(unsigned char c)
         return 1;
     }
 
-    for (i = 11; i != 0; i--) {
+    if (wait_clk_0() && wait_start()) {
+        return 1;
+    }
+
+    for (i = 10; i != 0; i--) {
         if (wait_clk_0()) {
             return 1;
         }
     }
-
-    for (i = 100; i != 0 && !CLK; i--) {
-        DELAY_US(1);
-    }
-    if (i == 0) {
-        return 1;
-    }
-
     return 0;
 }
 

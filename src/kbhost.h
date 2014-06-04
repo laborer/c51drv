@@ -7,10 +7,9 @@
 #define __KBHOST_H
 
 
-#define KBHOST_DATA             P1_7
+#define KBHOST_DATA             P1_4
 #define KBHOST_CLK              P3_2
 #define KBHOST_INTVEC           IE0_VECTOR
-
 
 #define KBHOST_ERR_NOACK        0x80
 #define KBHOST_ERR_PARITY       0xA0

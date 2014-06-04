@@ -21,6 +21,8 @@ void main(void) {
 
     welcome();
 
+    delay_ms(100);
+
     kbhost_init();
 
     while (1) {

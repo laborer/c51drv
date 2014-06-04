@@ -9,10 +9,10 @@
 
 #define DS1820_DQ               P2_7
 
-#define DS1820_ERR_INIT         (-1)
-#define DS1820_ERR_CRC          (-2)
-#define DS1820_ERR_SEARCH       (-3)
-#define DS1820_ERR_TIMEOUT      (-4)
+#define DS1820_ERR_INIT         -1
+#define DS1820_ERR_CRC          -2
+#define DS1820_ERR_SEARCH       -3
+#define DS1820_ERR_TIMEOUT      -4
 
 
 char ds1820_read_rom(unsigned char __idata *rom);
