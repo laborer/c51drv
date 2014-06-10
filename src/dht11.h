@@ -16,4 +16,4 @@
 char dht11_read(unsigned char __idata *out);
 
 
-#endif /* __IRNEC_H */
+#endif /* __DHT11_H */

@@ -27,7 +27,7 @@ AUTOISP		:= yes
 
 # Specify modules to compile
 MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
-MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11
+MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
 
 # Include modules and test cases designed for certain MCUs
 ifneq ($(findstring ^STC, ^$(TARGET)), )
@@ -119,6 +119,7 @@ $(call testf, ds1302): 		$(call libf, common uart print ds1302)
 $(call testf, print):		$(call libf, common uart print)
 $(call testf, kbhost):		$(call libf, common uart print kbhost)
 $(call testf, dht11):		$(call libf, common uart print dht11)
+$(call testf, hcsr04):		$(call libf, common uart print timer hcsr04)
 
 $(call testf, stc_wdt): 	$(call libf, common uart print)
 $(call testf, stc_gpio): 	$(call libf, common uart print)

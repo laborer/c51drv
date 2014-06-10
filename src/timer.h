@@ -45,8 +45,6 @@
            -     -     -   -   0     0     0   1   */           \
         TMOD &= ~T0_MASK;                                       \
         TMOD |= T0_M0;                                          \
-        TR0 = 0;                                                \
-        TF0 = 0;                                                \
     } while (0)
 
 /* Read Timer0 as a 16-bit timer */
@@ -117,8 +115,6 @@ unsigned int timer0_get16();
            0     0     0   1   -     -     -   -   */           \
         TMOD &= ~T1_MASK;                                       \
         TMOD |= T1_M0;                                          \
-        TR1 = 0;                                                \
-        TF1 = 0;                                                \
     } while (0)
 
 /* Read Timer1 as a 16-bit timer.  Different than TIMER0_GET16(),
