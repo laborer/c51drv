@@ -17,8 +17,6 @@ void welcome(void)
 }
 
 void main(void) {
-    unsigned char i;
-
     welcome();
 
     {

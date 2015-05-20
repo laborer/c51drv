@@ -39,6 +39,7 @@ char dht11_read(unsigned char __idata *out)
     }
 
     p = 0;
+    c = 0;
     for (i = 5; i != 0; i--, out++) {
         for (j = 8; j != 0; j--) {
             for (k = 100; k != 0; k--) {

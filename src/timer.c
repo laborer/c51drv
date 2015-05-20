@@ -146,10 +146,9 @@ extern void TIMER0_CALLBACK(void);
 #endif /* TIMER0_CALLBACK */
 
 /* Timer0 interrupt service routine for updating the higher 16-bit in
-   quasi-16-bit mode */
+   quasi-32-bit mode */
 void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1
 {
-    TF0 = 0;
     t0_h32 += 1;
 #ifdef TIMER0_CALLBACK
     TIMER0_CALLBACK();

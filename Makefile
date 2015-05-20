@@ -1,6 +1,6 @@
 # Try to use sdcc in the system.  If sdcc is not installed, find sdcc
-# at ~/Downloads/sdcc-3.3.0/bin/sdcc
-SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc-3.4.0/bin/sdcc)
+# at ~/Downloads/sdcc/bin/sdcc
+SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc/bin/sdcc)
 
 # Find where sdcc is, so we can also locate packihx and makebin there
 SDCCBINDIR	:= $(shell $(SDCC) --print-search-dirs | sed -n '/^programs:$$/{n;p}')
@@ -11,10 +11,12 @@ MAKEBIN		:= $(SDCCBINDIR)/makebin -p
 BUILDDIR	:= build
 
 # Disable some unnecessary warnings
-SDCCFLAGS	+= --less-pedantic --disable-warning 84
+SDCCFLAGS	+= --less-pedantic
 
 # Set the model name of the target MCU
-# TARGET		:= STC89C51RC
+ifndef TARGET
+    TARGET	:= STC89C52RC
+endif
 
 # Tell C program the name of the target MCU model
 SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
@@ -50,14 +52,14 @@ endif
 # Build a list of test cases
 TESTS		+= $(MODULES) 1 2 3 4 5 6
 TESTS		:= $(subst /,_,$(TESTS))
-BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.bin)
+BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.ihx)
 
 # Set memory usage limit for some known MCUs
-ifeq ($(TARGET), STC89C52RC)
+ifneq ($(filter $(TARGET), AT89C51), )
+    ASLINKFLAGS	+= --code-size 4096 --xram-size 128
+else ifneq ($(filter $(TARGET), STC89C52RC AT89S52), )
     ASLINKFLAGS	+= --code-size 8192 --xram-size 256
-else ifeq ($(TARGET), STC89C54RD+)
-    ASLINKFLAGS	+= --code-size 16384 --xram-size 1024
-else ifeq ($(TARGET), STC12C5A16S2)
+else ifneq ($(filter $(TARGET), STC89C54RD+ STC12C5A16S2), )
     ASLINKFLAGS	+= --code-size 16384 --xram-size 1024
 endif
 
@@ -90,12 +92,12 @@ $(BUILDDIR)/%.rel: src/%.c
 
 # Link every module in every test case.  This could result large
 # binary files
-# $(BINARIES:%.bin=%.ihx): $(MODULES:%=$(BUILDDIR)/%.rel)
+# $(BINARIES): $(MODULES:%=$(BUILDDIR)/%.rel)
 
 # AutoISP
 ifneq ($(AUTOISP), )
 ifneq ($(findstring ^STC, ^$(TARGET)), )
-$(BINARIES:%.bin=%.ihx): $(BUILDDIR)/stc/autoisp.rel
+$(BINARIES): $(BUILDDIR)/stc/autoisp.rel
 endif
 endif
 
@@ -137,12 +139,11 @@ $(call testf, 4): 		$(call libf, common uart print timer)
 $(call testf, 5): 		$(call libf, common uart print tools timer spi rom9346 ds1820 lcd1602 irnec)
 $(call testf, 6): 		$(call libf, common uart print timer)
 
-# Pack .ihx file to .hex.  By default, this makefile only generates
-# .bin file, and this rule is not used
+# Pack .ihx file to .hex.  By default, .hex file is not generated
 %.hex: %.ihx
 	$(PACKIHX) $< >$@
 
-# Convert .ihx file to .bin
+# Convert .ihx file to .bin.  By default, .bin file is not generated
 %.bin: %.ihx
 	$(MAKEBIN) $< $@
 
@@ -191,4 +192,4 @@ src/stc/modeldb.h:
 
 # Include source code dependency files built from previous rules
 -include $(MODULES:%=$(BUILDDIR)/%.dep)
--include $(BINARIES:%.bin=%.dep)
+-include $(BINARIES:%.ihx=%.dep)

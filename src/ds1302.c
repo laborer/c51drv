@@ -35,6 +35,7 @@ static unsigned char recv_byte(void)
     unsigned char i;
 
     IO = 1;
+    c = 0;
     for (i = 8; i != 0; i--) {
         c >>= 1;
         DELAY_US(1);

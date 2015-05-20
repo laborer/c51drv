@@ -134,6 +134,7 @@ unsigned char spi_recv(void) {
     WAIT_READY();
 #endif
     MOSI = 0;
+    c = 0;
     for (i = 8; i != 0; i--) {
         SCLK = 1;
         DELAY_US(1);

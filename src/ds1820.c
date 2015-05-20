@@ -253,6 +253,7 @@ static unsigned int read_scratchpad(unsigned char n)
     send_byte(0xBE);
     
     crc = 0;
+    ret = 0;
     for (i = 0; i < 9; i++) {
         c = recv_byte();
         crc = crc8(crc, c);
@@ -531,6 +532,7 @@ int ds1820_measure_temperature(unsigned char __idata *rom)
 
     /* Read resolution configuration if the chip uses parasite
        power. */
+    res = 0;
     if (pwr == 0) {
         res = ds1820_read_resolution(rom);
         if (res < 0) {

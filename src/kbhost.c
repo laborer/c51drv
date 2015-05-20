@@ -278,6 +278,7 @@ void kbhost_interrupt(void) __interrupt KBHOST_INTVEC __using 1
         return;
     }
 
+    c = 0;
     for (i = 8; i != 0; i--) {
         if (wait_clk_1()) {
             return;

@@ -133,8 +133,9 @@ void main(void) {
     EX0 = 1;
     EA = 1;
 
+    temptime = 0;
+    irtime = 0;
     tempstate = 0;
-
     romstate = 0;
 
     TIMER0_INIT32();

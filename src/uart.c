@@ -185,9 +185,6 @@ char uart_baudrate_auto(void)
         if (t > tmax) {
             tmax = t;
         }
-        if (t > tmin && t < tmin * 2) {
-            t -= tmin;
-        }
         if (t < tmin) {
             tmin = t;
         }
@@ -198,10 +195,13 @@ char uart_baudrate_auto(void)
     }
 
     if (tmin >> 8) {
-        return -1;
+        return -128;
     }
     if (k < 3) {
         return -2;
+    }
+    if (tmax * 2 < tmin * 5) {
+        return -1;
     }
 
     /* Set ratio for baud rate and oscillator frequency */
