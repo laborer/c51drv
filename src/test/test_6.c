@@ -69,7 +69,7 @@ void main(void) {
     delay_ms(1000);
 
     t = TIMER0_GET32();
-    ulong2bcd(3932159463L, buf);
+    ulong2bcd(3932159463UL, buf);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
     UARTCHAR('\n');
@@ -85,7 +85,7 @@ void main(void) {
     delay_ms(1000);
 
     t = TIMER0_GET32();
-    _ultoa(3932159463L, buf, 10);
+    _ultoa(3932159463UL, buf, 10);
     t = TIMER0_GET32() - t;
     _uart_putulong(t);
     UARTCHAR('\n');
