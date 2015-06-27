@@ -1,4 +1,4 @@
 MODULES	:= common uart print iic rom2402
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

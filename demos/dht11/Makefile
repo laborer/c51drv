@@ -1,4 +1,4 @@
 MODULES	:= common uart print dht11
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

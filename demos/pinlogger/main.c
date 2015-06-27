@@ -2,6 +2,8 @@
  *  Licensed under the BSD 2-Clause License.
  */
 
+/* This program measures the times between pin flips.  It can be used
+   to analyze protocols such as infrared remote.  */
 
 #include "common.h"
 #include "uart.h"

@@ -1,4 +1,4 @@
 MODULES	:= common uart print timer irnec
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

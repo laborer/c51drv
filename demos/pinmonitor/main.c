@@ -2,6 +2,7 @@
  *  Licensed under the BSD 2-Clause License.
  */
 
+/* Print if a PIN changes */
 
 #include "common.h"
 #include "uart.h"

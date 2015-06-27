@@ -1,4 +1,4 @@
 MODULES	:= common uart print iic pcf8591
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

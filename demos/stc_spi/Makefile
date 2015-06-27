@@ -1,5 +1,5 @@
 MODULES	:= common uart print stc/spi
-OBJECTS := main
+# OBJECTS := main
 
 ifeq ($(filter STC%, $(TARGET)), )
     $(warning Cannot build this demo for non-STC microcontroller)

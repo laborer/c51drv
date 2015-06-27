@@ -1,4 +1,4 @@
 MODULES	:= common uart print ds1302
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

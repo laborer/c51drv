@@ -1,4 +1,4 @@
 MODULES	:= common
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

@@ -1,4 +1,4 @@
 MODULES	:= common uart
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

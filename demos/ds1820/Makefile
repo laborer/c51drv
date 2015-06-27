@@ -1,4 +1,4 @@
 MODULES	:= common uart print tools ds1820
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common

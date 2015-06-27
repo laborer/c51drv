@@ -1,4 +1,4 @@
 MODULES	:= common uart print kbhost
-OBJECTS := main
+# OBJECTS := main
 
 include ../Makefile.common
