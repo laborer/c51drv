@@ -1,0 +1,28 @@
+BUILDDIR	:= $(DEMOSDIR)/$(notdir $(CURDIR))
+BINARY		:= $(BUILDDIR)/main.ihx
+MODULES		+= $(if $(filter yes, $(AUTOISP)), stc/autoisp)
+
+
+.PHONY: all clean
+
+all: $(BINARY)
+
+$(BINARY): $(OBJECTS:%=$(BUILDDIR)/%.rel) $(MODULES:%=$(MODULESDIR)/%.rel)
+
+# Generate dependency file for a C source file and compile the source
+# file using sdcc
+$(BUILDDIR)/%.rel: %.c
+	@mkdir -p $(@D)
+	@$(SDCC) -MM $(SDCCFLAGS) $< |						\
+	    sed ':a;$$!{N;ba}; s@\\\n@@g; s@^[^:]*: \(.*\)$$@$(@D)/\0\n\1:@'	\
+	    >$(@:%.rel=%.dep)
+	$(SDCC) -c $(SDCCFLAGS) $< -o $@
+
+# Link .rel files
+%.ihx: %.rel 
+	$(SDCC) $(SDCCFLAGS) $(ASLINKFLAGS) $^ -o $@
+
+# Clean up
+clean:
+	rm -rf $(BUILDDIR)
+

@@ -4,55 +4,62 @@ SDCC		:= $(if $(shell which sdcc), sdcc, ~/Downloads/sdcc/bin/sdcc)
 
 # Find where sdcc is, so we can also locate packihx and makebin there
 SDCCBINDIR	:= $(shell $(SDCC) --print-search-dirs | sed -n '/^programs:$$/{n;p}')
-PACKIHX		:= $(SDCCBINDIR)/packihx
-MAKEBIN		:= $(SDCCBINDIR)/makebin -p
 
 # The name of the directory which holds all the compile binaries
-BUILDDIR	:= build
-
-# Disable some unnecessary warnings
-SDCCFLAGS	+= --less-pedantic
+BUILDDIR	:= $(CURDIR)/build
+MODULESDIR	:= $(BUILDDIR)/modules
+DEMOSDIR	:= $(BUILDDIR)/demos
 
 # Set the model name of the target MCU
 ifndef TARGET
     TARGET	:= STC89C52RC
+    # TARGET	:= STC12C5A16S2
+    # TARGET	:= AT89C51
 endif
 
-# Tell C program the name of the target MCU model
-SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
-
-# Set frequency of the oscillator
-# SDCCFLAGS	+= -DFOSC=11059200L
+# # Specify demos to compile
+DEMOS		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
+DEMOS		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
+DEMOS		+= stc_wdt stc_gpio stc_adc stc_pca stc_eeprom stc_autoisp stc_spi stc_uart2
 
 # Enable AutoISP for STC MCUs
 AUTOISP		:= yes
 
-# Specify modules to compile
-MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
-MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
+# Set frequency of the oscillator
+# SDCCFLAGS	+= -DFOSC=11059200L
 
-# Include modules and test cases designed for certain MCUs
-ifneq ($(findstring ^STC, ^$(TARGET)), )
+# Disable some unnecessary warnings
+SDCCFLAGS	+= --less-pedantic
+
+# Tell C program the name of the target MCU model
+SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
+
+# Header directory
+SDCCFLAGS	+= -I$(CURDIR)/src
+
+# $(if $(findstring /test/, $@), -Isrc)
+
+# Set flags for certain MCUs
+ifneq ($(filter STC%, $(TARGET)), )
     SDCCFLAGS	+= -DMICROCONTROLLER_8052
     # If AutoISP is enabled, register autoisp_check as a UART callback
     # function
-    SDCCFLAGS	+= $(if $(AUTOISP), -DUART_CALLBACK=autoisp_check) 
-    MODULES	+= stc/eeprom stc/autoisp
-    TESTS	+= stc/wdt
+    SDCCFLAGS	+= $(if $(filter yes, $(AUTOISP)), -DUART_CALLBACK=autoisp_check) 
+    # MODULES	+= stc/eeprom stc/autoisp
+    # TESTS	+= stc/wdt
     # The following modules and test cases only work for non-STC89C
     # series MCUs
-    ifeq ($(findstring ^STC89, ^$(TARGET)), )
-        TESTS	+= stc/gpio stc/adc stc/pca stc/spi stc/uart2
+    ifneq ($(filter-out STC89%, $(TARGET)), )
+        # TESTS	+= stc/gpio stc/adc stc/pca stc/spi stc/uart2
         SDCCFLAGS += -DTICKS=1 -DCYCLES_MOV_R_N=2 -DCYCLES_DJNZ_R_E=4
     endif
 else
     SDCCFLAGS	+= -DMICROCONTROLLER_8051
+    ifneq ($(filter yes, $(AUTOISP)), )
+        $(warning Disable AutoISP for non-STC microcontrollers)
+        AUTOISP	:= no
+    endif
 endif
-
-# Build a list of test cases
-TESTS		+= $(MODULES) 1 2 3 4 5 6
-TESTS		:= $(subst /,_,$(TESTS))
-BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.ihx)
 
 # Set memory usage limit for some known MCUs
 ifneq ($(filter $(TARGET), AT89C51), )
@@ -63,6 +70,22 @@ else ifneq ($(filter $(TARGET), STC89C54RD+ STC12C5A16S2), )
     ASLINKFLAGS	+= --code-size 16384 --xram-size 1024
 endif
 
+# DEMOSLIST	:= $(DEMOS:%=demos/%)
+
+export TARGET
+export SDCC
+export SDCCFLAGS
+export ASLINKFLAGS
+export AUTOISP
+export MODULESDIR
+export DEMOSDIR
+
+# Build a list of test cases
+# TESTS		+= $(MODULES) 1 2 3 4 5 6
+# TESTS		:= $(subst /,_,$(TESTS))
+# BINARIES	:= $(TESTS:%=$(BUILDDIR)/test/test_%.ihx)
+# DEMOS		:= common tools
+
 # Tell test cases where to find modules' header files
 TESTCFLAGS	= $(if $(findstring /test/, $@), -Isrc)
 
@@ -71,38 +94,45 @@ testf		= $(patsubst %,$(BUILDDIR)/test/test_%.ihx,$(1))
 libf		= $(patsubst %,$(BUILDDIR)/%.rel,$(1))
 
 
-.PHONY: all clean
+.PHONY: all modules $(DEMOS) clean
 
-.PRECIOUS: $(BUILDDIR)/%.rel
+# .PRECIOUS: $(BUILDDIR)/%.rel
 
-all: $(BINARIES)
+all: $(DEMOS)
 
-# Generate dependency file for a C source file and compile the source
-# file using sdcc
-$(BUILDDIR)/%.rel: src/%.c
-	@mkdir -p $(@D)
-	@$(SDCC) -MM $(SDCCFLAGS) $(TESTCFLAGS) $< |				\
-	    sed ':a;$$!{N;ba}; s@\\\n@@g; s@^[^:]*: \(.*\)$$@$(@D)/\0\n\1:@'	\
-	    >$(@:%.rel=%.dep)
-	$(SDCC) -c $(SDCCFLAGS) $(TESTCFLAGS) $< -o $(@D)/
+modules:
+	$(MAKE) -C src
+
+$(DEMOS): modules
+	$(MAKE) -C $(@:%=demos/%)
+
+
+# # Generate dependency file for a C source file and compile the source
+# # file using sdcc
+# $(BUILDDIR)/%.rel: src/%.c
+# 	@mkdir -p $(@D)
+# 	@$(SDCC) -MM $(SDCCFLAGS) $(TESTCFLAGS) $< |				\
+# 	    sed ':a;$$!{N;ba}; s@\\\n@@g; s@^[^:]*: \(.*\)$$@$(@D)/\0\n\1:@'	\
+# 	    >$(@:%.rel=%.dep)
+# 	$(SDCC) -c $(SDCCFLAGS) $(TESTCFLAGS) $< -o $(@D)/
 
 # Link .rel files
-%.ihx: %.rel 
-	$(SDCC) $(SDCCFLAGS) $(ASLINKFLAGS) $^ -o $(@D)/
+# %.ihx: %.rel 
+# 	$(SDCC) $(SDCCFLAGS) $(ASLINKFLAGS) $^ -o $(@D)/
 
 # Link every module in every test case.  This could result large
 # binary files
 # $(BINARIES): $(MODULES:%=$(BUILDDIR)/%.rel)
 
-# AutoISP
-ifneq ($(AUTOISP), )
-ifneq ($(findstring ^STC, ^$(TARGET)), )
-$(BINARIES): $(BUILDDIR)/stc/autoisp.rel
-endif
-endif
+# # AutoISP
+# ifneq ($(AUTOISP), )
+# ifneq ($(findstring ^STC, ^$(TARGET)), )
+# $(BINARIES): $(BUILDDIR)/stc/autoisp.rel
+# endif
+# endif
 
-# To build a test case in the left column, we need modules from the
-# right column
+# # To build a test case in the left column, we need modules from the
+# # right column
 $(call testf, common): 		$(call libf, common)
 $(call testf, tools): 		$(call libf, common)
 $(call testf, uart): 		$(call libf, common uart)
@@ -139,55 +169,9 @@ $(call testf, 4): 		$(call libf, common uart print timer)
 $(call testf, 5): 		$(call libf, common uart print tools timer spi rom9346 ds1820 lcd1602 irnec)
 $(call testf, 6): 		$(call libf, common uart print timer)
 
-# Pack .ihx file to .hex.  By default, .hex file is not generated
-%.hex: %.ihx
-	$(PACKIHX) $< >$@
-
-# Convert .ihx file to .bin.  By default, .bin file is not generated
-%.bin: %.ihx
-	$(MAKEBIN) $< $@
-
 # Clean up
 clean:
 	rm -rf $(BUILDDIR)/*
-
-# The file name of the official STC ISP programmer, we use it to
-# compile a list of MCU models, which are then grouped into families
-# in modeldb.h
-STCISP_EXE	:= stc-isp-15xx-v6.61.exe
-src/stc/modeldb.h:
-	test -s $(STCISP_EXE) || exit 1
-
-	echo '#ifndef __MODELDB_H' >$@
-	echo '#define __MODELDB_H' >>$@
-	echo >>$@
-	echo >>$@
-
-	for i in '\(15F\|15L\|15W\)[[:digit:]]\+  STC15F'				\
-		'\(12C52\|12LE52\)[[:digit:]]\+   STC12C52'				\
-		'\(12C5A\|12LE5A\)[[:digit:]]\+   STC12C5A'				\
-		'\(10F\|10L\)[[:digit:]]\+        STC10F'				\
-		'\(11F\|11L\)[[:digit:]]\+        STC11F'				\
-		'\(12C54\|12LE54\)[[:digit:]]\+   STC12C54'				\
-		'\(12C56\|12LE56\)[[:digit:]]\+   STC12C56'				\
-		'\(12C\|12LE\)[[:digit:]]\+052    STC12Cx052'				\
-		'\(90C\|90LE\)[[:digit:]]\+AD     STC90CxAD'				\
-		'\(90C\|90LE\)[[:digit:]]\+R[CD]  STC90CxR'				\
-		'\(89C\|89LE\)5[[:digit:]]\+      STC89C';				\
-	do										\
-		strings $(STCISP_EXE) |							\
-		grep -o '^\(STC\|IAP\)'$${i%% *}'[[:digit:][:upper:]+]*' |		\
-		sort -u |								\
-		sed 's/+/_/; s/^/ defined TARGET_MODEL_/; 1s/^/#if/; 1!s/^/    ||/' |	\
-		sed '$$!s/$$/                                            /' |		\
-		sed '$$!s/^\(.\{64\}\).*$$/\1\\/' >>$@;					\
-		echo '#define TARGET_FAMILY_'$${i##* } >>$@;				\
-		echo '#endif' >>$@;							\
-		echo >>$@;								\
-	done
-
-	echo >>$@
-	echo '#endif /* __MODELDB_H */' >>$@
 
 
 # Include source code dependency files built from previous rules
