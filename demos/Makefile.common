@@ -1,5 +1,5 @@
 BUILDDIR	:= $(DEMOSDIR)/$(notdir $(CURDIR))
-BINARY		:= $(BUILDDIR)/main.ihx
+BINARY		?= $(BUILDDIR)/main.ihx
 MODULES		+= $(if $(filter yes, $(AUTOISP)), stc/autoisp)
 
 

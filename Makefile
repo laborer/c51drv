@@ -11,11 +11,9 @@ MODULESDIR	:= $(BUILDDIR)/modules
 DEMOSDIR	:= $(BUILDDIR)/demos
 
 # Set the model name of the target MCU
-ifndef TARGET
-    TARGET	:= STC89C52RC
-    # TARGET	:= STC12C5A16S2
-    # TARGET	:= AT89C51
-endif
+TARGET		?= STC89C52RC
+# TARGET		?= STC12C5A16S2
+# TARGET		?= AT89C51
 
 # Specify demos to compile
 DEMOS		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
@@ -74,7 +72,7 @@ export AUTOISP
 export MODULESDIR
 export DEMOSDIR
 
-.PHONY: all modules $(DEMOS) clean
+.PHONY: all modules $(DEMOS) srcinfo clean
 
 all: $(DEMOS)
 
@@ -83,6 +81,14 @@ modules:
 
 $(DEMOS): modules
 	$(MAKE) -C $(@:%=demos/%)
+
+srcinfo:
+	etags $(shell find src/ -name "*.[hc]")
+	etags -a $(shell find demos/ -name "*.[hc]")
+	$(SDCC) --print-search-dirs \
+	| sed -n '/^includedir:$$/,/^libdir:$$/{/\// {s/^/-I/;p}}' \
+	> .clang_complete
+	echo -I./src/ >>.clang_complete
 
 # Clean up
 clean:

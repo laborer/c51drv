@@ -1,4 +1,5 @@
 MODULES	:= common uart print stc/eeprom
+# BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 
 ifeq ($(filter STC%, $(TARGET)), )
