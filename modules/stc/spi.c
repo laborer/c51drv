@@ -18,7 +18,7 @@ static __bit                    direction;
 
 
 #ifdef SPI_CALLBACK
-void SPI_CALLBACK(unsigned char c);
+extern void SPI_CALLBACK(unsigned char c) __using 1;
 #endif /* SPI_CALLBACK */
 
 void spi_interrupt(void) __interrupt 9 __using 1

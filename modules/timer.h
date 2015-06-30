@@ -82,11 +82,14 @@
     } while (0)
 
 /* Count down t microseconds */
-#define TIMER0_COUNTDOWN_US(t)                                  \
+#define TIMER0_DELAY_US(t)                                      \
     do {                                                        \
+        TIMER0_STOP();                                          \
         TIMER0_INIT16();                                        \
         TIMER0_SET16(-CYCLES_US(t));                            \
+        TIMER0_FLAG = 0;                                        \
         TIMER0_START();                                         \
+        while (!TIMER0_FLAG);                                   \
     } while (0)
         
 unsigned int timer0_get16();

@@ -4,6 +4,7 @@
 
 
 #include "../common.h"
+#include "../timer.h"
 #include "stc.h"
 #include "autoisp.h"
 
@@ -11,17 +12,19 @@
 static unsigned char state = 0;
 
 
-void autoisp_check(unsigned char c)
-{       
+void autoisp_check(unsigned char c) __using 1
+{
+    unsigned int i;
+
     if ((unsigned char)AUTOISP_MAGIC[state] == c) {
         state += 1;
         if ((unsigned char)AUTOISP_MAGIC[state] == 0) {
             EA = 0;
-            TXD = 0;
-            delay_ms(AUTOISP_WAIT);
-            /* Reboot to ISP section */
-            /* IAPEN SWBS SWRST CMD_FAIL - WT2 WT1 WT0 */
-            IAP_CONTR = 0x60;
+            /* We are going to reboot.  Timer is free to use. */
+            for (i = AUTOISP_WAIT; i != 0; i--) {
+                TIMER0_DELAY_US(1000);
+            }
+            STC_REBOOT_ISP();
         }
     } else {
         state = ((unsigned char)AUTOISP_MAGIC[0] == c) ? 1 : 0;

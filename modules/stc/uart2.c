@@ -32,7 +32,7 @@ static char rcoff;
 
 
 #ifdef UART2_CALLBACK
-void UART2_CALLBACK(unsigned char c);
+extern void UART2_CALLBACK(unsigned char c) __using 1;
 #endif /* UART2_CALLBACK */
 
 /* UART2 interrupt routine */
@@ -89,9 +89,7 @@ char uart2_txready(void) {
 /* Send a byte in block mode */
 void uart2_putchar(unsigned char c)
 {
-    while (BUF_FULL(txbuf)) {
-        POWER_IDLE();
-    }
+    while (BUF_FULL(txbuf));
 
     BUF_PUT(txbuf, c);
     /* Check if transmitting is turned off */
@@ -106,9 +104,7 @@ void uart2_putchar(unsigned char c)
 /* Read a byte in block mode */
 unsigned char uart2_getchar(void)
 {
-    while (BUF_EMPTY(rcbuf)) {
-        POWER_IDLE();
-    }
+    while (BUF_EMPTY(rcbuf));
 
     return BUF_GET(rcbuf);
 }

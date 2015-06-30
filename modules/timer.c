@@ -142,7 +142,7 @@ void timer0_set32(unsigned long t)
 }
 
 #ifdef TIMER0_CALLBACK
-extern void TIMER0_CALLBACK(void);
+extern void TIMER0_CALLBACK(void) __using 1;
 #endif /* TIMER0_CALLBACK */
 
 /* Timer0 interrupt service routine for updating the higher 16-bit in

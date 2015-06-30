@@ -22,7 +22,7 @@ DEMOS		+= stc_wdt stc_gpio stc_adc stc_pca stc_eeprom stc_autoisp stc_spi stc_ua
 DEMOS		+= watchdog thermometer pinlogger uartecho pinmonitor
 
 # Enable AutoISP for STC MCUs
-AUTOISP		:= yes
+AUTOISP		?= yes
 
 # Set frequency of the oscillator
 # SDCCFLAGS	+= -DFOSC=11059200L
@@ -34,14 +34,14 @@ SDCCFLAGS	+= --less-pedantic
 SDCCFLAGS	+= -DTARGET_MODEL_$(subst +,_,$(TARGET))
 
 # Header directory
-SDCCFLAGS	+= -I$(CURDIR)/src
+SDCCFLAGS	+= -I$(CURDIR)/modules
 
 # Set flags for certain MCUs
 ifneq ($(filter STC%, $(TARGET)), )
     SDCCFLAGS	+= -DMICROCONTROLLER_8052
     # If AutoISP is enabled, register autoisp_check as a UART callback
     # function
-    SDCCFLAGS	+= $(if $(filter yes, $(AUTOISP)), -DUART_CALLBACK=autoisp_check) 
+    SDCCFLAGS	+= $(if $(filter yes, $(AUTOISP)), -DUART_CALLBACK=autoisp_check)
     # The following modules and test cases only work for non-STC89C
     # series MCUs
     ifneq ($(filter-out STC89%, $(TARGET)), )
@@ -50,7 +50,7 @@ ifneq ($(filter STC%, $(TARGET)), )
 else
     SDCCFLAGS	+= -DMICROCONTROLLER_8051
     ifneq ($(filter yes, $(AUTOISP)), )
-        $(warning Disable AutoISP for non-STC microcontrollers)
+        $(warning AutoISP can only be used on STC microcontrollers)
         AUTOISP	:= no
     endif
 endif
@@ -77,18 +77,18 @@ export DEMOSDIR
 all: $(DEMOS)
 
 modules:
-	$(MAKE) -C src
+	$(MAKE) -C modules
 
 $(DEMOS): modules
 	$(MAKE) -C $(@:%=demos/%)
 
 srcinfo:
-	etags $(shell find src/ -name "*.[hc]")
+	etags $(shell find modules/ -name "*.[hc]")
 	etags -a $(shell find demos/ -name "*.[hc]")
 	$(SDCC) --print-search-dirs \
 	| sed -n '/^includedir:$$/,/^libdir:$$/{/\// {s/^/-I/;p}}' \
 	> .clang_complete
-	echo -I./src/ >>.clang_complete
+	echo -I./modules/ >>.clang_complete
 
 # Clean up
 clean:

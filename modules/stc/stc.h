@@ -61,4 +61,12 @@
 #endif /* __STC89C5XRC_RDP_H_ */
 
 
+/* Reboot to ISP section */
+/* IAPEN SWBS SWRST CMD_FAIL - WT2 WT1 WT0 */
+#define STC_REBOOT_ISP()                                        \
+    do {                                                        \
+        IAP_CONTR = 0x60;                                       \
+    } while (0)
+
+
 #endif /* __STC_H */
