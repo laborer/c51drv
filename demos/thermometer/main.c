@@ -3,14 +3,14 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "irnec.h"
-#include "lcd1602.h"
-#include "rom9346.h"
-#include "ds1820.h"
-#include "timer.h"
-#include "print.h"
+#include <common.h>
+#include <uart.h>
+#include <irnec.h>
+#include <lcd1602.h>
+#include <rom9346.h>
+#include <ds1820.h>
+#include <timer.h>
+#include <print.h>
 
 
 #define LCDCHAR(c)                                              \

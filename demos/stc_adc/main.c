@@ -3,11 +3,11 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "stc/stc.h"
-#include "stc/adc.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <stc/stc.h>
+#include <stc/adc.h>
 
 
 static void welcome(void)

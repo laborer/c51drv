@@ -4,9 +4,9 @@
 
 /* Print if a PIN changes */
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
 
 
 void welcome(void)

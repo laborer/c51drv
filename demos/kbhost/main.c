@@ -3,10 +3,10 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "kbhost.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <kbhost.h>
 
 
 void welcome(void)

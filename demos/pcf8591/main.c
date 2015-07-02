@@ -3,10 +3,10 @@
  */
 
 
-#include "common.h"
-#include "pcf8591.h"
-#include "uart.h"
-#include "print.h"
+#include <common.h>
+#include <pcf8591.h>
+#include <uart.h>
+#include <print.h>
 
 
 void welcome(void)

@@ -3,8 +3,8 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
+#include <common.h>
+#include <uart.h>
 
 
 void welcome(void)

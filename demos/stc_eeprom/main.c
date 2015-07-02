@@ -3,10 +3,10 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "stc/eeprom.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <stc/eeprom.h>
 
 
 void welcome(void)

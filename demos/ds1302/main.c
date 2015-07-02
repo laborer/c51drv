@@ -3,11 +3,11 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "tools.h"
-#include "ds1302.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <tools.h>
+#include <ds1302.h>
 
 
 void welcome(void)

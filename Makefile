@@ -19,7 +19,7 @@ TARGET		?= STC89C52RC
 DEMOS		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
 DEMOS		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
 DEMOS		+= stc_wdt stc_gpio stc_adc stc_pca stc_eeprom stc_autoisp stc_spi stc_uart2
-DEMOS		+= watchdog thermometer pinlogger uartecho pinmonitor
+DEMOS		+= watchdog thermometer pinlogger uartecho pinmonitor command
 
 # Enable AutoISP for STC MCUs
 AUTOISP		?= yes

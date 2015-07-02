@@ -3,10 +3,10 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "irnec.h"
-#include "print.h"
+#include <common.h>
+#include <uart.h>
+#include <irnec.h>
+#include <print.h>
 
 
 void welcome(void)

@@ -3,11 +3,11 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "timer.h"
-#include "hcsr04.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <timer.h>
+#include <hcsr04.h>
 
 
 void welcome(void)

@@ -3,11 +3,11 @@
  */
 
 
-#include "common.h"
-#include "spi.h"
+#include <common.h>
+#include <spi.h>
 /* #include "uart.h" */
-#include "lcd1602.h"
-#include "print.h"
+#include <lcd1602.h>
+#include <print.h>
 
 
 #define CS P3_4

@@ -3,11 +3,11 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "stc/stc.h"
-#include "stc/spi.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <stc/stc.h>
+#include <stc/spi.h>
 
 
 #define SCLK    P1_7

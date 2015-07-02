@@ -3,10 +3,10 @@
  */
 
 
-#include "common.h"
-#include "uart.h"
-#include "print.h"
-#include "led7seg.h"
+#include <common.h>
+#include <uart.h>
+#include <print.h>
+#include <led7seg.h>
 
 
 void welcome(void)
