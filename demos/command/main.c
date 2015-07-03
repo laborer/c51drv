@@ -12,15 +12,21 @@
 
 
 #define ESCAPE          0x1B
-#define STATE_CMD_MASK  0xF0
-#define STATE_CMD_B     0x10
-#define STATE_CMD_S     0x20
-#define STATE_CMD_C     0x30
-#define STATE_CMD_P     0x40
-#define STATE_CMD_W     0x50
-#define STATE_CMD_M     0x60
-#define STATE_CMD_D     0x70
-#define STATE_FAIL      (0xFF & ~STATE_CMD_MASK)
+#define STATE_FAIL      0xFF
+#define COMMAND_WAIT    0
+#define COMMAND_B       1
+#define COMMAND_S       2
+#define COMMAND_C       3
+#define COMMAND_P       4
+#define COMMAND_W       5
+#define COMMAND_M       6
+#define COMMAND_D       7
+
+#define RESET()                                                 \
+    do {                                                        \
+        command = 0;                                            \
+        state = 0;                                              \
+    } while (0)
 
 #define LCDCHAR(c)                                              \
     lcd1602_putchar(c);
@@ -31,6 +37,7 @@
 
 unsigned char input;
 unsigned char state;
+unsigned char command;
 
 
 unsigned char hex2uchar(unsigned char hex)
@@ -53,7 +60,7 @@ void parse_pin(void)
     static __bit                b;
     unsigned char               t;
 
-    switch (state & ~STATE_CMD_MASK) {
+    switch (state) {
     case 0:
         pin = input - '0';
         if (pin < 4) {
@@ -65,19 +72,19 @@ void parse_pin(void)
         t = input - '0';
         if (t < 8) {
             pin = MEMORY_PIN(pin, t);
-            b = ((state & STATE_CMD_MASK) == STATE_CMD_S);
+            b = (command == COMMAND_S);
             state += 1;
             return;
         }
         break;
     case 2:
         if (input == '\n') {
-            if ((state & STATE_CMD_MASK) == STATE_CMD_B) {
+            if (command == COMMAND_B) {
                 UARTCHAR('0' + memory_pin_get(pin));
             } else {
                 memory_pin_set(pin, b);
             }
-            state = 0;
+            RESET();
             return;
         }
         break;
@@ -92,11 +99,11 @@ void parse_port(void)
     static unsigned char        c;
     unsigned char               t;
 
-    switch (state & ~STATE_CMD_MASK) {
+    switch (state) {
     case 0:
         port = input - '0';
         if (port < 4) {
-            if ((state & STATE_CMD_MASK) == STATE_CMD_P) {
+            if (command == COMMAND_P) {
                 state += 3;
             } else {
                 state += 1;
@@ -122,12 +129,12 @@ void parse_port(void)
         break;
     case 3:
         if (input == '\n') {
-            if ((state & STATE_CMD_MASK) == STATE_CMD_P) {
+            if (command == COMMAND_P) {
                 UARTHEX2(memory_port_get(port));
             } else {
                 memory_port_set(port, c);
             }
-            state = 0;
+            RESET();
             return;
         }
         break;
@@ -139,7 +146,7 @@ void parse_port(void)
 void parse_display(void)
 {
     if (input == '\n') {
-        state =0;
+        RESET();
     } else {
         LCDCHAR(input);
     }
@@ -150,7 +157,7 @@ void parse_move_cursor(void)
     static unsigned char        pos;
     unsigned char               t;
 
-    switch (state & ~STATE_CMD_MASK) {
+    switch (state) {
     case 0:
         t = hex2uchar(input);
         if (t != 0xFF) {
@@ -170,7 +177,7 @@ void parse_move_cursor(void)
     case 2:
         if (input == '\n') {
             lcd1602_position(pos & 0x0F, pos >> 4);
-            state = 0;
+            RESET();
             return;
         }
         break;
@@ -186,25 +193,25 @@ void parse_command(void)
         uart_putchar('@');
         break;
     case 'b':
-        state = STATE_CMD_B;
+        command = COMMAND_B;
         break;
     case 's':
-        state = STATE_CMD_S;
+        command = COMMAND_S;
         break;
     case 'c':
-        state = STATE_CMD_C;
+        command = COMMAND_C;
         break;
     case 'p':
-        state = STATE_CMD_P;
+        command = COMMAND_P;
         break;
     case 'w':
-        state = STATE_CMD_W;
+        command = COMMAND_W;
         break;
     case 'd':
-        state = STATE_CMD_D;
+        command = COMMAND_D;
         break;
     case 'm':
-        state = STATE_CMD_M;
+        command = COMMAND_M;
         break;
     case '\n':
         break;
@@ -217,36 +224,36 @@ void parse_command(void)
 void parse_input(void)
 {
     if (input == ESCAPE) {
-        state = 0;
+        RESET();
         return;
     }
     if (input == '\r') {
         input = '\n';
     }
-    switch (state & STATE_CMD_MASK) {
-    case 0:
+    switch (command) {
+    case COMMAND_WAIT:
         parse_command();
         break;
-    case STATE_CMD_B:
-    case STATE_CMD_S:
-    case STATE_CMD_C:
+    case COMMAND_B:
+    case COMMAND_S:
+    case COMMAND_C:
         parse_pin();
         break;
-    case STATE_CMD_P:
-    case STATE_CMD_W:
+    case COMMAND_P:
+    case COMMAND_W:
         parse_port();
         break;
-    case STATE_CMD_D:
+    case COMMAND_D:
         parse_display();
         break;
-    case STATE_CMD_M:
+    case COMMAND_M:
         parse_move_cursor();
         break;
     }
     if (state == STATE_FAIL) {
         UARTCHAR(ESCAPE);
         UARTCHAR('?');          /* For debugging using terminal */
-        state = 0;
+        RESET();
     }
 }
 

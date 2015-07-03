@@ -14,14 +14,6 @@
 #define TIMER_CYCLES_US(t)                                      \
     ((unsigned int)((t) / 1000000.0 * FOSC / 12))
 
-
-#if defined SDCC || defined __SDCC
-/* These functions manage the stack themselves so caller doesn't need
-   to save and restore registers */
-#pragma callee_saves timer0_get16,timer0_get32
-#endif /* SDCC */
-
-
 /* Timer flag indicating if timer overflows */
 #define TIMER0_FLAG TF0
 
@@ -92,8 +84,6 @@
         while (!TIMER0_FLAG);                                   \
     } while (0)
         
-unsigned int timer0_get16();
-
 
 /* Timer flag indicating if timer overflows */
 #define TIMER1_FLAG TF1
@@ -188,6 +178,17 @@ unsigned int timer0_get16();
 #endif /* MICROCONTROLLER_8052 */
 
 
+#if defined SDCC || defined __SDCC
+unsigned int timer0_get16(void) __naked;
+#else
+unsigned int timer0_get16(void);
+#endif /* SDCC */
+
+
+/* Declare TIMER0_MODE32_DISABLE to disable the quasi-32-bit timer so
+   that user program can define their own Timer0 interrupt. */
+#ifndef TIMER0_MODE32_DISABLE
+
 /* Initialize Timer0 as a quasi-32-bit timer */
 #define TIMER0_INIT32()                                         \
     do {                                                        \
@@ -206,13 +207,20 @@ unsigned int timer0_get16();
 #define TIMER0_SET32(t)                                         \
     timer0_set32(t)
 
-unsigned long timer0_get32(void);
-void timer0_set32(unsigned long t);
 
+#if defined SDCC || defined __SDCC
+unsigned long timer0_get32(void) __naked;
+#else
+unsigned long timer0_get32(void);
+#endif /* SDCC */
+
+void timer0_set32(unsigned long t);
 
 #if defined SDCC || defined __SDCC
 void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1;
 #endif /* SDCC */
+
+#endif /* TIMER0_MODE32_DISABLE */
 
 
 #endif /* __TIMER_H */
