@@ -1,4 +1,4 @@
-MODULES		:= common tools uart timer print iic spi irrc5 irnec led7seg kbhost
+MODULES		:= tools uart timer print iic spi irrc5 irnec led7seg kbhost
 MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
 ifneq ($(filter STC%, $(TARGET)), )
     MODULES	+= stc/eeprom stc/autoisp
