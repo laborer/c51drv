@@ -1,4 +1,4 @@
-MODULES	:= common uart print led7seg
+MODULES	:= tools uart print led7seg
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

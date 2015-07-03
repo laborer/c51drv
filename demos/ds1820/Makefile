@@ -1,4 +1,4 @@
-MODULES	:= common uart print tools ds1820
+MODULES	:= uart print tools ds1820
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

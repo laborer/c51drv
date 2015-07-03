@@ -1,4 +1,4 @@
-MODULES	:= common stc/uart2
+MODULES	:= stc/uart2
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

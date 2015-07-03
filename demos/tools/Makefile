@@ -1,4 +1,4 @@
-MODULES	:= common
+MODULES	:= tools
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

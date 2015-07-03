@@ -1,4 +1,4 @@
-MODULES	:= common uart
+MODULES	:= uart
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

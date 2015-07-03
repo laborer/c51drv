@@ -3,7 +3,6 @@
  */
 
 
-#include <common.h>
 #include <uart.h>
 #include <ds1820.h>
 #include <print.h>

@@ -3,7 +3,6 @@
  */
 
 
-#include <common.h>
 #include <rom2402.h>
 #include <uart.h>
 #include <print.h>

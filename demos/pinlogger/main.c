@@ -5,7 +5,7 @@
 /* This program measures the times between pin flips.  It can be used
    to analyze protocols such as infrared remote.  */
 
-#include <common.h>
+#include <tools.h>
 #include <uart.h>
 #include <print.h>
 #include <timer.h>

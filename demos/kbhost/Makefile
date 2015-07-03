@@ -1,4 +1,4 @@
-MODULES	:= common uart print kbhost
+MODULES	:= tools uart print kbhost
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

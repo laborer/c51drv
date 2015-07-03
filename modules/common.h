@@ -8,7 +8,6 @@
 
 
 #include <stdint.h>
-/* #include "tools.h" */
 
 
 /* Frequency of the oscillator */
@@ -164,36 +163,6 @@ void _nop_(void);
     do {                                                        \
         PCON |= PD;                                             \
     } while (0)
-
-/* Reverse the order of a byte using a large lookup table.  Comment
-   out this macro to save 256 bytes in code rom if it's not
-   necessary */
-#define REVERSE_FAST(c)                                         \
-    reverse_lookup_table[c]
-
-#ifdef REVERSE_FAST
-
-#define REVERSE(c)                                              \
-    REVERSE_FAST(c)
-
-extern const uint8_t __code reverse_lookup_table[];
-
-#else
-
-#define REVERSE(c)                                              \
-    reverse(c)
-
-#endif
-
-
-uint8_t reverse(uint8_t c);
-uint8_t uchar2packedbcd(uint8_t x);
-void uchar2bcd(uint8_t x, uint8_t __idata *buf);
-void uint2bcd(uint16_t x, uint8_t __idata *buf);
-void ulong2bcd(uint32_t x, uint8_t __idata *buf);
-void uint2hex(uint16_t x, uint8_t __idata *buf);
-void delay_ms(uint16_t t);
-__bit parity(uint8_t c);
 
 
 #endif /* __COMMON_H */

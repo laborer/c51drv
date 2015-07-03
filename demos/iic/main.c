@@ -3,7 +3,6 @@
  */
 
 
-#include <common.h>
 #include <iic.h>
 #include <uart.h>
 #include <print.h>

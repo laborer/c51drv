@@ -3,7 +3,6 @@
  */
 
 
-#include <common.h>
 #include <stc/uart2.h>
 
 

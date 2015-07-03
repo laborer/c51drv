@@ -4,7 +4,7 @@
 
 /* Print if a PIN changes */
 
-#include <common.h>
+#include <tools.h>
 #include <uart.h>
 #include <print.h>
 

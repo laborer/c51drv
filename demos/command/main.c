@@ -3,11 +3,9 @@
  */
 
 
-#include <common.h>
 #include <uart.h>
 #include <print.h>
 #include <lcd1602.h>
-#include <stc/stc.h>
 #include "memory.h"
 
 

@@ -1,4 +1,4 @@
-MODULES	:= common uart print dht11
+MODULES	:= tools uart print dht11
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

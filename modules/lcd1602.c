@@ -4,6 +4,7 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "lcd1602.h"
 
 

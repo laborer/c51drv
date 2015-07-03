@@ -1,4 +1,4 @@
-MODULES	:= common uart print spi rom9346
+MODULES	:= tools uart print spi rom9346
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

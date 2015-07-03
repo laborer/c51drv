@@ -1,4 +1,4 @@
-MODULES	:= common uart print iic
+MODULES	:= tools uart print iic
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

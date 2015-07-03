@@ -7,6 +7,9 @@
 #define __MEMORY_H
 
 
+#include <common.h>
+
+
 #define MEMORY_PIN(port, pin)                                   \
     (((port) << 3) + ((pin) & 0x7))
 

@@ -1,4 +1,4 @@
-MODULES	:= common uart print stc/eeprom
+MODULES	:= tools uart print stc/eeprom
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

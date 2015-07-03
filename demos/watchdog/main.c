@@ -6,7 +6,6 @@
    serial port every TIME_KICK seconds.
  */
 
-#include <common.h>
 #include <uart.h>
 #include <print.h>
 

@@ -1,4 +1,4 @@
-MODULES	:= common uart print timer irnec
+MODULES	:= tools uart print timer irnec
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

@@ -4,6 +4,7 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "dht11.h"
 
 

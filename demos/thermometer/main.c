@@ -3,7 +3,6 @@
  */
 
 
-#include <common.h>
 #include <uart.h>
 #include <irnec.h>
 #include <lcd1602.h>

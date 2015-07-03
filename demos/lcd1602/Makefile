@@ -1,4 +1,4 @@
-MODULES	:= common uart print lcd1602
+MODULES	:= tools uart print lcd1602
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 
