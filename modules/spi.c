@@ -18,8 +18,8 @@
 
 #ifdef SPI_UART_RECV_ENABLE
 
-static unsigned char __idata    *buffer;
-static unsigned char            length;
+static uint8_t __idata  *buffer;
+static uint8_t          length;
 
 /* UART service routine.  With SPI_UART_RECV_ENABLE, you can't use the
    uart module as it defines a UART service routine as well */
@@ -51,7 +51,7 @@ void spi_uart_init(void)
 }
 
 /* Receive n bytes to buf using accelerated SPI */
-void spi_uart_recvstr(unsigned char __idata *buf, unsigned char n)
+void spi_uart_recvstr(uint8_t __idata *buf, uint8_t n)
 {
     WAIT_READY();
 
@@ -62,9 +62,9 @@ void spi_uart_recvstr(unsigned char __idata *buf, unsigned char n)
 }
 
 /* Receive a byte using accelerated SPI */
-unsigned char spi_uart_recv(void)
+uint8_t spi_uart_recv(void)
 {
-    unsigned char __idata buf;
+    uint8_t __idata buf;
 
     spi_uart_recvstr(&buf, 1);
 
@@ -83,7 +83,7 @@ void spi_init(void)
 }
 
 /* If SPI is currently sending or receiving data */
-unsigned char spi_isbusy(void)
+uint8_t spi_isbusy(void)
 {
 #ifdef SPI_UART_RECV_ENABLE
     return length;
@@ -93,7 +93,7 @@ unsigned char spi_isbusy(void)
 }
 
 /* Send n bytes in buf */
-void spi_sendstr(unsigned char __idata *buf, unsigned char n)
+void spi_sendstr(uint8_t __idata *buf, uint8_t n)
 {
     for (; n != 0; buf++, n--) {
         spi_send(*buf);
@@ -101,7 +101,7 @@ void spi_sendstr(unsigned char __idata *buf, unsigned char n)
 }
 
 /* Receive n bytes to buf */
-void spi_recvstr(unsigned char __idata *buf, unsigned char n)
+void spi_recvstr(uint8_t __idata *buf, uint8_t n)
 {
     for (; n != 0; buf++, n--) {
         *buf = spi_recv();
@@ -109,8 +109,8 @@ void spi_recvstr(unsigned char __idata *buf, unsigned char n)
 }
 
 /* Send byte c */
-void spi_send(unsigned char c) {
-    unsigned char i;
+void spi_send(uint8_t c) {
+    uint8_t i;
 
 #ifdef SPI_UART_RECV_ENABLE
     WAIT_READY();
@@ -126,9 +126,9 @@ void spi_send(unsigned char c) {
 }
 
 /* Receive a byte */
-unsigned char spi_recv(void) {
-    unsigned char       c;
-    unsigned char       i;
+uint8_t spi_recv(void) {
+    uint8_t     c;
+    uint8_t     i;
 
 #ifdef SPI_UART_RECV_ENABLE
     WAIT_READY();

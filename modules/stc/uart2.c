@@ -14,9 +14,9 @@
 
 /* Ring buffer struct for UART2 I/O */
 typedef struct {
-    unsigned char dat[4];
-    unsigned char in;
-    unsigned char out;
+    uint8_t     dat[4];
+    uint8_t     in;
+    uint8_t     out;
 } buffer_t;
 
 
@@ -26,19 +26,19 @@ static buffer_t txbuf;
 static buffer_t rcbuf;
 
 /* Transmitting is turned off */
-static char txoff;
+static int8_t   txoff;
 /* Receiving buffer is overflow */
-static char rcoff;
+static int8_t   rcoff;
 
 
 #ifdef UART2_CALLBACK
-extern void UART2_CALLBACK(unsigned char c) __using 1;
+extern void UART2_CALLBACK(uint8_t c) __using 1;
 #endif /* UART2_CALLBACK */
 
 /* UART2 interrupt routine */
 void uart2_interrupt(void) __interrupt 8 __using 1
 {
-    unsigned char c;
+    uint8_t c;
 
     /* Check if UART2 is ready to read */
     if (S2CON & S2RI) {
@@ -77,17 +77,17 @@ void uart2_interrupt(void) __interrupt 8 __using 1
 }
 
 /* Test if there are data ready to be read */
-char uart2_rcready(void) {
+int8_t uart2_rcready(void) {
     return !BUF_EMPTY(rcbuf);
 }
 
 /* Test if it is ready to send data */
-char uart2_txready(void) {
+int8_t uart2_txready(void) {
     return !BUF_FULL(txbuf);
 }
 
 /* Send a byte in block mode */
-void uart2_putchar(unsigned char c)
+void uart2_putchar(uint8_t c)
 {
     while (BUF_FULL(txbuf));
 
@@ -102,7 +102,7 @@ void uart2_putchar(unsigned char c)
 }
 
 /* Read a byte in block mode */
-unsigned char uart2_getchar(void)
+uint8_t uart2_getchar(void)
 {
     while (BUF_EMPTY(rcbuf));
 

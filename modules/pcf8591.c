@@ -13,13 +13,13 @@
 #define DEVREAD         1
 
 
-unsigned char pcf8591_adc(unsigned char dev)
+uint8_t pcf8591_adc(uint8_t dev)
 {
-    unsigned char c;
+    uint8_t c;
 
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVREAD)) {
         goto start;
     }
@@ -31,13 +31,13 @@ unsigned char pcf8591_adc(unsigned char dev)
     return c;
 }
 
-void pcf8591_adcstr(unsigned char dev, 
-                    unsigned char __idata *p,
-                    unsigned char n)
+void pcf8591_adcstr(uint8_t dev,
+                    uint8_t __idata *p,
+                    uint8_t n)
 {
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVREAD)) {
         goto start;
     }
@@ -49,11 +49,11 @@ void pcf8591_adcstr(unsigned char dev,
     iic_stop();
 }
 
-unsigned char pcf8591_ctrl(unsigned char dev, unsigned char ctrl)
+uint8_t pcf8591_ctrl(uint8_t dev, uint8_t ctrl)
 {
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
@@ -65,11 +65,11 @@ unsigned char pcf8591_ctrl(unsigned char dev, unsigned char ctrl)
     iic_stop();
 }
 
-void pcf8591_dac(unsigned char dev, unsigned char ctrl, unsigned char c)
+void pcf8591_dac(uint8_t dev, uint8_t ctrl, uint8_t c)
 {
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
@@ -85,14 +85,14 @@ void pcf8591_dac(unsigned char dev, unsigned char ctrl, unsigned char c)
     iic_stop();
 }
 
-void pcf8591_dacstr(unsigned char dev, 
-                    unsigned char ctrl, 
-                    const unsigned char __idata *p,
-                    unsigned char n)
+void pcf8591_dacstr(uint8_t dev,
+                    uint8_t ctrl,
+                    const uint8_t __idata *p,
+                    uint8_t n)
 {
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }

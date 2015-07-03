@@ -10,26 +10,26 @@
 /* Print integer num using function putchar and return the number of
    characters printed.  It provides the similar functionality as
    printf("%d", num). E.g.,
-   print_int(uart_putchar, 0, 10, num) 
+   print_int(uart_putchar, 0, 10, num)
        is same as printf("%10d", num);
-   print_int(uart_putchar, PRINT_ZERO, 4, num) 
-       is same as printf("%04d", num); 
-   print_int(uart_putchar, PRINT_LEFTALIGN, 6, num) 
+   print_int(uart_putchar, PRINT_ZERO, 4, num)
+       is same as printf("%04d", num);
+   print_int(uart_putchar, PRINT_LEFTALIGN, 6, num)
        is same as printf("%-6d", num);
    print_int(uart_putchar, PRINT_UNSIGNED, 0, num)
        is same as printf("%u", num);
    print_int(uart_putchar, PRINT_HEX | PRINT_UPPERCASE, 0, num)
        is same as printf("%X", num); */
-unsigned char print_int(putchar_func putchar,
-                        unsigned char fmt,
-                        unsigned char width,
-                        int num)
+uint8_t print_int(putchar_func putchar,
+                  uint8_t fmt,
+                  uint8_t width,
+                  int16_t num)
 {
-    unsigned char __idata       buf[5];
-    unsigned char __idata       *p;
-    unsigned char               sign;
-    unsigned char               n;
-    unsigned char               ret;
+    uint8_t __idata     buf[5];
+    uint8_t __idata     *p;
+    uint8_t             sign;
+    uint8_t             n;
+    uint8_t             ret;
 
     /* Decide which sign should be used */
     if (num < 0 && !(fmt & (PRINT_UNSIGNED | PRINT_HEX))) {
@@ -110,14 +110,14 @@ unsigned char print_int(putchar_func putchar,
 /* Print string str using function putchar and return the number of
    characters printed.  It provides the similar functionality as
    printf("%s", num). E.g.,
-   print_int(uart_putchar, 0, 10, str) 
+   print_int(uart_putchar, 0, 10, str)
        is same as printf("%10s", str); */
-unsigned char print_str(putchar_func putchar, 
-                        unsigned char fmt, 
-                        unsigned char width, 
-                        const unsigned char *str)
+uint8_t print_str(putchar_func putchar,
+                  uint8_t fmt,
+                  uint8_t width,
+                  const uint8_t *str)
 {
-    unsigned char       ret;
+    uint8_t       ret;
 
     for (ret = 0; *str != 0; str++, ret++);
     str -= ret;

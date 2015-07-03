@@ -7,6 +7,9 @@
 #define __DS1820_H
 
 
+#include "common.h"
+
+
 #define DS1820_DQ               P2_7
 
 #define DS1820_ERR_INIT         -1
@@ -15,23 +18,23 @@
 #define DS1820_ERR_TIMEOUT      -4
 
 
-char ds1820_read_rom(unsigned char __idata *rom);
-char ds1820_read_power_supply(unsigned char __idata *rom);
-char ds1820_convert_t(unsigned char __idata *rom);
-char ds1820_copy_scratchpad(unsigned char __idata *rom);
-char ds1820_recall_e2(unsigned char __idata *rom);
-char ds1820_search_rom(unsigned char __idata *rom);
-char ds1820_alarm_search(unsigned char __idata *rom);
-int ds1820_read_temperature(unsigned char __idata *rom);
-char ds1820_read_resolution(unsigned char __idata *rom);
-char ds1820_write_resolution(unsigned char __idata *rom, unsigned char res);
-char ds1820_read_triggers(unsigned char __idata *rom, 
-                          unsigned char __idata *th,
-                          unsigned char __idata *tl);
-char ds1820_write_triggers(unsigned char __idata *rom, 
-                           unsigned char th,
-                           unsigned char tl);
-int ds1820_measure_temperature(unsigned char __idata *rom);
+int8_t ds1820_read_rom(uint8_t __idata *rom);
+int8_t ds1820_read_power_supply(uint8_t __idata *rom);
+int8_t ds1820_convert_t(uint8_t __idata *rom);
+int8_t ds1820_copy_scratchpad(uint8_t __idata *rom);
+int8_t ds1820_recall_e2(uint8_t __idata *rom);
+int8_t ds1820_search_rom(uint8_t __idata *rom);
+int8_t ds1820_alarm_search(uint8_t __idata *rom);
+int16_t ds1820_read_temperature(uint8_t __idata *rom);
+int8_t ds1820_read_resolution(uint8_t __idata *rom);
+int8_t ds1820_write_resolution(uint8_t __idata *rom, uint8_t res);
+int8_t ds1820_read_triggers(uint8_t __idata *rom, 
+                            uint8_t __idata *th,
+                            uint8_t __idata *tl);
+int8_t ds1820_write_triggers(uint8_t __idata *rom, 
+                             uint8_t th,
+                             uint8_t tl);
+int16_t ds1820_measure_temperature(uint8_t __idata *rom);
 
 
 #endif /* __DS1820_H */

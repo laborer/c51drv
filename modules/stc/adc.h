@@ -7,6 +7,9 @@
 #define __ADC_H
 
 
+#include "stc.h"
+
+
 /* ADC_CONTR Register:
    POWER SPEED1 SPEED0 FLAG START CHS2 CHS1 CHS0 */
 

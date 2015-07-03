@@ -9,16 +9,16 @@
 #include "autoisp.h"
 
 
-static unsigned char state = 0;
+static uint8_t state = 0;
 
 
-void autoisp_check(unsigned char c) __using 1
+void autoisp_check(uint8_t c) __using 1
 {
-    unsigned int i;
+    uint16_t i;
 
-    if ((unsigned char)AUTOISP_MAGIC[state] == c) {
+    if ((uint8_t)AUTOISP_MAGIC[state] == c) {
         state += 1;
-        if ((unsigned char)AUTOISP_MAGIC[state] == 0) {
+        if ((uint8_t)AUTOISP_MAGIC[state] == 0) {
             EA = 0;
             /* We are going to reboot.  Timer is free to use. */
             for (i = AUTOISP_WAIT; i != 0; i--) {
@@ -27,6 +27,6 @@ void autoisp_check(unsigned char c) __using 1
             STC_REBOOT_ISP();
         }
     } else {
-        state = ((unsigned char)AUTOISP_MAGIC[0] == c) ? 1 : 0;
+        state = ((uint8_t)AUTOISP_MAGIC[0] == c) ? 1 : 0;
     }
 }

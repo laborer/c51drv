@@ -12,9 +12,9 @@
 #define TIME_ERROR      TIMER_CYCLES_US(200)
 
 
-static unsigned char    state;
-static unsigned int     time;
-static unsigned int     data;
+static uint8_t  state;
+static uint16_t time;
+static uint16_t data;
 
 
 void irrc5_init(void)
@@ -26,9 +26,9 @@ void irrc5_init(void)
     TIMER0_START();
 }
 
-char irrc5_falling(void)
+int8_t irrc5_falling(void)
 {
-    unsigned int t;
+    uint16_t t;
 
     t = time;
     time = timer0_get16();
@@ -90,9 +90,9 @@ char irrc5_falling(void)
     return state;
 }
 
-char irrc5_rising_last(void)
+int8_t irrc5_rising_last(void)
 {
-    unsigned int t;
+    uint16_t t;
 
     t = time;
     time = timer0_get16();
@@ -121,7 +121,7 @@ char irrc5_rising_last(void)
     return 0;
 }
 
-unsigned int irrc5_result(void)
+uint16_t irrc5_result(void)
 {
     return data;
 }

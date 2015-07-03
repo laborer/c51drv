@@ -7,6 +7,9 @@
 #define __GPIO_H
 
 
+#include "stc.h"
+
+
 #define GPIO_BI         0
 #define GPIO_OUT        1
 #define GPIO_IN         2

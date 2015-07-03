@@ -4,6 +4,7 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "rom9346.h"
 #include "spi.h"
 
@@ -21,7 +22,7 @@
 
 
 /* Send an instruction to the chip */
-static void send_cmd(unsigned int cmd)
+static void send_cmd(uint16_t cmd)
 {
     /* Clear CS first to reset the internal control logic */
     CS = 0;
@@ -71,7 +72,7 @@ void rom9346_write_disable(void)
 }
 
 /* Erase one word. */
-void rom9346_erase(unsigned int addr)
+void rom9346_erase(uint16_t addr)
 {
     send_cmd(BUILDCMD(11) | addr);
     CS = 0;
@@ -85,7 +86,7 @@ void rom9346_erase_all(void)
 }
 
 /* Read one word from addr */
-word_t rom9346_read(unsigned int addr)
+word_t rom9346_read(uint16_t addr)
 {
     word_t c;
 
@@ -97,7 +98,7 @@ word_t rom9346_read(unsigned int addr)
 }
 
 /* Read n words from addr to string p */
-void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
+void rom9346_readstr(uint16_t addr, word_t __idata *p, uint8_t n)
 {
     send_cmd(BUILDCMD(10) | addr);
     for (; n != 0; p++, n--) {
@@ -107,7 +108,7 @@ void rom9346_readstr(unsigned int addr, word_t __idata *p, unsigned char n)
 }
 
 /* Write one word c to addr */
-void rom9346_write(unsigned int addr, word_t w)
+void rom9346_write(uint16_t addr, word_t w)
 {
     send_cmd(BUILDCMD(01) | addr);
     send_word(w);

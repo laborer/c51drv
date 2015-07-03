@@ -2,6 +2,9 @@
 #define __PRINT_H
 
 
+#include "common.h"
+
+
 /* Zero padding.  Similar to printf("%04d", ..) */
 #define PRINT_ZERO      0x01
 /* Use plus sign for positive number.  Similar to printf("%+d", ..) */
@@ -19,7 +22,7 @@
 #define PRINT_UNSIGNED  0x80
 
 
-typedef void (*putchar_func)(unsigned char);
+typedef void (*putchar_func)(uint8_t);
 
 
 /* Print a char using UART */
@@ -39,7 +42,7 @@ typedef void (*putchar_func)(unsigned char);
     print_int(uart_putchar,                                     \
               PRINT_HEX | PRINT_UPPERCASE | PRINT_ZERO,         \
               2,                                                \
-              (unsigned char)num)
+              (uint8_t)num)
 
 /* Print num as 4-digit hexadecimal using UART */
 #define UARTHEX4(num)                                           \
@@ -53,14 +56,14 @@ typedef void (*putchar_func)(unsigned char);
     print_str(uart_putchar, 0, 0, str)
 
 
-unsigned char print_int(putchar_func putchar,
-                        unsigned char fmt,
-                        unsigned char width,
-                        int num);
-unsigned char print_str(putchar_func putchar, 
-                        unsigned char fmt, 
-                        unsigned char width, 
-                        const unsigned char *str);
+uint8_t print_int(putchar_func putchar,
+                  uint8_t fmt,
+                  uint8_t width,
+                  int16_t num);
+uint8_t print_str(putchar_func putchar,
+                  uint8_t fmt,
+                  uint8_t width,
+                  const uint8_t *str);
 
 
 #endif /* __PRINT_H */

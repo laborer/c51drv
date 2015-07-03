@@ -5,8 +5,6 @@
 
 #include "common.h"
 #include "timer.h"
-#include "uart.h"
-#include "print.h"
 #include "hcsr04.h"
 
 
@@ -14,9 +12,9 @@
 #define ECHO    HCSR04_ECHO
 
 
-unsigned int hcsr04_read(void)
+uint16_t hcsr04_read(void)
 {
-    unsigned int        t;
+    uint16_t t;
 
     TRIG = 1;
     DELAY_US(10);

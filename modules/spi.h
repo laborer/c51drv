@@ -7,6 +7,9 @@
 #define __SPI_H
 
 
+#include "common.h"
+
+
 #define SPI_SCLK        P2_2
 #define SPI_MOSI        P2_1
 #define SPI_MISO        P2_0
@@ -21,11 +24,11 @@
 
 
 void spi_init(void);
-unsigned char spi_isbusy(void);
-void spi_sendstr(unsigned char __idata *buf, unsigned char n);
-void spi_recvstr(unsigned char __idata *buf, unsigned char n);
-void spi_send(unsigned char c);
-unsigned char spi_recv(void);
+uint8_t spi_isbusy(void);
+void spi_sendstr(uint8_t __idata *buf, uint8_t n);
+void spi_recvstr(uint8_t __idata *buf, uint8_t n);
+void spi_send(uint8_t c);
+uint8_t spi_recv(void);
 
 #ifdef SPI_UART_RECV_ENABLE
 
@@ -39,9 +42,9 @@ void spi_uart_interrupt(void) __interrupt SI0_VECTOR __using 1;
 #endif
 
 void spi_uart_init(void);
-unsigned char spi_uart_isbusy(void);
-void spi_uart_recvstr(unsigned char __idata *buf, unsigned char n);
-unsigned char spi_uart_recv(void);
+uint8_t spi_uart_isbusy(void);
+void spi_uart_recvstr(uint8_t __idata *buf, uint8_t n);
+uint8_t spi_uart_recv(void);
 
 #endif /* SPI_UART_RECV_ENABLE */
 

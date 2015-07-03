@@ -34,14 +34,13 @@
 
 
 #if defined SDCC || defined __SDCC
-void kbhost_interrupt(void) __interrupt KBHOST_INTVEC; //using 1;
+void kbhost_interrupt(void) __interrupt KBHOST_INTVEC __using 1;
 #endif
 
 void kbhost_init(void);
 void kbhost_stop(void);
-int kbhost_read(void);
-/* char kbhost_send_byte(unsigned char c); */
-/* unsigned char kbhost_recv_byte(void); */
+int16_t kbhost_read(void);
+uint8_t kbhost_modifiers(void);
 
 
 #endif /* __KBHOST_H */

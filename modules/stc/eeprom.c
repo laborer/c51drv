@@ -90,7 +90,7 @@ static void disable(void)
     IAP_ADDRL = 0xFF;
 }
 
-void eeprom_erase(unsigned int addr)
+void eeprom_erase(uint16_t addr)
 {
     IAP_CONTR = ENABLE_IAP;
     /* ERASE Command */
@@ -103,7 +103,7 @@ void eeprom_erase(unsigned int addr)
     disable();
 }
 
-void eeprom_write(unsigned int addr, unsigned char c)
+void eeprom_write(uint16_t addr, uint8_t c)
 {
     IAP_CONTR = ENABLE_IAP;
     /* PROGRAM Command */
@@ -117,7 +117,7 @@ void eeprom_write(unsigned int addr, unsigned char c)
     disable();
 }
 
-unsigned char eeprom_read(unsigned int addr)
+uint8_t eeprom_read(uint16_t addr)
 {
     IAP_CONTR = ENABLE_IAP;
     /* READ Command */

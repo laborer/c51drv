@@ -7,12 +7,15 @@
 #define __IIC_H
 
 
+#include "common.h"
+
+
 #define IIC_SCL P1_1
 #define IIC_SDA P1_2
 
 
-__bit iic_send(unsigned char c);
-unsigned char iic_recv(__bit ack);
+__bit iic_send(uint8_t c);
+uint8_t iic_recv(__bit ack);
 void iic_start(void);
 void iic_stop(void);
 void iic_reset(void);

@@ -10,13 +10,13 @@
 #define DATA DHT11_DATA
 
 
-char dht11_read(unsigned char __idata *out)
+int8_t dht11_read(uint8_t __idata *out)
 {
-    unsigned char       i;
-    unsigned char       j;
-    unsigned char       k;
-    unsigned char       p;
-    unsigned char       c;
+    uint8_t     i;
+    uint8_t     j;
+    uint8_t     k;
+    uint8_t     p;
+    uint8_t     c;
 
     if (DATA) {
         DATA = 0;

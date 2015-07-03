@@ -7,6 +7,9 @@
 #define __PCF8591_H
 
 
+#include "common.h"
+
+
 #define PCF8591_INPUTCONFIG0    0x00
 #define PCF8591_INPUTCONFIG1    0x10
 #define PCF8591_INPUTCONFIG2    0x20
@@ -15,16 +18,16 @@
 #define PCF8591_OUTPUTENABLE    0x40
 
 
-unsigned char pcf8591_adc(unsigned char dev);
-void pcf8591_adcstr(unsigned char dev, 
-                    unsigned char __idata *p,
-                    unsigned char n);
-unsigned char pcf8591_ctrl(unsigned char dev, unsigned char ctrl);
-void pcf8591_dac(unsigned char dev, unsigned char ctrl, unsigned char c);
-void pcf8591_dacstr(unsigned char dev, 
-                    unsigned char ctrl, 
-                    const unsigned char __idata *p,
-                    unsigned char n);
+uint8_t pcf8591_adc(uint8_t dev);
+void pcf8591_adcstr(uint8_t dev, 
+                    uint8_t __idata *p,
+                    uint8_t n);
+uint8_t pcf8591_ctrl(uint8_t dev, uint8_t ctrl);
+void pcf8591_dac(uint8_t dev, uint8_t ctrl, uint8_t c);
+void pcf8591_dacstr(uint8_t dev, 
+                    uint8_t ctrl, 
+                    const uint8_t __idata *p,
+                    uint8_t n);
 
 
 #endif /* __PCF8591_H */

@@ -3,14 +3,15 @@
  */
 
 
+#include "common.h"
 #include "tools.h"
 
 
 /* CRC-8.
    See: http://www.hackersdelight.org/crc.pdf */
-unsigned char crc8(unsigned char crc, unsigned char c)
+uint8_t crc8(uint8_t crc, uint8_t c)
 {
-    unsigned char i;
+    uint8_t i;
 
     crc ^= c;
     for (i = 8; i != 0; i--) {

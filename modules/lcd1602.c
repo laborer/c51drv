@@ -35,7 +35,7 @@
     while (RECV_CMD() & 0x80) {}
 
 
-static void send_byte(unsigned char c)
+static void send_byte(uint8_t c)
 {
     RW = 0;
     E = 1;
@@ -44,9 +44,9 @@ static void send_byte(unsigned char c)
     E = 0;
 }
 
-static unsigned char recv_byte(void)
+static uint8_t recv_byte(void)
 {
-    unsigned char c;
+    uint8_t c;
 
     RW = 1;
     E = 1;
@@ -58,13 +58,13 @@ static unsigned char recv_byte(void)
     return c;
 }
 
-static void set_addr(unsigned char addr)
+static void set_addr(uint8_t addr)
 {
     WAIT_READY();
     SEND_CMD(0x80 | addr & 0x7F);
 }
 
-static unsigned char get_addr(void)
+static uint8_t get_addr(void)
 {
     WAIT_READY();
     return RECV_CMD() & 0x7F;
@@ -100,26 +100,26 @@ void lcd1602_shift(__bit display, __bit direction)
     SEND_CMD(0x10 | (display << 3) | (direction << 2));
 }
 
-void lcd1602_putchar(unsigned char c)
+void lcd1602_putchar(uint8_t c)
 {
     WAIT_READY();
     SEND_DAT(c);
 }
 
-unsigned char lcd1602_getchar(void)
+uint8_t lcd1602_getchar(void)
 {
     WAIT_READY();
     return RECV_DAT();
 }
 
-void lcd1602_position(unsigned char x, unsigned char y)
+void lcd1602_position(uint8_t x, uint8_t y)
 {
     set_addr(x | (y << 6));
 }
 
-void lcd1602_write_cgram(unsigned char addr, unsigned char c)
+void lcd1602_write_cgram(uint8_t addr, uint8_t c)
 {
-    unsigned char t;
+    uint8_t t;
 
     t = get_addr();
     SEND_CMD(0x40 | addr & 0x3F);
@@ -128,10 +128,10 @@ void lcd1602_write_cgram(unsigned char addr, unsigned char c)
     set_addr(t);
 }
 
-unsigned char lcd1602_read_cgram(unsigned char addr)
+uint8_t lcd1602_read_cgram(uint8_t addr)
 {
-    unsigned char t;
-    unsigned char c;
+    uint8_t     t;
+    uint8_t     c;
 
     t = get_addr();
     SEND_CMD(0x40 | addr & 0x3F);
@@ -142,10 +142,10 @@ unsigned char lcd1602_read_cgram(unsigned char addr)
     return c;
 }
 
-void lcd1602_character(unsigned char idx, const unsigned char __code *p)
+void lcd1602_character(uint8_t idx, const uint8_t __code *p)
 {
-    unsigned char t;
-    unsigned char i;
+    uint8_t     t;
+    uint8_t     i;
 
     t = get_addr();
     for (i = 0; i < 8; i++, p++) {

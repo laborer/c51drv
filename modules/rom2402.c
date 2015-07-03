@@ -14,13 +14,13 @@
 #define PAGEMASK        ((1 << ROM2402_PAGEBITS) - 1)
 
 
-unsigned char rom2402_read(unsigned char dev, unsigned char addr)
+uint8_t rom2402_read(uint8_t dev, uint8_t addr)
 {
-    unsigned char c;
+    uint8_t c;
 
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
@@ -42,16 +42,16 @@ unsigned char rom2402_read(unsigned char dev, unsigned char addr)
     return c;
 }
 
-void rom2402_readstr(unsigned char dev, 
-                     unsigned char addr, 
-                     unsigned char __idata *p,
-                     unsigned char n)
+void rom2402_readstr(uint8_t dev,
+                     uint8_t addr,
+                     uint8_t __idata *p,
+                     uint8_t n)
 {
-    unsigned char i;
+    uint8_t i;
 
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
@@ -85,11 +85,11 @@ void rom2402_readstr(unsigned char dev,
     }
 }
 
-void rom2402_write(unsigned char dev, unsigned char addr, unsigned char c)
+void rom2402_write(uint8_t dev, uint8_t addr, uint8_t c)
 {
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }
@@ -105,17 +105,17 @@ void rom2402_write(unsigned char dev, unsigned char addr, unsigned char c)
     iic_stop();
 }
 
-void rom2402_writestr(unsigned char dev, 
-                      unsigned char addr, 
-                      const unsigned char __idata *p,
-                      unsigned char n)
+void rom2402_writestr(uint8_t dev,
+                      uint8_t addr,
+                      const uint8_t __idata *p,
+                      uint8_t n)
 {
-    unsigned char i;
-    unsigned char k;
+    uint8_t     i;
+    uint8_t     k;
 
  start:
     iic_start();
-    
+
     if (iic_send((dev << 1) & 0x0E | DEVADDR | DEVWRITE)) {
         goto start;
     }

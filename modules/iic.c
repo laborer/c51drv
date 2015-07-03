@@ -12,9 +12,9 @@
 
 
 /* Send byte c */
-__bit iic_send(unsigned char c)
+__bit iic_send(uint8_t c)
 {
-    unsigned char i;
+    uint8_t i;
 
     SCL = 0;
 
@@ -36,10 +36,10 @@ __bit iic_send(unsigned char c)
 }
 
 /* Receive a byte and acknowledge with bit ack */
-unsigned char iic_recv(__bit ack)
+uint8_t iic_recv(__bit ack)
 {
-    unsigned char i;
-    unsigned char c;
+    uint8_t     i;
+    uint8_t     c;
 
     c = 0;
 
@@ -93,7 +93,7 @@ void iic_stop(void)
 /* Reset all iic slaves */
 void iic_reset(void)
 {
-    unsigned char i;
+    uint8_t i;
 
     SCL = 0;
     SDA = 1;

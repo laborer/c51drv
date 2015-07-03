@@ -7,6 +7,8 @@
 #define __UART_H
 
 
+#include "common.h"
+
 
 /* Should SMOD bit be used in uart_baudrate() */
 #define UART_SMOD       1
@@ -18,12 +20,12 @@
 void uart_interrupt(void) __interrupt SI0_VECTOR __using 1;
 #endif
 
-char uart_rcready(void);
-char uart_txready(void);
-void uart_putchar(unsigned char c);
-unsigned char uart_getchar(void);
+int8_t uart_rcready(void);
+int8_t uart_txready(void);
+void uart_putchar(uint8_t c);
+uint8_t uart_getchar(void);
 void uart_baudrate(void);
-char uart_baudrate_auto(void);
+int8_t uart_baudrate_auto(void);
 void uart_init(void);
 
 

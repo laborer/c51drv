@@ -7,6 +7,9 @@
 #define __TOOLS_H
 
 
+#include "common.h"
+
+
 /* Return the number of elements in buf */
 #define BUF_DATSIZE(buf)                                        \
     (sizeof((buf).dat) / sizeof((buf).dat[0]))
@@ -52,14 +55,14 @@
 /* Test if the buffer is full */
 #define BUF_FULL(buf)                                           \
     ((sizeof((buf).in) == 1)                                    \
-     ? (!((unsigned char)((buf).in - (buf).out + 1)             \
+     ? (!((uint8_t)((buf).in - (buf).out + 1)                   \
           & BUF_MASK(buf)))                                     \
      : (!(((buf).in - (buf).out + 1) & BUF_MASK(buf))))
 
 /* Return the number of elements in the buffer */
 #define BUF_LEN(buf)                                            \
     ((sizeof((buf).in) == 1)                                    \
-     ? ((unsigned char)((buf).in - (buf).out) & BUF_MASK(buf))  \
+     ? ((uint8_t)((buf).in - (buf).out) & BUF_MASK(buf))        \
      : (((buf).in - (buf).out) & BUF_MASK(buf)))
 
 /* Convert binary to byte.  E.g., BIN(11111111) returns 255 */
@@ -95,11 +98,11 @@
 
 /* Convert a packed BCD number to a byte */
 #define PACKEDBCD2UCHAR(x)                                      \
-    ((unsigned char)(((unsigned char)(x) >> 4) * 10             \
-                     + ((unsigned char)(x) & 0x0F)))
+    ((uint8_t)(((uint8_t)(x) >> 4) * 10                         \
+               + ((uint8_t)(x) & 0x0F)))
 
 
-unsigned char crc8(unsigned char crc, unsigned char c);
+uint8_t crc8(uint8_t crc, uint8_t c);
 
 
 #endif /* __TOOLS_H */

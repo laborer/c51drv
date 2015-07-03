@@ -12,13 +12,13 @@
 #define RECV    1
 
 
-static unsigned char __idata    *buffer;
-static unsigned char            length;
-static __bit                    direction;
+static uint8_t __idata  *buffer;
+static uint8_t          length;
+static __bit            direction;
 
 
 #ifdef SPI_CALLBACK
-extern void SPI_CALLBACK(unsigned char c) __using 1;
+extern void SPI_CALLBACK(uint8_t c) __using 1;
 #endif /* SPI_CALLBACK */
 
 void spi_interrupt(void) __interrupt 9 __using 1
@@ -66,12 +66,12 @@ void spi_init(void)
     length = 0;
 }
 
-unsigned char spi_isbusy(void)
+uint8_t spi_isbusy(void)
 {
     return length;
 }
 
-void spi_sendstr(unsigned char __idata *buf, unsigned char n)
+void spi_sendstr(uint8_t __idata *buf, uint8_t n)
 {
     while (length);
 
@@ -82,7 +82,7 @@ void spi_sendstr(unsigned char __idata *buf, unsigned char n)
     SPDAT = *buf;
 }
 
-void spi_recvstr(unsigned char __idata *buf, unsigned char n)
+void spi_recvstr(uint8_t __idata *buf, uint8_t n)
 {
     while (length);
 
@@ -93,15 +93,15 @@ void spi_recvstr(unsigned char __idata *buf, unsigned char n)
     SPDAT = 0;
 }
 
-void spi_send(unsigned char c) {
-    unsigned char __idata buf;
+void spi_send(uint8_t c) {
+    uint8_t __idata buf;
 
     buf = c;
     spi_sendstr(&buf, 1);
 }
 
-unsigned char spi_recv(void) {
-    unsigned char __idata buf;
+uint8_t spi_recv(void) {
+    uint8_t __idata buf;
 
     spi_recvstr(&buf, 1);
 

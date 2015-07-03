@@ -7,6 +7,9 @@
 #define __DS1302_H
 
 
+#include "common.h"
+
+
 #define DS1302_CE       P3_5
 #define DS1302_SCLK     P3_6
 #define DS1302_IO       P3_4
@@ -39,10 +42,10 @@
     ds1302_read(7)
 
 
-unsigned char ds1302_read(unsigned char addr);
-void ds1302_read_clock(unsigned char __idata *p);
-void ds1302_write(unsigned char addr, unsigned char c);
-void ds1302_write_clock(unsigned char __idata *p);
+uint8_t ds1302_read(uint8_t addr);
+void ds1302_read_clock(uint8_t __idata *p);
+void ds1302_write(uint8_t addr, uint8_t c);
+void ds1302_write_clock(uint8_t __idata *p);
 
 
 #endif /* __DS1302_H */

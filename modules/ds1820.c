@@ -4,6 +4,7 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "ds1820.h"
 
 
@@ -15,7 +16,7 @@
 #define DQ DS1820_DQ
 
 
-static unsigned char crc;
+static uint8_t crc;
 
 
 /* Send bit b */
@@ -30,9 +31,9 @@ static void send_bit(__bit b)
 }
 
 /* Send byte c */
-static void send_byte(unsigned char c)
+static void send_byte(uint8_t c)
 {
-    unsigned char i;
+    uint8_t i;
 
     for (i = 8; i != 0; i--) {
         send_bit(c & 1);
@@ -51,15 +52,15 @@ static __bit recv_bit(void)
     DELAY_US(10);
     b = DQ;
     DELAY_US(70);
-    
+
     return b;
 }
 
 /* Receive a byte */
-static unsigned char recv_byte(void)
+static uint8_t recv_byte(void)
 {
-    unsigned char i;
-    unsigned char c;
+    uint8_t     i;
+    uint8_t     c;
 
     c = 0;
     for (i = 8; i != 0; i--) {
@@ -73,7 +74,7 @@ static unsigned char recv_byte(void)
 }
 
 /* Initialize conversation */
-static char init(void)
+static int8_t init(void)
 {
     /* It seems that if DQ is not pulled-up long enough, the chip
        doesn't respond correctly.  This is not described in
@@ -95,10 +96,10 @@ static char init(void)
 }
 
 /* Send out the address of the device we are looking for */
-static void match_rom(unsigned char __idata *rom)
+static void match_rom(uint8_t __idata *rom)
 {
-    unsigned char i;
-    
+    uint8_t i;
+
     if (rom) {
         /* Match ROM */
         send_byte(0x55);
@@ -113,13 +114,13 @@ static void match_rom(unsigned char __idata *rom)
 
 /* Find the device addressed next to rom on the bus.  Parameter cmd
    decides whether it is a normal or alarm search */
-static char next_rom(unsigned char __idata *rom, unsigned char cmd)
+static int8_t next_rom(uint8_t __idata *rom, uint8_t cmd)
 {
-    char i;
-    char j;
-    char k;
-    char b;
-    char k0;
+    int8_t      i;
+    int8_t      j;
+    int8_t      k;
+    int8_t      b;
+    int8_t      k0;
 
     /* Initialize DS1820. */
     if (init() < 0) {
@@ -153,7 +154,7 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
 
         /* Poll chips on both branches. */
         b = recv_bit();
-        b |= (char)recv_bit() << 1;
+        b |= (int8_t)recv_bit() << 1;
 
         /* Follow the path given by rom. */
         send_bit(rom[i] & j);
@@ -170,9 +171,9 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
         }
         /* There is no way to go.  There is no chip on the side where
            rom asks us to go. */
-        if (b == 2 && (rom[i] & j) != 0 || b == 1 && (rom[i] & j) == 0) { 
-            break; 
-        }       
+        if (b == 2 && (rom[i] & j) != 0 || b == 1 && (rom[i] & j) == 0) {
+            break;
+        }
     }
 
     /* If rom is a valid chip, return 0; or, if we haven't seen a
@@ -188,7 +189,7 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
     if (init() < 0) {
         return DS1820_ERR_INIT;
     }
-    
+
     /* Search ROM or Alarm Search*/
     send_byte(cmd);
 
@@ -221,10 +222,10 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
             j = 1;
             i += 1;
         }
-        
+
         /* Poll chips on both branches. */
         b = recv_bit();
-        b |= (char)recv_bit() << 1;
+        b |= (int8_t)recv_bit() << 1;
 
         /* Always go left as long as there is a chip on the left. */
         if (b == 3) {
@@ -234,7 +235,7 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
         } else {
             rom[i] &= ~j;
         }
-        
+
         /* After updating rom, we follow the path given by it. */
         send_bit(rom[i] & j);
     }
@@ -243,15 +244,15 @@ static char next_rom(unsigned char __idata *rom, unsigned char cmd)
 }
 
 /* Read the n and n+1-th byte on the scratchpad */
-static unsigned int read_scratchpad(unsigned char n)
+static uint16_t read_scratchpad(uint8_t n)
 {
-    unsigned char       i;
-    unsigned char       c;
-    unsigned int        ret;
-    
+    uint8_t     i;
+    uint8_t     c;
+    uint16_t    ret;
+
     /* Read Scratchpad */
     send_byte(0xBE);
-    
+
     crc = 0;
     ret = 0;
     for (i = 0; i < 9; i++) {
@@ -261,7 +262,7 @@ static unsigned int read_scratchpad(unsigned char n)
         if (i == n) {
             ret = c;
         } else if (i == n + 1) {
-            ret |= (int)c << 8;
+            ret |= (uint16_t)c << 8;
         }
     }
 
@@ -269,9 +270,9 @@ static unsigned int read_scratchpad(unsigned char n)
 }
 
 /* Write threshold th, tl and configuration cfg to the scratchpad */
-static void write_scratchpad(unsigned char th, 
-                             unsigned char tl, 
-                             unsigned char cfg)
+static void write_scratchpad(uint8_t th,
+                             uint8_t tl,
+                             uint8_t cfg)
 {
     /* Write Scratchpad */
     send_byte(0x4E);
@@ -283,9 +284,9 @@ static void write_scratchpad(unsigned char th,
 
 
 /* Read the address of a device */
-char ds1820_read_rom(unsigned char __idata *rom)
+int8_t ds1820_read_rom(uint8_t __idata *rom)
 {
-    unsigned char i;
+    uint8_t i;
 
     if (init() < 0) {
         return DS1820_ERR_INIT;
@@ -307,14 +308,14 @@ char ds1820_read_rom(unsigned char __idata *rom)
 }
 
 /* Read which power supply a device uses */
-char ds1820_read_power_supply(unsigned char __idata *rom)
+int8_t ds1820_read_power_supply(uint8_t __idata *rom)
 {
     if (init() < 0) {
         return DS1820_ERR_INIT;
     }
 
     match_rom(rom);
-    
+
     /* Read Power Supply */
     send_byte(0xB4);
 
@@ -322,14 +323,14 @@ char ds1820_read_power_supply(unsigned char __idata *rom)
 }
 
 /* Send command to start temperature measurement */
-char ds1820_convert_t(unsigned char __idata *rom)
+int8_t ds1820_convert_t(uint8_t __idata *rom)
 {
     if (init() < 0) {
         return DS1820_ERR_INIT;
     }
 
     match_rom(rom);
-    
+
     /* Convert T */
     send_byte(0x44);
 
@@ -337,7 +338,7 @@ char ds1820_convert_t(unsigned char __idata *rom)
 }
 
 /* Store scratchpad to eeprom */
-char ds1820_copy_scratchpad(unsigned char __idata *rom)
+int8_t ds1820_copy_scratchpad(uint8_t __idata *rom)
 {
     if (init() < 0) {
         return DS1820_ERR_INIT;
@@ -352,7 +353,7 @@ char ds1820_copy_scratchpad(unsigned char __idata *rom)
 }
 
 /* Reload scratchpad from eeprom */
-char ds1820_recall_e2(unsigned char __idata *rom)
+int8_t ds1820_recall_e2(uint8_t __idata *rom)
 {
     if (init() < 0) {
         return DS1820_ERR_INIT;
@@ -367,7 +368,7 @@ char ds1820_recall_e2(unsigned char __idata *rom)
 }
 
 /* Search the device addressed next to rom */
-char ds1820_search_rom(unsigned char __idata *rom)
+int8_t ds1820_search_rom(uint8_t __idata *rom)
 {
     /* Search ROM */
     return next_rom(rom, 0xF0);
@@ -375,17 +376,17 @@ char ds1820_search_rom(unsigned char __idata *rom)
 
 /* Search the device addressed next to rom, which triggered its
    alarm */
-char ds1820_alarm_search(unsigned char __idata *rom)
+int8_t ds1820_alarm_search(uint8_t __idata *rom)
 {
     /* Alarm Search */
     return next_rom(rom, 0xEC);
 }
 
 /* Read the measured temperature */
-int ds1820_read_temperature(unsigned char __idata *rom)
+int16_t ds1820_read_temperature(uint8_t __idata *rom)
 {
-    unsigned int ret;
-    
+    uint16_t ret;
+
     if (init() < 0) {
         return 0x80FF & DS1820_ERR_INIT;
     }
@@ -401,9 +402,9 @@ int ds1820_read_temperature(unsigned char __idata *rom)
 }
 
 /* Read the resolution of temperature measurement */
-char ds1820_read_resolution(unsigned char __idata *rom)
+int8_t ds1820_read_resolution(uint8_t __idata *rom)
 {
-    unsigned int ret;
+    uint16_t ret;
 
     if (init() < 0) {
         return DS1820_ERR_INIT;
@@ -416,13 +417,13 @@ char ds1820_read_resolution(unsigned char __idata *rom)
         return DS1820_ERR_CRC;
     }
 
-    return (((char)ret & 0x7F) >> 5) + 9;
+    return (((int8_t)ret & 0x7F) >> 5) + 9;
 }
 
 /* Set the resolution of temperature measurement */
-char ds1820_write_resolution(unsigned char __idata *rom, unsigned char res)
+int8_t ds1820_write_resolution(uint8_t __idata *rom, uint8_t res)
 {
-    unsigned int ret;
+    uint16_t ret;
 
     /* The first command is to save trigger settings. */
     if (init() < 0) {
@@ -445,16 +446,16 @@ char ds1820_write_resolution(unsigned char __idata *rom, unsigned char res)
     match_rom(rom);
 
     write_scratchpad(ret, ret >> 8, (res - 9) << 5);
-    
+
     return 0;
 }
 
 /* Read trigger temperatures */
-char ds1820_read_triggers(unsigned char __idata *rom, 
-                          unsigned char __idata *th,
-                          unsigned char __idata *tl)
+int8_t ds1820_read_triggers(uint8_t __idata *rom,
+                            uint8_t __idata *th,
+                            uint8_t __idata *tl)
 {
-    unsigned int ret;
+    uint16_t ret;
 
     if (init() < 0) {
         return DS1820_ERR_INIT;
@@ -474,11 +475,11 @@ char ds1820_read_triggers(unsigned char __idata *rom,
 }
 
 /* Set trigger temperatures */
-char ds1820_write_triggers(unsigned char __idata *rom, 
-                           unsigned char th,
-                           unsigned char tl)
+int8_t ds1820_write_triggers(uint8_t __idata *rom,
+                             uint8_t th,
+                             uint8_t tl)
 {
-    unsigned char ret;
+    uint8_t ret;
 
     /* The first command is to save resolution setting. */
     if (init() < 0) {
@@ -512,12 +513,12 @@ char ds1820_write_triggers(unsigned char __idata *rom,
    such case, a better way is to run convert_t(...) first, then return
    the control flow to the event loop and call read_temperature(...)
    one second later (for 12-bit resolution). */
-int ds1820_measure_temperature(unsigned char __idata *rom)
+int16_t ds1820_measure_temperature(uint8_t __idata *rom)
 {
-    unsigned char pwr;
-    unsigned char res;
-    unsigned char ret;
-    unsigned char i;
+    uint8_t     pwr;
+    uint8_t     res;
+    uint8_t     ret;
+    uint8_t     i;
 
     /* Read power status.  If the chip is powered, we can use read
        slot to test when it finishes conversion after issuing a

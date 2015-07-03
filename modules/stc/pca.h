@@ -7,6 +7,9 @@
 #define __PCA_H
 
 
+#include "stc.h"
+
+
 /* PCA Control Register: CCON
    CF CR - - - - CCF1 CCF0
    

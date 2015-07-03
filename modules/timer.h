@@ -12,7 +12,7 @@
 
 /* The increment of timer in t microseconds */
 #define TIMER_CYCLES_US(t)                                      \
-    ((unsigned int)((t) / 1000000.0 * FOSC / 12))
+    ((uint16_t)((t) / 1000000.0 * FOSC / 12))
 
 /* Timer flag indicating if timer overflows */
 #define TIMER0_FLAG TF0
@@ -47,7 +47,7 @@
 #define TIMER0_SET16(t)                                         \
     do {                                                        \
         TL0 = (t);                                              \
-        TH0 = (unsigned int)(t) >> 8;                           \
+        TH0 = (uint16_t)(t) >> 8;                               \
     } while (0)
 
 /* Initialize Timer0 as an 8-bit auto-reload timer */
@@ -120,7 +120,7 @@
 #define TIMER1_SET16(t)                                         \
     do {                                                        \
         TL1 = (t);                                              \
-        TH1 = (unsigned int)(t) >> 8;                           \
+        TH1 = (uint16_t)(t) >> 8;                               \
     } while (0)
 
 /* Initialize Timer1 as an 8-bit auto-reload timer */
@@ -172,16 +172,16 @@
 #define TIMER2_SET16(t)                                         \
     do {                                                        \
         RCAP2L = (t);                                           \
-        RCAP2H = (unsigned int)(t) >> 8;                        \
+        RCAP2H = (uint16_t)(t) >> 8;                            \
     } while (0)
 
 #endif /* MICROCONTROLLER_8052 */
 
 
 #if defined SDCC || defined __SDCC
-unsigned int timer0_get16(void) __naked;
+uint16_t timer0_get16(void) __naked;
 #else
-unsigned int timer0_get16(void);
+uint16_t timer0_get16(void);
 #endif /* SDCC */
 
 
@@ -209,12 +209,12 @@ unsigned int timer0_get16(void);
 
 
 #if defined SDCC || defined __SDCC
-unsigned long timer0_get32(void) __naked;
+uint32_t timer0_get32(void) __naked;
 #else
-unsigned long timer0_get32(void);
+uint32_t timer0_get32(void);
 #endif /* SDCC */
 
-void timer0_set32(unsigned long t);
+void timer0_set32(uint32_t t);
 
 #if defined SDCC || defined __SDCC
 void timer0_interrupt(void) __interrupt TF0_VECTOR __using 1;

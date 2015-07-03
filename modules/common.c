@@ -7,7 +7,7 @@
 
 
 #ifdef REVERSE_FAST
-const unsigned char __code reverse_lookup_table[] = {
+const uint8_t __code reverse_lookup_table[] = {
     0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0,
     0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0, 
     0x08, 0x88, 0x48, 0xC8, 0x28, 0xA8, 0x68, 0xE8,
@@ -45,9 +45,9 @@ const unsigned char __code reverse_lookup_table[] = {
 
 
 /* Reverse the order of a byte */
-unsigned char reverse(unsigned char c)
+uint8_t reverse(uint8_t c)
 {
-    const unsigned char __code lookup[16] = {
+    const uint8_t __code lookup[16] = {
         0x0, 0x8, 0x4, 0xC,
         0x2, 0xA, 0x6, 0xE,
         0x1, 0x9, 0x5, 0xD,
@@ -57,13 +57,13 @@ unsigned char reverse(unsigned char c)
 }
 
 /* Convert a byte to packed BCD format */
-unsigned char uchar2packedbcd(unsigned char x)
+uint8_t uchar2packedbcd(uint8_t x)
 {
     return ((x / 10) << 4) | B;
 }
 
 /* Convert a byte to BCD format and store it in array buf */
-void uchar2bcd(unsigned char x, unsigned char __idata *buf)
+void uchar2bcd(uint8_t x, uint8_t __idata *buf)
 {
     x = x / 10;
     buf[2] = B;
@@ -71,16 +71,16 @@ void uchar2bcd(unsigned char x, unsigned char __idata *buf)
     buf[1] = B;
 }
 
-/* Convert an unsigned int to BCD format and store it in array buf.
+/* Convert an uint16_t to BCD format and store it in array buf.
    See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3731568
    See: http://www.amobbs.com/bbs/bbs_content.jsp?bbs_sn=3587651
    See also: http://www.cs.uiowa.edu/~jones/bcd/decimal.html
  */
-void uint2bcd(unsigned int x, unsigned char __idata *buf)
+void uint2bcd(uint16_t x, uint8_t __idata *buf)
 {
-    unsigned char               i;
-    unsigned char               j;
-    unsigned char __idata       *p;
+    uint8_t             i;
+    uint8_t             j;
+    uint8_t __idata     *p;
 
     i = x >> 10;        /* x == 1024i+r == 1000i+(24i+r-1024n) 
                            where n == 0 */
@@ -107,18 +107,19 @@ void uint2bcd(unsigned int x, unsigned char __idata *buf)
     *(p++) = i / 10;
     *(p++) = B;
     *(p++) = j / 25;
-    *(p++) = (unsigned char)((unsigned char)(B * 4) + (x & 3)) / 10;
+    *(p++) = (uint8_t)((uint8_t)(B * 4) + (x & 3)) / 10;
     *(p++) = B;
 }
 
 
-/* Convert an unsigned long to BCD format and store it in array buf */
-void ulong2bcd(unsigned long x, unsigned char __idata *buf)
+/* Convert an unsigned long (uint32_t) to BCD format and store it in
+   array buf */
+void ulong2bcd(uint32_t x, uint8_t __idata *buf)
 {
-    unsigned char               i;
-    unsigned char               j;
-    unsigned char               k;
-    unsigned char __idata       *p;
+    uint8_t             i;
+    uint8_t             j;
+    uint8_t             k;
+    uint8_t __idata     *p;
 
     /* Suppose the higher part of x is xh and the lower part of x is
        xl.  As x is an 32-bit integer, x == xh*65536+xl, which can be
@@ -163,20 +164,20 @@ void ulong2bcd(unsigned long x, unsigned char __idata *buf)
     }
 }
 
-/* Convert an unsigned int to hexadecimal and store it in array buf */
-void uint2hex(unsigned int x, unsigned char __idata *buf)
+/* Convert an uint16_t to hexadecimal and store it in array buf */
+void uint2hex(uint16_t x, uint8_t __idata *buf)
 {
-    unsigned char __idata *p;
+    uint8_t __idata *p;
 
     p = buf;
     *(p++) = x >> 12;
     *(p++) = (x >> 8) & 0x0F;
-    *(p++) = (unsigned char)x >> 4;
+    *(p++) = (uint8_t)x >> 4;
     *p = x & 0x0F;
 }
 
 /* Delay t milliseconds */
-void delay_ms(unsigned int t)
+void delay_ms(uint16_t t)
 {
     for (; t != 0; t--) {
         /* It needs about 6 extra machine cycles to do one loop. */
@@ -185,7 +186,7 @@ void delay_ms(unsigned int t)
 }
 
 /* Get the parity bit of c */
-__bit parity(unsigned char c)
+__bit parity(uint8_t c)
 {
     ACC = c;
     return P;

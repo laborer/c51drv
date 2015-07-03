@@ -7,7 +7,10 @@
 #define __LED7SEG_H
 
 
-extern const unsigned char __code led7seg_encode[16];
+#include "common.h"
+
+
+extern const uint8_t __code led7seg_encode[16];
 
 
 #endif /* __LED7SEG_H */

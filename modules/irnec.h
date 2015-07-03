@@ -7,6 +7,9 @@
 #define __IRNEC_H
 
 
+#include "common.h"
+
+
 #define IRNEC_ERR_LONGBIT       -1
 #define IRNEC_ERR_SHORTBIT      -2
 #define IRNEC_ERR_INVERSE       -3
@@ -14,8 +17,8 @@
 
 
 void irnec_init(void);
-char irnec_falling(void);
-unsigned int irnec_result(void);
+int8_t irnec_falling(void);
+uint16_t irnec_result(void);
 
 
 #endif /* __IRNEC_H */

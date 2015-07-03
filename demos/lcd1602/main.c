@@ -4,6 +4,7 @@
 
 
 #include <common.h>
+#include <tools.h>
 #include <uart.h>
 #include <lcd1602.h>
 #include <print.h>

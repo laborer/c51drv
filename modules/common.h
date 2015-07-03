@@ -7,7 +7,8 @@
 #define __COMMON_H
 
 
-#include "tools.h"
+#include <stdint.h>
+/* #include "tools.h" */
 
 
 /* Frequency of the oscillator */
@@ -102,7 +103,7 @@ void _nop_(void);
 
 /* The number of machine cycles in a microsecond */
 #define CYCLES_US(t)                                            \
-    ((unsigned int)((t) / 1000000.0 * FOSC / TICKS))
+    ((uint16_t)((t) / 1000000.0 * FOSC / TICKS))
 
 /* The number of loops of the first inner loop */
 #define __DELAY_LOOP0   0x7E
@@ -114,7 +115,7 @@ void _nop_(void);
     (((n) > 0) ? ((n) + __DELAY_MOV) : 0)
 /* The number of loops of the first outer loop */
 #define __DELAY_LOOP1(n)                                        \
-    (((int)(n) - __DELAY_MOV) / __DELAY_INNER - 1)
+    (((int16_t)(n) - __DELAY_MOV) / __DELAY_INNER - 1)
 /* The number of machine cycles left after the first loop */
 #define __DELAY_N1(n)                                           \
     ((n) - __DELAY_CUTOFF(__DELAY_LOOP1(n) * __DELAY_INNER))
@@ -129,8 +130,8 @@ void _nop_(void);
 /* Delay for n machine cycles */
 #define DELAY_CYCLES(n)                                         \
     do {                                                        \
-        __DELAY_TYPE unsigned char i;                           \
-        __DELAY_TYPE unsigned char j;                           \
+        __DELAY_TYPE uint8_t i;                                 \
+        __DELAY_TYPE uint8_t j;                                 \
         if (__DELAY_LOOP1(n) > 0) {                             \
             for (i = __DELAY_LOOP1(n); i != 0; i--) {           \
                 for (j = __DELAY_LOOP0; j != 0; j--);           \
@@ -175,7 +176,7 @@ void _nop_(void);
 #define REVERSE(c)                                              \
     REVERSE_FAST(c)
 
-extern const unsigned char __code reverse_lookup_table[];
+extern const uint8_t __code reverse_lookup_table[];
 
 #else
 
@@ -185,14 +186,14 @@ extern const unsigned char __code reverse_lookup_table[];
 #endif
 
 
-unsigned char reverse(unsigned char c);
-unsigned char uchar2packedbcd(unsigned char x);
-void uchar2bcd(unsigned char x, unsigned char __idata *buf);
-void uint2bcd(unsigned int x, unsigned char __idata *buf);
-void ulong2bcd(unsigned long x, unsigned char __idata *buf);
-void uint2hex(unsigned int x, unsigned char __idata *buf);
-void delay_ms(unsigned int t);
-__bit parity(unsigned char c);
+uint8_t reverse(uint8_t c);
+uint8_t uchar2packedbcd(uint8_t x);
+void uchar2bcd(uint8_t x, uint8_t __idata *buf);
+void uint2bcd(uint16_t x, uint8_t __idata *buf);
+void ulong2bcd(uint32_t x, uint8_t __idata *buf);
+void uint2hex(uint16_t x, uint8_t __idata *buf);
+void delay_ms(uint16_t t);
+__bit parity(uint8_t c);
 
 
 #endif /* __COMMON_H */

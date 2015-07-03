@@ -15,9 +15,9 @@
 #define CMDWRITE        0x80
 
 
-static void send_byte(unsigned char c)
+static void send_byte(uint8_t c)
 {
-    unsigned char i;
+    uint8_t i;
 
     for (i = 8; i != 0; i--) {
         IO = c & 1;
@@ -29,10 +29,10 @@ static void send_byte(unsigned char c)
     }
 }
 
-static unsigned char recv_byte(void)
+static uint8_t recv_byte(void)
 {
-    unsigned char c;
-    unsigned char i;
+    uint8_t     c;
+    uint8_t     i;
 
     IO = 1;
     c = 0;
@@ -65,9 +65,9 @@ static void stop(void)
     CE = 0;
 }
 
-unsigned char ds1302_read(unsigned char addr)
+uint8_t ds1302_read(uint8_t addr)
 {
-    unsigned char c;
+    uint8_t c;
 
     start();
     send_byte((addr << 1) | CMDREAD);
@@ -77,9 +77,9 @@ unsigned char ds1302_read(unsigned char addr)
     return c;
 }
 
-void ds1302_read_clock(unsigned char __idata *p)
+void ds1302_read_clock(uint8_t __idata *p)
 {
-    unsigned char i;
+    uint8_t i;
 
     start();
     /* send_byte(0xBF); */
@@ -90,7 +90,7 @@ void ds1302_read_clock(unsigned char __idata *p)
     stop();
 }
 
-void ds1302_write(unsigned char addr, unsigned char c)
+void ds1302_write(uint8_t addr, uint8_t c)
 {
     start();
     send_byte((addr << 1) | CMDWRITE);
@@ -98,9 +98,9 @@ void ds1302_write(unsigned char addr, unsigned char c)
     stop();
 }
 
-void ds1302_write_clock(unsigned char __idata *p)
+void ds1302_write_clock(uint8_t __idata *p)
 {
-    unsigned char i;
+    uint8_t i;
 
     start();
     send_byte((0x1F << 1) | CMDWRITE);

@@ -7,9 +7,12 @@
 #define __EERPOM_H
 
 
-void eeprom_erase(unsigned int addr);
-void eeprom_write(unsigned int addr, unsigned char c);
-unsigned char eeprom_read(unsigned int addr);
+#include "../common.h"
+
+
+void eeprom_erase(uint16_t addr);
+void eeprom_write(uint16_t addr, uint8_t c);
+uint8_t eeprom_read(uint16_t addr);
 
 
 #endif /* __EEPROM_H */

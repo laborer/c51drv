@@ -6,9 +6,6 @@
 #include "common.h"
 #include "kbhost.h"
 
-#include "uart.h"
-#include "print.h"
-
 
 #define DATA    KBHOST_DATA
 #define CLK     KBHOST_CLK
@@ -34,17 +31,17 @@
     } while(0)
 
 
-static unsigned char    flags;
-static unsigned char    newchar;
-static unsigned char    modifiers;
-static unsigned char    state;
+static uint8_t  flags;
+static uint8_t  newchar;
+static uint8_t  modifiers;
+static uint8_t  state;
 
 
 /* Wait for CLK falling edge.  This function should only be used in
    interrupt routine */
-static char wait_clk_1(void) __using 1
+static int8_t wait_clk_1(void) __using 1
 {
-    unsigned char i;
+    uint8_t i;
     
     for (i = 100; i != 0; i--) {
         if (CLK) {
@@ -68,9 +65,9 @@ static char wait_clk_1(void) __using 1
 
 /* Wait for CLK falling edge.  This function should only be used in
    non-interrupt routine */
-static char wait_clk_0(void)
+static int8_t wait_clk_0(void)
 {
-    unsigned char i;
+    uint8_t i;
     
     for (i = 100; i != 0; i--) {
         if (CLK) {
@@ -93,9 +90,9 @@ static char wait_clk_0(void)
 }
 
 /* Wait keyboard to be ready for receiving */
-static char wait_start(void)
+static int8_t wait_start(void)
 {
-    unsigned char i;
+    uint8_t i;
     
     for (i = 250; i != 0; i--) {
         if (!CLK) {
@@ -108,10 +105,10 @@ static char wait_start(void)
 }
 
 /* Send a byte to keyboard and bypass its response */
-static char send_byte(unsigned char c)
+static int8_t send_byte(uint8_t c)
 {
-    unsigned char       i;
-    __bit               p;
+    uint8_t     i;
+    __bit       p;
     
     EXx = 0;
     CLK = 0;
@@ -158,7 +155,7 @@ static char send_byte(unsigned char c)
    manages Num Lock, Caps Lock and Scroll Lock */
 static void decode(void)
 {
-    const unsigned char __code graphmap[] = {
+    const uint8_t __code graphmap[] = {
         0,    0,    0,    0,    0,    0,    0,    0,    
         0,    0,    0,    0,    0,    '\t', '`',  0,    
         0,    0,    0,    0,    0,    'q',  '1',  0,    
@@ -176,7 +173,7 @@ static void decode(void)
         '0',  '.',  '2',  '5',  '6',  '8',  0,    0,    
         0,    '+',  '3',  '-',  '*',  '9',  0,    0,
     };
-    const unsigned char __code shiftmap[] = {
+    const uint8_t __code shiftmap[] = {
         0x45, ')',        
         0x16, '!',        
         0x1E, '@',        
@@ -199,7 +196,7 @@ static void decode(void)
         0x49, '>',        
         0x4A, '?',        
     };
-    const unsigned char __code modifierlist[] = {
+    const uint8_t __code modifierlist[] = {
         0x12,        // KBHOST_LSHIFT
         0x59,        // KBHOST_RSHIFT
         0x14,        // KBHOST_LCTRL
@@ -209,15 +206,15 @@ static void decode(void)
         0x1F + 0x80, // KBHOST_LGUI
         0x27 + 0x80, // KBHOST_RGUI
     };
-    const unsigned char __code locklist[] = {
+    const uint8_t __code locklist[] = {
         0x7E,        // KBHOST_SCROLL
         0x77,        // KBHOST_NUM
         0x58,        // KBHOST_CAPS
     };
 
-    unsigned char               i;
-    unsigned char               c;
-    unsigned char __code        *p;
+    uint8_t             i;
+    uint8_t             c;
+    uint8_t __code      *p;
 
     c = graphmap[newchar];
     if (newchar < 0x80 && c) {
@@ -271,8 +268,8 @@ static void decode(void)
 /* Interrupt routine for reading from keyboard */
 void kbhost_interrupt(void) __interrupt KBHOST_INTVEC __using 1
 {
-    unsigned char       i;
-    unsigned char       c;
+    uint8_t     i;
+    uint8_t     c;
 
     if (DATA) {
         return;
@@ -345,9 +342,9 @@ void kbhost_stop(void)
 }
 
 /* Read a character sent by the keyboard */
-int kbhost_read(void)
+int16_t kbhost_read(void)
 {
-    int ret;
+    int16_t ret;
 
     if (!(flags & KBHOST_HASNEW)) {
         ret = 0;
@@ -395,7 +392,7 @@ int kbhost_read(void)
     return ret;
 }
 
-unsigned char kbhost_modifiers(void) 
+uint8_t kbhost_modifiers(void) 
 {
     return modifiers;
 }

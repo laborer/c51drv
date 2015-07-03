@@ -4,15 +4,16 @@
 
 
 #include "common.h"
+#include "tools.h"
 #include "uart.h"
 #include "timer.h"
 
 
 /* Ring buffer struct for UART I/O */
 typedef struct {
-    unsigned char dat[4];
-    unsigned char in;
-    unsigned char out;
+    uint8_t     dat[4];
+    uint8_t     in;
+    uint8_t     out;
 } buffer_t;
 
 
@@ -28,13 +29,13 @@ static __bit rcoff;
 
 
 #ifdef UART_CALLBACK
-extern void UART_CALLBACK(unsigned char c) __using 1;
+extern void UART_CALLBACK(uint8_t c) __using 1;
 #endif /* UART_CALLBACK */
 
 /* UART interrupt routine */
 void uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 {
-    unsigned char c;
+    uint8_t c;
 
     /* Check if UART is ready to read */
     if (RI) {
@@ -73,17 +74,17 @@ void uart_interrupt(void) __interrupt SI0_VECTOR __using 1
 }
 
 /* Test if there are data ready to be read */
-char uart_rcready(void) {
+int8_t uart_rcready(void) {
     return !BUF_EMPTY(rcbuf);
 }
 
 /* Test if it is ready to send data */
-char uart_txready(void) {
+int8_t uart_txready(void) {
     return !BUF_FULL(txbuf);
 }
 
 /* Send a byte in block mode */
-void uart_putchar(unsigned char c)
+void uart_putchar(uint8_t c)
 {
     while (BUF_FULL(txbuf));
 
@@ -98,7 +99,7 @@ void uart_putchar(unsigned char c)
 }
 
 /* Read a byte in block mode */
-unsigned char uart_getchar(void)
+uint8_t uart_getchar(void)
 {
     while (BUF_EMPTY(rcbuf));
 
@@ -124,13 +125,13 @@ void uart_baudrate(void)
 }
 
 /* Detect and set baudrate automatically  */
-char uart_baudrate_auto(void)
+int8_t uart_baudrate_auto(void)
 {
-    unsigned int        t;
-    unsigned int        tmax;
-    unsigned int        tmin;
-    unsigned char       i;
-    unsigned char       k;
+    uint16_t    t;
+    uint16_t    tmax;
+    uint16_t    tmin;
+    uint8_t     i;
+    uint8_t     k;
 
     /* Disable Timer1 interrupt */
     ET1 = 0;

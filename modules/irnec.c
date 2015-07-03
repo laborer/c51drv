@@ -10,16 +10,16 @@
 
 #define BIT0            TIMER_CYCLES_US(562.5)
 #define BIT1            (BIT0 * 3)
-#define STATE2          ((unsigned int)(BIT0 * 15.5))
+#define STATE2          ((uint16_t)(BIT0 * 15.5))
 #define STATE3          (BIT0 * 8)
 #define REPEAT          (BIT0 * 4)
 #define TIME_ERROR      TIMER_CYCLES_US(100)
 
 
-static unsigned char    state;
-static unsigned int     time;
-static unsigned int     data;
-static unsigned char    buf;
+static uint8_t  state;
+static uint16_t time;
+static uint16_t data;
+static uint8_t  buf;
 
 
 void irnec_init(void)
@@ -31,9 +31,9 @@ void irnec_init(void)
     TIMER0_START();
 }
 
-char irnec_falling(void) 
+int8_t irnec_falling(void) 
 {
-    unsigned int t;
+    uint16_t t;
 
     t = time;
     time = timer0_get16();
@@ -57,14 +57,14 @@ char irnec_falling(void)
             if (state == 2 + 16 * 1) {
                 data = buf << 8;
             } else if (state == 2 + 16 * 2) {
-                if ((unsigned char)(~data >> 8) != buf) {
+                if ((uint8_t)(~data >> 8) != buf) {
                     state = 2;
                     return IRNEC_ERR_INVERSE;
                 }
             } else if (state == 2 + 16 * 3) {
                 data |= buf;
             } else {  /* state == 2 + 16 * 4 */
-                if ((unsigned char)(~data) != buf) {
+                if ((uint8_t)(~data) != buf) {
                     state = 2;
                     return IRNEC_ERR_INVERSE;
                 }
@@ -92,7 +92,7 @@ char irnec_falling(void)
     return state;
 }
 
-unsigned int irnec_result(void)
+uint16_t irnec_result(void)
 {
     return data;
 }

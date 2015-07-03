@@ -7,6 +7,9 @@
 #define __LCD1602_H
 
 
+#include "common.h"
+
+
 #define LCD1602_RS      P2_4
 #define LCD1602_RW      P2_5
 #define LCD1602_E       P2_6
@@ -18,12 +21,12 @@ void lcd1602_return_home(void);
 void lcd1602_entry_mode(__bit direction, __bit shift);
 void lcd1602_switch(__bit display, __bit cursor, __bit blink);
 void lcd1602_shift(__bit display, __bit direction);
-void lcd1602_putchar(unsigned char c);
-unsigned char lcd1602_getchar(void);
-void lcd1602_position(unsigned char x, unsigned char y);
-void lcd1602_write_cgram(unsigned char addr, unsigned char c);
-unsigned char lcd1602_read_cgram(unsigned char addr);
-void lcd1602_character(unsigned char idx, const unsigned char __code *p);
+void lcd1602_putchar(uint8_t c);
+uint8_t lcd1602_getchar(void);
+void lcd1602_position(uint8_t x, uint8_t y);
+void lcd1602_write_cgram(uint8_t addr, uint8_t c);
+uint8_t lcd1602_read_cgram(uint8_t addr);
+void lcd1602_character(uint8_t idx, const uint8_t __code *p);
 void lcd1602_init(void);
 
 
