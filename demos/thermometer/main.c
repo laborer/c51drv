@@ -57,7 +57,7 @@ static void display_init(void)
 
 static void display_temp_clear(void)
 {
-    lcd1602_position(0, 0);
+    LCD1602_POSITION(0, 0);
     LCDSTR("        ");
 }
 
@@ -65,7 +65,7 @@ static void display_temp(int tempcode)
 {
     unsigned int k;
 
-    lcd1602_position(0, 0);
+    LCD1602_POSITION(0, 0);
     LCDINT4(tempcode >> 4);
     LCDCHAR('.');
 
@@ -82,13 +82,13 @@ static void display_temp(int tempcode)
 
 static void display_ir_clear(void)
 {
-    lcd1602_position(10, 0);
+    LCD1602_POSITION(10, 0);
     LCDSTR("    ");
 }
 
 static void display_ir(unsigned int ircode)
 {
-    lcd1602_position(10, 0);
+    LCD1602_POSITION(10, 0);
     LCDHEX4(ircode);
 }
 
@@ -99,16 +99,16 @@ static void display_rom(void)
     unsigned char c;
 
     for (i = 0; i < 18; i++) {
-        lcd1602_position(i + 1, 1);
+        LCD1602_POSITION(i + 1, 1);
         c = lcd1602_getchar();
-        lcd1602_position(i, 1);
+        LCD1602_POSITION(i, 1);
         LCDCHAR(c);
     }
 
     /* pos = (pos + 1) & (64 * 4 - 1); */
     pos += 1;
     if (!(pos & 0x03)) {
-        lcd1602_position(15, 1);
+        LCD1602_POSITION(15, 1);
         LCDHEX4(rom9346_read(pos >> 2));
     }
 }

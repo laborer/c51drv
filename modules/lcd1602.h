@@ -15,17 +15,37 @@
 #define LCD1602_E       P2_6
 #define LCD1602_DB      P0
 
+#define LCD1602_CLEAR()                                         \
+    lcd1602_cmd(0x01)
 
-void lcd1602_clear_display(void);
-void lcd1602_return_home(void);
-void lcd1602_entry_mode(__bit direction, __bit shift);
-void lcd1602_switch(__bit display, __bit cursor, __bit blink);
-void lcd1602_shift(__bit display, __bit direction);
+#define LCD1602_HOME()                                          \
+    lcd1602_cmd(0x02)
+
+#define LCD1602_ENTRY(direction, shift)                         \
+    lcd1602_cmd(0x04 | ((__bit)direction << 1) | shift)
+
+#define LCD1602_SWITCH(display, cursor, blink)                  \
+    lcd1602_cmd(0x08                                            \
+                | ((__bit)(display) << 2)                       \
+                | ((__bit)(cursor) << 1)                        \
+                | (__bit)(blink))
+
+#define LCD1602_SHIFT(display, direction)                       \
+    lcd1602_cmd(0x10                                            \
+                | ((__bit)display << 3)                         \
+                | ((__bit)direction << 2))
+
+#define LCD1602_SETADDR(addr)                                   \
+    lcd1602_cmd(0x80 | (addr))
+
+#define LCD1602_POSITION(x, y)                                  \
+    LCD1602_SETADDR(x | (y << 6))
+
+
+uint8_t lcd1602_getaddr(void);
+void lcd1602_cmd(uint8_t cmd);
+uint8_t lcd1602_getchar();
 void lcd1602_putchar(uint8_t c);
-uint8_t lcd1602_getchar(void);
-void lcd1602_position(uint8_t x, uint8_t y);
-void lcd1602_write_cgram(uint8_t addr, uint8_t c);
-uint8_t lcd1602_read_cgram(uint8_t addr);
 void lcd1602_character(uint8_t idx, const uint8_t __code *p);
 void lcd1602_init(void);
 

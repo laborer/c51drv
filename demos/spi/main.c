@@ -99,7 +99,7 @@ void main(void) {
 
     welcome();
 
-    lcd1602_position(0, 1);
+    LCD1602_POSITION(0, 1);
 
 #ifdef SPI_UART_RECV_ENABLE
     spi_uart_init();

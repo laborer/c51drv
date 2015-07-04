@@ -151,7 +151,7 @@ __bit parse_movecursor(void)
         return 1;
     }
 
-    lcd1602_position(buffer[1], buffer[0]);
+    LCD1602_POSITION(buffer[1], buffer[0]);
 
     RESET();
 
@@ -210,7 +210,11 @@ void parse_input(void)
 
 void display_clock(void)
 {
-    lcd1602_position(0, 1);
+    uint8_t addr;
+
+    addr = lcd1602_getaddr();
+
+    LCD1602_POSITION(0, 1);
     LCD_PRINTF_S(clock_monthname[clock_month - 1]);
     LCD_PRINTF_C('/');
     LCD_PRINTF_02D(clock_day);
@@ -221,6 +225,8 @@ void display_clock(void)
     LCD_PRINTF_02D(clock_minute);
     LCD_PRINTF_C(':');
     LCD_PRINTF_02D(clock_second);
+
+    LCD1602_SETADDR(addr);
 }
 
 void main(void)
@@ -246,8 +252,8 @@ void main(void)
             input = uart_getchar();
             parse_input();
         }
-        /* if (clock_update()) { */
-        /*     display_clock(); */
-        /* } */
+        if (clock_update()) {
+            display_clock();
+        }
     }
 }

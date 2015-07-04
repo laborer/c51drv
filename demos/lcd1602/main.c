@@ -55,25 +55,26 @@ void main(void) {
     lcd1602_init();
 
     /* lcd1602_entry_mode(1, 1); */
-    lcd1602_switch(1, 1, 1);
+    LCD1602_SWITCH(1, 1, 1);
+    /* lcd1602_switch(1, 1, 1); */
 
-    lcd1602_position(0, 0);
+    LCD1602_POSITION(0, 0);
 
     for (i = 'A'; i <= 'Z'; i++) {
         lcd1602_putchar(i);
     }
 
-    lcd1602_position(8, 1);
+    LCD1602_POSITION(8, 1);
 
     for (i = '0'; i <= '9'; i++) {
         lcd1602_putchar(i);
     }
 
-    lcd1602_write_cgram(0, 'A');
+    /* lcd1602_write_cgram(0, 'A'); */
 
-    UARTCHAR(lcd1602_read_cgram(0));
+    /* UARTCHAR(lcd1602_read_cgram(0)); */
 
-    lcd1602_position(0, 1);
+    LCD1602_POSITION(0, 1);
 
     lcd1602_character(0, chn_year);
     lcd1602_character(1, chn_month);
@@ -91,8 +92,8 @@ void main(void) {
         lcd1602_putchar(*p);
     }
     lcd1602_putchar(2);
-    
-    lcd1602_return_home();
+
+    LCD1602_HOME();
 
     while (i = uart_getchar()) {
         lcd1602_putchar(i);
