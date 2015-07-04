@@ -7,6 +7,7 @@
 #include <print.h>
 #include <lcd1602.h>
 #include "memory.h"
+#include "clock.h"
 
 
 #define ESCAPE          0x1B
@@ -20,203 +21,162 @@
 #define COMMAND_M       6
 #define COMMAND_D       7
 
+#define NCOMMANDS       (sizeof(command_table) / sizeof(command_table[0]))
+#define NBUFFER         6
+
 #define RESET()                                                 \
     do {                                                        \
         command = 0;                                            \
         state = 0;                                              \
+        length = 0;                                             \
     } while (0)
 
-#define LCDCHAR(c)                                              \
+#define LCD_PRINTF_C(c)                                         \
     lcd1602_putchar(c);
 
-#define LCDSTR(str)                                             \
+#define LCD_PRINTF_S(str)                                       \
     print_str(lcd1602_putchar, 0, 0, str)
 
-
-unsigned char input;
-unsigned char state;
-unsigned char command;
+#define LCD_PRINTF_02D(num)                                     \
+    print_int(lcd1602_putchar, PRINT_ZERO, 2, num);
 
 
-unsigned char hex2uchar(unsigned char hex)
+const __code struct {
+    uint8_t     cmd;
+    uint8_t     len;
+    __bit       (*func)(void);
+} command_table[] = {
+    {'\n', 1, parse_command},   /* 0 */
+    {'b', 3, parse_pin},        /* 1 */
+    {'s', 3, parse_pin},        /* 2 */
+    {'c', 3, parse_pin},        /* 3 */
+    {'p', 2, parse_port},       /* 4 */
+    {'w', 4, parse_port},       /* 5 */
+    {'m', 3, parse_movecursor}, /* 6 */
+    {'d', 1, parse_display},    /* 7 */
+};
+
+uint8_t input;
+uint8_t state;
+uint8_t length;
+uint8_t command;
+uint8_t buffer[NBUFFER];
+
+
+uint8_t hex2uchar(uint8_t hex)
 {
-    unsigned char t;
-
-    t = hex - '0';
-    if (t > 9) {
-        t -= 'a' - '0' - 10;
-        if (t < 10 || t > 15) {
+    hex -= '0';
+    if (hex > 9) {
+        hex -= 'a' - '0' - 10;
+        if (hex < 10 || hex > 15) {
             return 0xFF;
         }
     }
-    return t;
+
+    return hex;
 }
 
-void parse_pin(void)
+__bit parse_pin(void)
 {
-    static unsigned char        pin;
-    static __bit                b;
-    unsigned char               t;
-
-    switch (state) {
-    case 0:
-        pin = input - '0';
-        if (pin < 4) {
-            state += 1;
-            return;
-        }
-        break;
-    case 1:
-        t = input - '0';
-        if (t < 8) {
-            pin = MEMORY_PIN(pin, t);
-            b = (command == COMMAND_S);
-            state += 1;
-            return;
-        }
-        break;
-    case 2:
-        if (input == '\n') {
-            if (command == COMMAND_B) {
-                UARTCHAR('0' + memory_pin_get(pin));
-            } else {
-                memory_pin_set(pin, b);
-            }
-            RESET();
-            return;
-        }
-        break;
+    if (input != '\n') {
+        return 1;
     }
 
-    state = STATE_FAIL;
-}
-
-void parse_port(void)
-{
-    static unsigned char        port;
-    static unsigned char        c;
-    unsigned char               t;
-
-    switch (state) {
-    case 0:
-        port = input - '0';
-        if (port < 4) {
-            if (command == COMMAND_P) {
-                state += 3;
-            } else {
-                state += 1;
-            }
-            return;
-        }
-        break;
-    case 1:
-        t = hex2uchar(input);
-        if (t != 0xFF) {
-            c = t << 4;
-            state += 1;
-            return;
-        }
-        break;
-    case 2:
-        t = hex2uchar(input);
-        if (t != 0xFF) {
-            c += t;
-            state += 1;
-            return;
-        }
-        break;
-    case 3:
-        if (input == '\n') {
-            if (command == COMMAND_P) {
-                UARTHEX2(memory_port_get(port));
-            } else {
-                memory_port_set(port, c);
-            }
-            RESET();
-            return;
-        }
-        break;
+    buffer[0] -= '0';
+    buffer[1] -= '0';
+    if (buffer[0] >= 4 || buffer[1] >= 8) {
+        return 1;
     }
 
-    state = STATE_FAIL;
+    buffer[0] = MEMORY_PIN(buffer[0], buffer[1]);
+    if (command = 1) {          /* B */
+        UARTCHAR('0' + memory_pin_get(buffer[0]));
+    } else {                    /* S, C */
+        memory_pin_set(buffer[0], command == 2);
+    }
+
+    RESET();
+
+    return 0;
 }
 
-void parse_display(void)
+__bit parse_port(void)
+{
+    if (input != '\n') {
+        return 1;
+    }
+
+    buffer[0] -= '0';
+    if (buffer[0] >= 4) {
+        return 1;
+    }
+
+    if (command == 4) {
+        UARTHEX2(memory_port_get(buffer[0]));
+    } else {
+        buffer[1] = hex2uchar(buffer[1]);
+        buffer[2] = hex2uchar(buffer[2]);
+        if (buffer[1] == 0xFF || buffer[2] == 0xFF) {
+            return 1;
+        }
+        memory_port_set(buffer[0], (buffer[1] << 4) | buffer[2]);
+    }
+
+    RESET();
+
+    return 0;
+}
+
+__bit parse_display(void)
 {
     if (input == '\n') {
         RESET();
     } else {
-        LCDCHAR(input);
-    }
-}
-
-void parse_move_cursor(void)
-{
-    static unsigned char        pos;
-    unsigned char               t;
-
-    switch (state) {
-    case 0:
-        t = hex2uchar(input);
-        if (t != 0xFF) {
-            pos = t << 4;
-            state += 1;
-            return;
-        }
-        break;
-    case 1:
-        t = hex2uchar(input);
-        if (t != 0xFF) {
-            pos += t;
-            state += 1;
-            return;
-        }
-        break;
-    case 2:
-        if (input == '\n') {
-            lcd1602_position(pos & 0x0F, pos >> 4);
-            RESET();
-            return;
-        }
-        break;
+        LCD_PRINTF_C(input);
+        length = 0;
     }
 
-    state = STATE_FAIL;
+    return 0;
 }
 
-void parse_command(void)
+__bit parse_movecursor(void)
 {
-    switch (input) {
-    case '@':
+    if (input != '\n') {
+        return 1;
+    }
+
+    buffer[0] = hex2uchar(buffer[0]);
+    buffer[1] = hex2uchar(buffer[1]);
+    if (buffer[0] == 0xFF || buffer[1] == 0xFF) {
+        return 1;
+    }
+
+    lcd1602_position(buffer[1], buffer[0]);
+
+    RESET();
+
+    return 0;
+}
+
+__bit parse_command(void)
+{
+    uint8_t i;
+
+    for (i = 0; i != NCOMMANDS; i++) {
+        if (input == command_table[i].cmd) {
+            command = i;
+            length = 0;
+            return 0;
+        }
+    }
+
+    if (input == '@') {
         uart_putchar('@');
-        break;
-    case 'b':
-        command = COMMAND_B;
-        break;
-    case 's':
-        command = COMMAND_S;
-        break;
-    case 'c':
-        command = COMMAND_C;
-        break;
-    case 'p':
-        command = COMMAND_P;
-        break;
-    case 'w':
-        command = COMMAND_W;
-        break;
-    case 'd':
-        command = COMMAND_D;
-        break;
-    case 'm':
-        command = COMMAND_M;
-        break;
-    case '\n':
-        break;
-    default:
-        state = STATE_FAIL;
-        break;
+        length = 0;
+        return 0;
     }
+
+    return 1;
 }
 
 void parse_input(void)
@@ -228,46 +188,66 @@ void parse_input(void)
     if (input == '\r') {
         input = '\n';
     }
-    switch (command) {
-    case COMMAND_WAIT:
-        parse_command();
-        break;
-    case COMMAND_B:
-    case COMMAND_S:
-    case COMMAND_C:
-        parse_pin();
-        break;
-    case COMMAND_P:
-    case COMMAND_W:
-        parse_port();
-        break;
-    case COMMAND_D:
-        parse_display();
-        break;
-    case COMMAND_M:
-        parse_move_cursor();
-        break;
+
+    length += 1;
+    if (length == command_table[command].len) {
+        if (command_table[command].func()) {
+            goto fail;
+        }
+    } else if (input == '\n') {
+        goto fail;
+    } else {
+        buffer[length - 1] = input;
     }
-    if (state == STATE_FAIL) {
-        UARTCHAR(ESCAPE);
-        UARTCHAR('?');          /* For debugging using terminal */
-        RESET();
-    }
+
+    return;
+
+ fail:
+    UARTCHAR(ESCAPE);
+    UARTCHAR('?');          /* For debugging using terminal */
+    RESET();
+}
+
+void display_clock(void)
+{
+    lcd1602_position(0, 1);
+    LCD_PRINTF_S(clock_monthname[clock_month - 1]);
+    LCD_PRINTF_C('/');
+    LCD_PRINTF_02D(clock_day);
+    LCD_PRINTF_C(' ');
+    LCD_PRINTF_C(' ');
+    LCD_PRINTF_02D(clock_hour);
+    LCD_PRINTF_C(':');
+    LCD_PRINTF_02D(clock_minute);
+    LCD_PRINTF_C(':');
+    LCD_PRINTF_02D(clock_second);
 }
 
 void main(void)
 {
     lcd1602_init();
-    LCDSTR("c51drv");
+    /* LCDSTR("c51drv"); */
 
-    while (uart_baudrate_auto());
+    /* while (uart_baudrate_auto()); */
+    uart_baudrate();
     uart_init();
     UARTSTR("c51drv\n");
+
+    clock_year = 16;
+    clock_month = 12;
+    clock_day = 31;
+    clock_hour = 23;
+    clock_minute = 59;
+    clock_second = 55;
+    clock_init();
 
     while (1) {
         if (uart_rcready()) {
             input = uart_getchar();
             parse_input();
         }
+        /* if (clock_update()) { */
+        /*     display_clock(); */
+        /* } */
     }
 }

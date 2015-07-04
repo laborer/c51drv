@@ -1,5 +1,5 @@
-MODULES	:= tools uart print lcd1602
+MODULES	:= tools uart print lcd1602 timer
 # BINARY := $(BUILDDIR)/main.ihx
-OBJECTS := memory
+OBJECTS := memory clock
 
 include ../Makefile.common
