@@ -10,15 +10,19 @@
 #include <timer.h>
 
 
-/* This macro yields correct results for dates from Mar 1900 to Jan
-   2100 */
-#define CLOCK_DAYSINMONTH(year, month)                          \
-    (32 - (((month) == 2)                                       \
-           ? (((year) % 4) ? 3 : 2)                             \
-           : (uint8_t)((month) - 1) % 7 % 2))
-
-
 #ifndef CLOCK_DATE_DISABLE
+
+/* Calculate the number of days in the given month and year.  The
+   result is valid for the 21st century. */
+#define CLOCK_DAYSINMONTH(year, month)                          \
+    ((uint8_t)(((month) == 2)                                   \
+               ? (((year) % 4) ? 28 : 29)                       \
+               : (31 - (uint8_t)((month) - 1) % 7 % 2)))
+
+/* Check if the day of month overflows */
+#define CLOCK_DAYOVERFLOW(year, month, day)                     \
+    (day > 28 && day > CLOCK_DAYSINMONTH(year, month))
+
 
 extern const __code uint8_t* __code clock_monthname[];
 extern const __code uint8_t* __code clock_dayofweekname[];

@@ -19,10 +19,12 @@ $(BUILDDIR)/%.rel: %.c
 	$(SDCC) -c $(SDCCFLAGS) $< -o $@
 
 # Link .rel files
-%.ihx: %.rel 
+%.ihx: %.rel
 	$(SDCC) $(SDCCFLAGS) $(ASLINKFLAGS) $^ -o $@
 
 # Clean up
 clean:
 	rm -rf $(BUILDDIR)
 
+
+-include $(OBJECTS:%=$(BUILDDIR)/%.dep)

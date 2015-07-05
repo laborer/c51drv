@@ -81,7 +81,7 @@ uint8_t clock_update(void)
 
 #ifndef CLOCK_DATE_DISABLE
     clock_day += 1;
-    if (clock_day != CLOCK_DAYSINMONTH(clock_year, clock_month)) {
+    if (!CLOCK_DAYOVERFLOW(clock_year, clock_month, clock_day)) {
         return 4;
     }
     clock_day = 1;
@@ -105,9 +105,9 @@ uint8_t clock_update(void)
 #ifndef CLOCK_DATE_DISABLE
 
 /* Calculate the current day of week using a variation of Gauss'
-   algorithm.  The result is valid for 21st Century.
+   algorithm.  The result is valid for the 21st century.
    See: https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#Disparate_variation
-*/
+ */
 uint8_t clock_dayofweek(void)
 {
     uint8_t     month;
@@ -121,10 +121,10 @@ uint8_t clock_dayofweek(void)
         year = clock_year;
     }
 
-    return (clock_day
-            + (13 * month - 1) / 5
-            + year
-            + year / 4) % 7;
+    return (uint8_t)(clock_day
+                     + (uint8_t)(13 * month - 1) / 5
+                     + year
+                     + year / 4) % 7;
 }
 
 #endif /* CLOCK_DATE_DISABLE */

@@ -207,7 +207,7 @@ __bit parse_date(void)
         || buffer[1] == 0
         || buffer[1] > 12
         || buffer[2] == 0
-        || buffer[2] > CLOCK_DAYSINMONTH(buffer[0], buffer[1])) {
+        || CLOCK_DAYOVERFLOW(buffer[0], buffer[1], buffer[2])) {
         return 1;
     }
 
@@ -326,8 +326,5 @@ void main(void)
         }
 
         display_clock(clock_update());
-        /* if (clock_update()) { */
-        /*     display_clock(); */
-        /* } */
     }
 }
