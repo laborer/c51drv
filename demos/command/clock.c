@@ -14,8 +14,12 @@
 #ifndef CLOCK_DATE_DISABLE
 
 const __code uint8_t* __code clock_monthname[] = {
-    "JAN", "FEB", "MAR", "APR", "MAY", "JUN", 
-    "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+
+const __code uint8_t* __code clock_dayofweekname[] = {
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 };
 
 uint8_t         clock_year;
@@ -44,7 +48,7 @@ void clock_init(void)
 uint8_t clock_update(void)
 {
     int16_t     t;
-    
+
     ET0 = 0;
     t = TIMER0_GET32() >> 16;
     ET0 = 1;
@@ -76,35 +80,51 @@ uint8_t clock_update(void)
     clock_hour = 0;
 
 #ifndef CLOCK_DATE_DISABLE
-    {
-        uint8_t     days;
-    
-        if (clock_month == 2) {
-            days = (clock_year % 4) ? 3 : 2;
-        } else {
-            days = (uint8_t)(clock_month - 1) % 7 % 2;
-        }
-        days = 32 - days;
-
-        clock_day += 1;
-        if (clock_day != days) {
-            return 4;
-        }
-        clock_day = 1;
-        
-        clock_month += 1;
-        if (clock_month != 13) {
-            return 5;
-        }
-        clock_month = 1;
-
-        clock_year += 1;
-        if (clock_year != 100) {
-            return 6;
-        }
-        clock_year = 0;
+    clock_day += 1;
+    if (clock_day != CLOCK_DAYSINMONTH(clock_year, clock_month)) {
+        return 4;
     }
+    clock_day = 1;
+
+    clock_month += 1;
+    if (clock_month != 13) {
+        return 5;
+    }
+    clock_month = 1;
+
+    clock_year += 1;
+    if (clock_year != 100) {
+        return 6;
+    }
+    clock_year = 0;
 #endif /* CLOCK_DATE_DISABLE */
 
     return 1;
 }
+
+#ifndef CLOCK_DATE_DISABLE
+
+/* Calculate the current day of week using a variation of Gauss'
+   algorithm.  The result is valid for 21st Century.
+   See: https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#Disparate_variation
+*/
+uint8_t clock_dayofweek(void)
+{
+    uint8_t     month;
+    uint8_t     year;
+
+    if (clock_month <= 2) {
+        month = clock_month + 10;
+        year = (clock_year == 0) ? 4 : (clock_year - 1);
+    } else {
+        month = clock_month - 2;
+        year = clock_year;
+    }
+
+    return (clock_day
+            + (13 * month - 1) / 5
+            + year
+            + year / 4) % 7;
+}
+
+#endif /* CLOCK_DATE_DISABLE */

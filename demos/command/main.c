@@ -11,23 +11,13 @@
 
 
 #define ESCAPE          0x1B
-#define STATE_FAIL      0xFF
-#define COMMAND_WAIT    0
-#define COMMAND_B       1
-#define COMMAND_S       2
-#define COMMAND_C       3
-#define COMMAND_P       4
-#define COMMAND_W       5
-#define COMMAND_M       6
-#define COMMAND_D       7
-
+#define COMMAND_FAIL    0xFF
 #define NCOMMANDS       (sizeof(command_table) / sizeof(command_table[0]))
 #define NBUFFER         6
 
 #define RESET()                                                 \
     do {                                                        \
         command = 0;                                            \
-        state = 0;                                              \
         length = 0;                                             \
     } while (0)
 
@@ -53,17 +43,18 @@ const __code struct {
     {'p', 2, parse_port},       /* 4 */
     {'w', 4, parse_port},       /* 5 */
     {'m', 3, parse_movecursor}, /* 6 */
-    {'d', 1, parse_display},    /* 7 */
+    {'l', 1, parse_display},    /* 7 */
+    {'d', 7, parse_date},       /* 8 */
+    {'t', 7, parse_time},       /* 9 */
 };
 
 uint8_t input;
-uint8_t state;
 uint8_t length;
 uint8_t command;
 uint8_t buffer[NBUFFER];
 
 
-uint8_t hex2uchar(uint8_t hex)
+static uint8_t decode_hex(uint8_t hex)
 {
     hex -= '0';
     if (hex > 9) {
@@ -74,6 +65,57 @@ uint8_t hex2uchar(uint8_t hex)
     }
 
     return hex;
+}
+
+static __bit decode_dec_buffer()
+{
+    uint8_t i;
+
+    for (i = 0; i != 6; i++) {
+        buffer[i] -= '0';
+        if (buffer[i] > 9) {
+            return 1;
+        }
+    }
+
+    for (i = 0; i != 3; i++) {
+        buffer[i] = buffer[i * 2] * 10 + buffer[i * 2 + 1];
+    }
+
+    return 0;
+}
+
+void display_clock(uint8_t update)
+{
+    uint8_t addr;
+
+    if (update == 0) {
+        return;
+    }
+
+    addr = lcd1602_getaddr();
+
+    if (update > 3) {
+        LCD1602_POSITION(0, 0);
+        LCD_PRINTF_S(clock_dayofweekname[clock_dayofweek()]);
+        LCD_PRINTF_C(' ');
+        LCD_PRINTF_S(clock_monthname[clock_month - 1]);
+        LCD_PRINTF_C(' ');
+        LCD_PRINTF_02D(clock_day);
+        LCD_PRINTF_S(" 20");
+        LCD_PRINTF_02D(clock_year);
+    }
+    if (update > 1) {
+        LCD1602_POSITION(0, 1);
+        LCD_PRINTF_02D(clock_hour);
+        LCD_PRINTF_C(':');
+        LCD_PRINTF_02D(clock_minute);
+        LCD_PRINTF_C(':');
+    }
+    LCD1602_POSITION(6, 1);
+    LCD_PRINTF_02D(clock_second);
+
+    LCD1602_SETADDR(addr);
 }
 
 __bit parse_pin(void)
@@ -96,7 +138,6 @@ __bit parse_pin(void)
     }
 
     RESET();
-
     return 0;
 }
 
@@ -114,8 +155,8 @@ __bit parse_port(void)
     if (command == 4) {
         UARTHEX2(memory_port_get(buffer[0]));
     } else {
-        buffer[1] = hex2uchar(buffer[1]);
-        buffer[2] = hex2uchar(buffer[2]);
+        buffer[1] = decode_hex(buffer[1]);
+        buffer[2] = decode_hex(buffer[2]);
         if (buffer[1] == 0xFF || buffer[2] == 0xFF) {
             return 1;
         }
@@ -123,7 +164,6 @@ __bit parse_port(void)
     }
 
     RESET();
-
     return 0;
 }
 
@@ -145,8 +185,8 @@ __bit parse_movecursor(void)
         return 1;
     }
 
-    buffer[0] = hex2uchar(buffer[0]);
-    buffer[1] = hex2uchar(buffer[1]);
+    buffer[0] = decode_hex(buffer[0]);
+    buffer[1] = decode_hex(buffer[1]);
     if (buffer[0] == 0xFF || buffer[1] == 0xFF) {
         return 1;
     }
@@ -154,7 +194,54 @@ __bit parse_movecursor(void)
     LCD1602_POSITION(buffer[1], buffer[0]);
 
     RESET();
+    return 0;
+}
 
+__bit parse_date(void)
+{
+    if (input != '\n') {
+        return 1;
+    }
+
+    if (decode_dec_buffer()
+        || buffer[1] == 0
+        || buffer[1] > 12
+        || buffer[2] == 0
+        || buffer[2] > CLOCK_DAYSINMONTH(buffer[0], buffer[1])) {
+        return 1;
+    }
+
+    clock_year = buffer[0];
+    clock_month = buffer[1];
+    clock_day = buffer[2];
+
+    display_clock(6);
+
+    RESET();
+    return 0;
+}
+
+__bit parse_time(void)
+{
+    if (input != '\n') {
+        return 1;
+    }
+
+    if (decode_dec_buffer()
+        || buffer[0] >= 24
+        || buffer[1] >= 60
+        || buffer[2] >= 60) {
+        return 1;
+    }
+
+    clock_hour = buffer[0];
+    clock_minute = buffer[1];
+    clock_second = buffer[2];
+
+    clock_init();
+    display_clock(3);
+
+    RESET();
     return 0;
 }
 
@@ -171,7 +258,7 @@ __bit parse_command(void)
     }
 
     if (input == '@') {
-        uart_putchar('@');
+        UARTCHAR('@');
         length = 0;
         return 0;
     }
@@ -188,10 +275,14 @@ void parse_input(void)
     if (input == '\r') {
         input = '\n';
     }
+    if (command == COMMAND_FAIL) {
+        goto fail;
+    }
 
     length += 1;
     if (length == command_table[command].len) {
         if (command_table[command].func()) {
+            command = COMMAND_FAIL;
             goto fail;
         }
     } else if (input == '\n') {
@@ -203,36 +294,16 @@ void parse_input(void)
     return;
 
  fail:
-    UARTCHAR(ESCAPE);
-    UARTCHAR('?');          /* For debugging using terminal */
-    RESET();
-}
-
-void display_clock(void)
-{
-    uint8_t addr;
-
-    addr = lcd1602_getaddr();
-
-    LCD1602_POSITION(0, 1);
-    LCD_PRINTF_S(clock_monthname[clock_month - 1]);
-    LCD_PRINTF_C('/');
-    LCD_PRINTF_02D(clock_day);
-    LCD_PRINTF_C(' ');
-    LCD_PRINTF_C(' ');
-    LCD_PRINTF_02D(clock_hour);
-    LCD_PRINTF_C(':');
-    LCD_PRINTF_02D(clock_minute);
-    LCD_PRINTF_C(':');
-    LCD_PRINTF_02D(clock_second);
-
-    LCD1602_SETADDR(addr);
+    if (input == '\n') {
+        UARTCHAR(ESCAPE);
+        UARTCHAR('?');          /* For debugging using terminal */
+        RESET();
+    }
 }
 
 void main(void)
 {
     lcd1602_init();
-    /* LCDSTR("c51drv"); */
 
     /* while (uart_baudrate_auto()); */
     uart_baudrate();
@@ -246,14 +317,17 @@ void main(void)
     clock_minute = 59;
     clock_second = 55;
     clock_init();
+    display_clock(6);
 
     while (1) {
         if (uart_rcready()) {
             input = uart_getchar();
             parse_input();
         }
-        if (clock_update()) {
-            display_clock();
-        }
+
+        display_clock(clock_update());
+        /* if (clock_update()) { */
+        /*     display_clock(); */
+        /* } */
     }
 }
