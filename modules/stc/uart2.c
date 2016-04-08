@@ -4,6 +4,7 @@
 
 
 #include "../common.h"
+#include "../tools.h"
 #include "stc.h"
 #include "uart2.h"
 
@@ -119,7 +120,7 @@ void uart2_baudrate(void)
     AUXR |= 0x10 | (UART2_SMOD ? 0x08 : 0) | (UART2_BRTX12 ? 0x04 : 0);
 
     /* Set timer */
-    /* 256 - FOSC * (SMOD1 + 1) / BAUD / 32 / 12 */ 
+    /* 256 - FOSC * (SMOD1 + 1) / BAUD / 32 / 12 */
     BRT = -(FOSC / UART2_BAUD / (UART2_SMOD ? 16 : 32)
             / (UART2_BRTX12 ? 1 : 12));
 }
@@ -129,7 +130,7 @@ void uart2_init(void)
 {
     BUF_INIT(rcbuf);
     BUF_INIT(txbuf);
-    
+
     txoff = 1;
     rcoff = 0;
 
@@ -139,7 +140,7 @@ void uart2_init(void)
     S2CON = 0x50;
 
     /* Enable UART2 interrupt */
-    /* - - - - - - ESPI ES2 
+    /* - - - - - - ESPI ES2
        - - - - - - -    1   */
     IE2 |= 0x01;
     /* Enable global interrupt */

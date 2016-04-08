@@ -4,6 +4,35 @@
 
 #if defined TARGET_MODEL_IAP15F105                              \
     || defined TARGET_MODEL_IAP15F105W                          \
+    || defined TARGET_MODEL_IAP15L105                           \
+    || defined TARGET_MODEL_IAP15L105W                          \
+    || defined TARGET_MODEL_STC15F100                           \
+    || defined TARGET_MODEL_STC15F100W                          \
+    || defined TARGET_MODEL_STC15F101                           \
+    || defined TARGET_MODEL_STC15F101W                          \
+    || defined TARGET_MODEL_STC15F102                           \
+    || defined TARGET_MODEL_STC15F102W                          \
+    || defined TARGET_MODEL_STC15F103                           \
+    || defined TARGET_MODEL_STC15F103W                          \
+    || defined TARGET_MODEL_STC15F104                           \
+    || defined TARGET_MODEL_STC15F104E                          \
+    || defined TARGET_MODEL_STC15F104W                          \
+    || defined TARGET_MODEL_STC15L100                           \
+    || defined TARGET_MODEL_STC15L100W                          \
+    || defined TARGET_MODEL_STC15L101                           \
+    || defined TARGET_MODEL_STC15L101W                          \
+    || defined TARGET_MODEL_STC15L102                           \
+    || defined TARGET_MODEL_STC15L102W                          \
+    || defined TARGET_MODEL_STC15L103                           \
+    || defined TARGET_MODEL_STC15L103W                          \
+    || defined TARGET_MODEL_STC15L104                           \
+    || defined TARGET_MODEL_STC15L104E                          \
+    || defined TARGET_MODEL_STC15L104W
+#define TARGET_FAMILY_STC15F10
+#endif
+
+#if defined TARGET_MODEL_IAP15F105                              \
+    || defined TARGET_MODEL_IAP15F105W                          \
     || defined TARGET_MODEL_IAP15F1K61AS                        \
     || defined TARGET_MODEL_IAP15F1K61S                         \
     || defined TARGET_MODEL_IAP15F1K61S2                        \
@@ -174,8 +203,11 @@
     || defined TARGET_MODEL_STC15W1K08PWM                       \
     || defined TARGET_MODEL_STC15W1K16PWM                       \
     || defined TARGET_MODEL_STC15W1K16S                         \
+    || defined TARGET_MODEL_STC15W1K20AS                        \
     || defined TARGET_MODEL_STC15W1K20S                         \
     || defined TARGET_MODEL_STC15W1K24S                         \
+    || defined TARGET_MODEL_STC15W1K32AS                        \
+    || defined TARGET_MODEL_STC15W1K48AS                        \
     || defined TARGET_MODEL_STC15W201S                          \
     || defined TARGET_MODEL_STC15W202S                          \
     || defined TARGET_MODEL_STC15W203S                          \

@@ -3,6 +3,7 @@
  */
 
 
+#include <tools.h>
 #include <uart.h>
 #include <print.h>
 #include <stc/stc.h>
@@ -35,7 +36,7 @@ void main(void)
         /* The following segment reads 10 bytes from a 93C46 */
         MISO = 1;
         SS = 1;
-        
+
         while (!MISO);
 
         /* Send one bite (the start bit) to 93C46.  Since the SPI
@@ -53,7 +54,7 @@ void main(void)
         SCLK = 1;
         DELAY_US(1);
         SPCTL |= 0x40;
-        
+
         spi_send(0x80);
         while (spi_isbusy());
 

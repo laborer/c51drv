@@ -2,8 +2,12 @@ MODULES		:= tools uart timer print iic spi irrc5 irnec led7seg kbhost
 MODULES		+= ds1820 rom9346 rom2402 lcd1602 pcf8591 ds1302 dht11 hcsr04
 ifneq ($(filter STC%, $(TARGET)), )
     MODULES	+= stc/eeprom stc/autoisp
-    ifneq ($(filter-out STC89%, $(TARGET)), )
-        MODULES	+= stc/spi stc/uart2
+    ifneq ($(filter STC89%, $(TARGET)), )
+	MODULES	+=
+    else ifneq ($(filter STC15F%, $(TARGET)), )
+	MODULES += stc/spi
+    else
+	MODULES += stc/spi stc/uart2
     endif
 endif
 
@@ -30,7 +34,7 @@ clean:
 # The file name of the official STC ISP programmer, we use it to
 # compile a list of MCU models, which are then grouped into families
 # in modeldb.h
-STCISP_EXE	:= stc-isp-15xx-v6.85H.exe
+STCISP_EXE	:= ../stc-isp-15xx-v6.85K.exe
 stc/modeldb.h:
 	test -s $(STCISP_EXE) || exit 1
 
@@ -39,7 +43,8 @@ stc/modeldb.h:
 	echo >>$@
 	echo >>$@
 
-	for i in '\(15F\|15L\|15W\)[[:digit:]]\+  STC15F'				\
+	for i in '\(15F10\|15L10\)[[:digit:]]\+   STC15F10'				\
+		'\(15F\|15L\|15W\)[[:digit:]]\+   STC15F'				\
 		'\(12C52\|12LE52\)[[:digit:]]\+   STC12C52'				\
 		'\(12C5A\|12LE5A\)[[:digit:]]\+   STC12C5A'				\
 		'\(10F\|10L\)[[:digit:]]\+        STC10F'				\

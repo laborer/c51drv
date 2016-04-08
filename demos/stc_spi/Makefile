@@ -1,4 +1,4 @@
-MODULES	:= uart print stc/spi
+MODULES	:= tools uart print stc/spi
 # BINARY := $(BUILDDIR)/main.ihx
 # OBJECTS := main
 

@@ -15,7 +15,7 @@
 
 #include "stc89c5xrc_rdp.h"
 
-#elif defined TARGET_FAMILY_STC90CxAD 
+#elif defined TARGET_FAMILY_STC90CxAD
 
 #include "stc90c5xad.h"
 
@@ -37,6 +37,10 @@
     || defined TARGET_FAMILY_STC11F
 
 #include "stc12c5a60s2.h"
+
+#elif defined TARGET_FAMILY_STC15F10
+
+#include "stc15f104e.h"
 
 #elif defined TARGET_FAMILY_STC15F
 
